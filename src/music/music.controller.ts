@@ -7,7 +7,7 @@ export class MusicController {
     constructor(private readonly musicService: MusicService) {}
 
     @Get()
-    findAll(): string {
-        return 'music@@@';
+    findAll(): object {
+        return {'name' : 'music@@@'};
     }
 }
