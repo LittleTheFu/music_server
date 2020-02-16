@@ -3,10 +3,13 @@ import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  index : number;
+  constructor(private readonly appService: AppService) {this.index = 0;}
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
+    this.index++;
+    return (this.index.toString());
+    // return this.appService.getHello();
   }
 }
