@@ -15,7 +15,8 @@ export class MusicController {
   @Get('nextMusic')
   getNextMusic(): object {
     this.index++;
-    const name = 'http://localhost:9999/' + ((this.index) % 8).toString() + '.mp3';
+    const name = 'http://localhost:9999/music/' + ((this.index) % 8).toString() + '.mp3';
+    console.log(name);
     return {'name' : name};
   }
 
