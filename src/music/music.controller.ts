@@ -7,18 +7,12 @@ import { MusicService } from './music.service';
 
 @Controller('music')
 export class MusicController {
-  index: number;
   constructor(private readonly musicService: MusicService) {
-    this.index = 4;
   }
 
   @Get('nextMusic')
-  getNextMusic(): object {
-    this.index++;
-    const name = 'http://localhost:9999/music/' + ((this.index) % 8).toString() + '.mp3';
-    const cover = 'http://localhost:9999/album/' + ((this.index) % 8).toString() + '.png';
-    console.log(name);
-    return { 'name': name, 'cover': cover };
+  async getNextMusic(): Promise<object> {
+    return this.musicService.getNextMusic();
   }
 
   // @Get()
