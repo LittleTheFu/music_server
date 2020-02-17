@@ -1,9 +1,7 @@
 // import { Controller, Get, Res, HttpCode, Header, Req } from '@nestjs/common';
 import { Controller, Get } from '@nestjs/common';
 import { MusicService } from './music.service';
-// import { Request } from 'express';
 
-// import * as fs from "fs";
 
 @Controller('music')
 export class MusicController {
@@ -12,19 +10,9 @@ export class MusicController {
 
   @Get('nextMusic')
   async getNextMusic(): Promise<object> {
-    // console.log(global['nestHttpServer'].getUrl());
-    // const url = await global['nestHttpServer'].getUrl();
-    // await global['nestHttpServer'].getUrl().then((o)=>{console.log(o);})
-    // console.log(url);
-    // console.log(global['nestHttpServer']);
     return this.musicService.getNextMusic();
   }
-
-  // @Get()
-  // findAll(): string {
-  //     return "a";
-  // }
-
+  
   // @Get()
   // @Header('Content-Type', 'audio/mpeg')
   // // @HttpCode(206)
