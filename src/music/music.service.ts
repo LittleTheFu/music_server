@@ -20,6 +20,8 @@ export class MusicService {
 
   getNextMusic(): Music {
     this.index++;
-    return this.musics[this.index];
+    const i = this.index%8;
+    console.log(this.musics[i]);
+    return this.musics[i];
   }
 }
