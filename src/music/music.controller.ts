@@ -12,7 +12,12 @@ export class MusicController {
   async getNextMusic(): Promise<object> {
     return this.musicService.getNextMusic();
   }
-  
+
+  @Get('MusicList')
+  async getMusicList(): Promise<object> {
+    return this.musicService.getMusicList();
+  }
+
   // @Get()
   // @Header('Content-Type', 'audio/mpeg')
   // // @HttpCode(206)

@@ -24,4 +24,8 @@ export class MusicService {
     console.log(this.musics[i]);
     return this.musics[i];
   }
+
+  getMusicList() : Music[] {
+    return this.musics;
+  }
 }
