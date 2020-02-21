@@ -28,4 +28,8 @@ export class MusicService {
   getMusicList() : Music[] {
     return this.musics;
   }
+
+  getMusics() : Music[] {
+    return this.musics.slice(2,4);
+  }
 }

@@ -18,6 +18,11 @@ export class MusicController {
     return this.musicService.getMusicList();
   }
 
+  @Get('Musics')
+  async getMusics(): Promise<object> {
+    return this.musicService.getMusics();
+  }
+
   // @Get()
   // @Header('Content-Type', 'audio/mpeg')
   // // @HttpCode(206)
