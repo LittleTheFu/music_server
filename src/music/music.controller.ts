@@ -8,10 +8,10 @@ export class MusicController {
   constructor(private readonly musicService: MusicService) {
   }
 
-  @Get('nextMusic')
-  async getNextMusic(): Promise<object> {
-    return this.musicService.getNextMusic();
-  }
+  // @Get('nextMusic')
+  // async getNextMusic(): Promise<object> {
+  //   return this.musicService.getNextMusic();
+  // }
 
   @Get('MusicList')
   async getMusicList(): Promise<object> {
