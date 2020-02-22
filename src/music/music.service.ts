@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 // import { Music } from './interfaces/music.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Music } from './entity/music.entity';
+import { Music, MusicCollection } from './entity/music.entity';
 
 
 @Injectable()
@@ -10,8 +10,8 @@ export class MusicService {
   // index: number;
   // private readonly musics: Music[] = [];
   constructor(
-    @InjectRepository(Music)
-    private readonly usersRepository: Repository<Music>){
+    @InjectRepository(MusicCollection)
+    private readonly usersRepository: Repository<MusicCollection>) {
 
     // this.index = 0;
     // this.musics.push({ address: 'http://localhost:9999/music/0.mp3', cover: 'http://localhost:9999/album/0.png', name: 'Honey Bunny My Love', artist: 'SHAKING PINK', album: 'しぇいきんぐ!SHAKING PINK' });
@@ -31,16 +31,25 @@ export class MusicService {
   //   return this.musics[i];
   // }
 
-  getMusicList() : Promise<Music[]> {
-    this.usersRepository.find().then((o)=>console.log(o));
-    // const musics = this.usersRepository.find();
-    // console.log(musics);
-    return this.usersRepository.find();
-    // return this.musics;
+  async getMusicList(): Promise<Music[]> {
+    const collection = await this.usersRepository.findOne({
+      relations: ['musics'],
+      where: { id: 1 }
+    });
+    const musics = collection.musics;
+    // console.log(collection);
+    console.log(musics);
+    return musics;
   }
 
-  getMusics() : Promise<Music[]> {
-    return this.usersRepository.find({ id:2 });
-    // return this.musics.slice(2,4);
+  async getMusics(): Promise<Music[]> {
+    const collection = await this.usersRepository.findOne({
+      relations: ['musics'],
+      where: { id: 2 }
+    });
+    const musics = collection.musics;
+    // console.log(collection);
+    // console.log(musics);
+    return musics;
   }
 }

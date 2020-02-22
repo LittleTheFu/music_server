@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { MusicModule } from './music/music.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-import { Music } from './music/entity/music.entity';
+import { Music, MusicCollection } from './music/entity/music.entity';
 
 
 @Module({
@@ -12,8 +12,9 @@ import { Music } from './music/entity/music.entity';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db',
-      entities: [Music],
+      entities: [Music, MusicCollection],
       synchronize: true,
+      autoLoadEntities: true,
     }),
     MusicModule],
   controllers: [AppController],

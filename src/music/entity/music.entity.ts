@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
 
 @Entity()
 export class Music {
@@ -18,6 +18,18 @@ export class Music {
     artist: string;
 
     @Column()
-    album: string;
-    
+    album: string; 
   }
+
+@Entity()
+export class MusicCollection {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  name: string;
+
+  @ManyToMany(type => Music)
+  @JoinTable()
+  musics: Music[];
+}
