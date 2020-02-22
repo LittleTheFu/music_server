@@ -33,12 +33,14 @@ export class MusicService {
 
   getMusicList() : Promise<Music[]> {
     this.usersRepository.find().then((o)=>console.log(o));
+    // const musics = this.usersRepository.find();
+    // console.log(musics);
     return this.usersRepository.find();
     // return this.musics;
   }
 
   getMusics() : Promise<Music[]> {
-    return this.usersRepository.find();
+    return this.usersRepository.find({ id:2 });
     // return this.musics.slice(2,4);
   }
 }
