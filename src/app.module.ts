@@ -5,6 +5,7 @@ import { MusicModule } from './music/music.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { Music, MusicCollection } from './music/entity/music.entity';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -16,7 +17,8 @@ import { Music, MusicCollection } from './music/entity/music.entity';
       synchronize: true,
       autoLoadEntities: true,
     }),
-    MusicModule],
+    MusicModule,
+    AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
