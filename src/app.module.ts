@@ -5,6 +5,7 @@ import { MusicModule } from './music/music.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { Music, MusicCollection } from './music/entity/music.entity';
+import { User } from './users/entity/user.entity';
 import { AuthModule } from './auth/auth.module';
 
 
@@ -13,7 +14,7 @@ import { AuthModule } from './auth/auth.module';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db',
-      entities: [Music, MusicCollection],
+      entities: [Music, MusicCollection, User],
       synchronize: true,
       autoLoadEntities: true,
     }),
