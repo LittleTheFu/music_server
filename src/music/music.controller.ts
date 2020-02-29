@@ -18,9 +18,9 @@ export class MusicController {
   }
 
   @Post('like')
-  like(@Body() likeMusicDto: LikeMusicDto): string {
+  async like(@Body() likeMusicDto: LikeMusicDto): Promise<object> {
     console.log('like music');
-    console.log(likeMusicDto);
-    return 'like-music';
+    // console.log(likeMusicDto);
+    return this.musicService.likeMusic(likeMusicDto.musicId);
   }
 }

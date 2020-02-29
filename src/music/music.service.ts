@@ -11,7 +11,10 @@ export class MusicService {
   // private readonly musics: Music[] = [];
   constructor(
     @InjectRepository(MusicCollection)
-    private readonly usersRepository: Repository<MusicCollection>) {
+    private readonly MusicCollectionRepository: Repository<MusicCollection>,
+    
+    @InjectRepository(Music)
+    private readonly MusicRepository: Repository<Music>) {
 
     // this.index = 0;
     // this.musics.push({ address: 'http://localhost:9999/music/0.mp3', cover: 'http://localhost:9999/album/0.png', name: 'Honey Bunny My Love', artist: 'SHAKING PINK', album: 'しぇいきんぐ!SHAKING PINK' });
@@ -24,15 +27,8 @@ export class MusicService {
     // this.musics.push({ address: 'http://localhost:9999/music/7.mp3', cover: 'http://localhost:9999/album/7.png', name: 'Thalidomide Chocolat', artist: 'Sound.AVE', album: 'Reliance' });
   }
 
-  // getNextMusic(): Music {
-  //   this.index++;
-  //   const i = this.index%8;
-  //   console.log(this.musics[i]);
-  //   return this.musics[i];
-  // }
-
   async getMusicList(): Promise<Music[]> {
-    const collection = await this.usersRepository.findOne({
+    const collection = await this.MusicCollectionRepository.findOne({
       relations: ['musics'],
       where: { id: 1 }
     });
@@ -44,7 +40,7 @@ export class MusicService {
   }
 
   async getMusics(): Promise<Music[]> {
-    const collection = await this.usersRepository.findOne({
+    const collection = await this.MusicCollectionRepository.findOne({
       relations: ['musics'],
       where: { id: 2 }
     });
@@ -52,5 +48,13 @@ export class MusicService {
     // console.log(collection);
     // console.log(musics);
     return musics;
+  }
+
+  async likeMusic(musicId: number): Promise<Music> {
+    const music = await this.MusicRepository.findOne(musicId);
+    music.like++;
+    return this.MusicRepository.save(music);
+    // console.log(music);
+    // return music;
   }
 }
