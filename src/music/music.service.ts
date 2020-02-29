@@ -37,8 +37,9 @@ export class MusicService {
       where: { id: 1 }
     });
     const musics = collection.musics;
-    // console.log(collection);
-    console.log(musics);
+    console.log(collection);
+    // console.log(musics);
+
     return musics;
   }
 

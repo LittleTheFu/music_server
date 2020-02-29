@@ -19,6 +19,9 @@ export class Music {
 
     @Column()
     album: string; 
+
+    @Column()
+    like: number;
   }
 
 @Entity()
