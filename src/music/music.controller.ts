@@ -23,4 +23,11 @@ export class MusicController {
     // console.log(likeMusicDto);
     return this.musicService.likeMusic(likeMusicDto.musicId);
   }
+
+  @Post('dislike')
+  async dislike(@Body() likeMusicDto: LikeMusicDto): Promise<object> {
+    console.log('dislike music');
+    // console.log(likeMusicDto);
+    return this.musicService.dislikeMusic(likeMusicDto.musicId);
+  }
 }

@@ -54,7 +54,11 @@ export class MusicService {
     const music = await this.MusicRepository.findOne(musicId);
     music.like++;
     return this.MusicRepository.save(music);
-    // console.log(music);
-    // return music;
+  }
+
+  async dislikeMusic(musicId: number): Promise<Music> {
+    const music = await this.MusicRepository.findOne(musicId);
+    music.like--;
+    return this.MusicRepository.save(music);
   }
 }
