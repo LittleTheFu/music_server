@@ -1,28 +1,39 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, AfterLoad } from 'typeorm';
 
 @Entity()
 export class Music {
-    @PrimaryGeneratedColumn()
-    id: number;
+  // constructor() {
+  //   this.pad = 9;
+  // }
 
-    @Column()
-    address: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    cover: string;
+  @Column()
+  address: string;
 
-    @Column()
-    name: string;
+  @Column()
+  cover: string;
 
-    @Column()
-    artist: string;
+  @Column()
+  name: string;
 
-    @Column()
-    album: string; 
+  @Column()
+  artist: string;
 
-    @Column()
-    like: number;
+  @Column()
+  album: string;
+
+  @Column()
+  like: number;
+
+  pad: number;
+
+  @AfterLoad()
+  updateCounters() {
+    this.pad = 100;
   }
+}
 
 @Entity()
 export class MusicCollection {

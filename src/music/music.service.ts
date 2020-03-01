@@ -33,6 +33,7 @@ export class MusicService {
       where: { id: 1 }
     });
     const musics = collection.musics;
+    console.log(musics[0].pad);
     console.log(collection);
     // console.log(musics);
 
@@ -46,7 +47,7 @@ export class MusicService {
     });
     const musics = collection.musics;
     // console.log(collection);
-    // console.log(musics);
+    console.log(musics);
     return musics;
   }
 
