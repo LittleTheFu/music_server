@@ -2,9 +2,9 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, AfterLoa
 
 @Entity()
 export class Music {
-  // constructor() {
-  //   this.pad = 9;
-  // }
+  constructor() {
+    this.likedByCurrentUser = false;
+  }
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -29,14 +29,14 @@ export class Music {
 
   likedByCurrentUser: boolean;
 
-  @AfterLoad()
-  updateCounters() {
-    if( this.id === 1) {
-      this.likedByCurrentUser = true;
-    } else {
-      this.likedByCurrentUser = false;
-    }
-  }
+  // @AfterLoad()
+  // updateCounters() {
+  //   if( this.id === 1) {
+  //     this.likedByCurrentUser = true;
+  //   } else {
+  //     this.likedByCurrentUser = false;
+  //   }
+  // }
 }
 
 @Entity()

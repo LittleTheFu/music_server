@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Music, MusicCollection } from './entity/music.entity';
+import { User } from '../users/entity/user.entity';
 
 
 @Injectable()
@@ -14,7 +15,10 @@ export class MusicService {
     private readonly MusicCollectionRepository: Repository<MusicCollection>,
     
     @InjectRepository(Music)
-    private readonly MusicRepository: Repository<Music>) {
+    private readonly MusicRepository: Repository<Music>,
+    
+    @InjectRepository(User)
+    private readonly UserRepository: Repository<User>) {
 
     // this.index = 0;
     // this.musics.push({ address: 'http://localhost:9999/music/0.mp3', cover: 'http://localhost:9999/album/0.png', name: 'Honey Bunny My Love', artist: 'SHAKING PINK', album: 'しぇいきんぐ!SHAKING PINK' });
@@ -36,6 +40,17 @@ export class MusicService {
     console.log(collection);
     // console.log(musics);
 
+    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: 1}});
+    console.log(user);
+    const likes = user.likes;
+    musics.forEach((m) => {
+      likes.forEach((l) => {
+        if(m.id === l.id) {
+          m.likedByCurrentUser = true;
+        }
+      })
+    });
+
     return musics;
   }
 
@@ -47,18 +62,49 @@ export class MusicService {
     const musics = collection.musics;
     // console.log(collection);
     console.log(musics);
+
+    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: 1}});
+    console.log(user);
+    const likes = user.likes;
+    musics.forEach((m) => {
+      likes.forEach((l) => {
+        if(m.id === l.id) {
+          m.likedByCurrentUser = true;
+        }
+      })
+    });
+
     return musics;
   }
 
   async likeMusic(musicId: number): Promise<Music> {
     const music = await this.MusicRepository.findOne(musicId);
     music.like++;
-    return this.MusicRepository.save(music);
+
+    const retMusic = await this.MusicRepository.save(music);
+    retMusic.likedByCurrentUser = true;
+
+    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: 1}});
+    user.likes.push(retMusic);
+
+    await this.UserRepository.save(user);
+
+    return retMusic;
   }
 
   async dislikeMusic(musicId: number): Promise<Music> {
     const music = await this.MusicRepository.findOne(musicId);
     music.like--;
-    return this.MusicRepository.save(music);
+
+    const retMusic = await this.MusicRepository.save(music);
+    retMusic.likedByCurrentUser = false;
+
+    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: 1}});
+    const newLikes = user.likes.filter((m) => {return m.id !== retMusic.id});
+    user.likes = newLikes;
+
+    await this.UserRepository.save(user);
+
+    return retMusic;
   }
 }
