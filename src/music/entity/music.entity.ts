@@ -27,11 +27,15 @@ export class Music {
   @Column()
   like: number;
 
-  pad: number;
+  likedByCurrentUser: boolean;
 
   @AfterLoad()
   updateCounters() {
-    this.pad = 100;
+    if( this.id === 1) {
+      this.likedByCurrentUser = true;
+    } else {
+      this.likedByCurrentUser = false;
+    }
   }
 }
 

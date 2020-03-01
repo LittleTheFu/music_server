@@ -33,7 +33,6 @@ export class MusicService {
       where: { id: 1 }
     });
     const musics = collection.musics;
-    console.log(musics[0].pad);
     console.log(collection);
     // console.log(musics);
 
