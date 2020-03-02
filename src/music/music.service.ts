@@ -31,7 +31,7 @@ export class MusicService {
     // this.musics.push({ address: 'http://localhost:9999/music/7.mp3', cover: 'http://localhost:9999/album/7.png', name: 'Thalidomide Chocolat', artist: 'Sound.AVE', album: 'Reliance' });
   }
 
-  async getMusicList(): Promise<Music[]> {
+  async getMusicList(userId: number): Promise<Music[]> {
     const collection = await this.MusicCollectionRepository.findOne({
       relations: ['musics'],
       where: { id: 1 }
@@ -40,7 +40,7 @@ export class MusicService {
     console.log(collection);
     // console.log(musics);
 
-    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: 1}});
+    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: userId}});
     console.log(user);
     const likes = user.likes;
     musics.forEach((m) => {
@@ -54,7 +54,7 @@ export class MusicService {
     return musics;
   }
 
-  async getMusics(): Promise<Music[]> {
+  async getMusics(userId: number): Promise<Music[]> {
     const collection = await this.MusicCollectionRepository.findOne({
       relations: ['musics'],
       where: { id: 2 }
@@ -63,7 +63,7 @@ export class MusicService {
     // console.log(collection);
     console.log(musics);
 
-    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: 1}});
+    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: userId}});
     console.log(user);
     const likes = user.likes;
     musics.forEach((m) => {
@@ -77,14 +77,14 @@ export class MusicService {
     return musics;
   }
 
-  async likeMusic(musicId: number): Promise<Music> {
+  async likeMusic(userId: number, musicId: number): Promise<Music> {
     const music = await this.MusicRepository.findOne(musicId);
     music.like++;
 
     const retMusic = await this.MusicRepository.save(music);
     retMusic.likedByCurrentUser = true;
 
-    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: 1}});
+    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: userId}});
     user.likes.push(retMusic);
 
     await this.UserRepository.save(user);
@@ -92,14 +92,14 @@ export class MusicService {
     return retMusic;
   }
 
-  async dislikeMusic(musicId: number): Promise<Music> {
+  async dislikeMusic(userId: number, musicId: number): Promise<Music> {
     const music = await this.MusicRepository.findOne(musicId);
     music.like--;
 
     const retMusic = await this.MusicRepository.save(music);
     retMusic.likedByCurrentUser = false;
 
-    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: 1}});
+    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: userId}});
     const newLikes = user.likes.filter((m) => {return m.id !== retMusic.id});
     user.likes = newLikes;
 
