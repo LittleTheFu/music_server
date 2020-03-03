@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, Unique } from 'typeorm';
 import { Music } from '../../music/entity/music.entity';
 
 @Entity()
+@Unique(['name'])
 export class User {
     @PrimaryGeneratedColumn()
     id: number;

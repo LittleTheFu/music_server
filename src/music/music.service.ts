@@ -89,6 +89,8 @@ export class MusicService {
 
     await this.UserRepository.save(user);
 
+    console.log('like : ' + retMusic.like);
+
     return retMusic;
   }
 
@@ -104,6 +106,8 @@ export class MusicService {
     user.likes = newLikes;
 
     await this.UserRepository.save(user);
+
+    console.log('dislike : ' + retMusic.like);
 
     return retMusic;
   }

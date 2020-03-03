@@ -17,4 +17,10 @@ export class UsersService {
     });
     return user;
   }
+
+  async createOne(username: string, password: string): Promise<User> {
+    const user = await this.usersRepository.create({name: username, password: password});
+    const retUser = await this.usersRepository.save(user);
+    return retUser;
+  }
 }
