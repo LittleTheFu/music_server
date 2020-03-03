@@ -22,6 +22,12 @@ export class MusicController {
     return this.musicService.getMusics(req.user.userId);
   }
 
+  @Get('Collections')
+  async getMusicCollections(): Promise<object> {
+    // console.log('req.user : ' + JSON.stringify(req.user));
+    return this.musicService.getMusicCollections();
+  }
+
   @UseGuards(JwtAuthGuard)
   @Post('like')
   async like(@Request() req, @Body() likeMusicDto: LikeMusicDto): Promise<object> {

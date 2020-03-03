@@ -111,4 +111,9 @@ export class MusicService {
 
     return retMusic;
   }
+
+  async getMusicCollections(): Promise<MusicCollection[]> {
+    const collections = await this.MusicCollectionRepository.find();
+    return collections;
+  }
 }
