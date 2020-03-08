@@ -47,6 +47,9 @@ export class MusicCollection {
   @Column()
   name: string;
 
+  @Column()
+  cover: string;
+
   @ManyToMany(type => Music)
   @JoinTable()
   musics: Music[];
