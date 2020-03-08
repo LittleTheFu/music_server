@@ -31,6 +31,29 @@ export class MusicService {
     // this.musics.push({ address: 'http://localhost:9999/music/7.mp3', cover: 'http://localhost:9999/album/7.png', name: 'Thalidomide Chocolat', artist: 'Sound.AVE', album: 'Reliance' });
   }
 
+  async getMusicListByCollectionName(userId: number, name: string): Promise<Music[]> {
+    const collection = await this.MusicCollectionRepository.findOne({
+      relations: ['musics'],
+      where: { name: name }
+    });
+    const musics = collection.musics;
+    console.log(collection);
+    // console.log(musics);
+
+    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: userId}});
+    console.log(user);
+    const likes = user.likes;
+    musics.forEach((m) => {
+      likes.forEach((l) => {
+        if(m.id === l.id) {
+          m.likedByCurrentUser = true;
+        }
+      })
+    });
+
+    return musics;
+  }
+
   async getMusicList(userId: number): Promise<Music[]> {
     const collection = await this.MusicCollectionRepository.findOne({
       relations: ['musics'],
