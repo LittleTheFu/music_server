@@ -1,11 +1,20 @@
 import { Controller, Get, Post, Request, Body, UseGuards } from '@nestjs/common';
 import { MusicService } from './music.service';
-import { LikeMusicDto, GetMusicByCollectionNameDto } from './dto/music.dto';
+import { LikeMusicDto, GetMusicByCollectionNameDto, GetMusicByKeywordDto } from './dto/music.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('music')
 export class MusicController {
   constructor(private readonly musicService: MusicService) {
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('GetMusicsByKeyword')
+  async getMusicsByKeyword(@Request() req, @Body() getMusicByKeywordDto: GetMusicByKeywordDto): Promise<object> {
+    // console.log('req.user : ' + JSON.stringify(req.user));
+    // console.log('req.header : ' + JSON.stringify(req.body));
+    const keyword = getMusicByKeywordDto.keyword;
+    return this.musicService.getMusicsByKeyword(req.user.userId, keyword);
   }
 
   @UseGuards(JwtAuthGuard)

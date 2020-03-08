@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 // import { Music } from './interfaces/music.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { Music, MusicCollection } from './entity/music.entity';
 import { User } from '../users/entity/user.entity';
 
@@ -29,6 +29,23 @@ export class MusicService {
     // this.musics.push({ address: 'http://localhost:9999/music/5.mp3', cover: 'http://localhost:9999/album/5.png', name: 'Bubbles', artist: 'SnowFlakez!', album: 'Bubbles' });
     // this.musics.push({ address: 'http://localhost:9999/music/6.mp3', cover: 'http://localhost:9999/album/6.png', name: 'Grayedout-Antifront- (Soleily Remix)', artist: 'Soleily', album: 'ANTiFRONT GEARS' });
     // this.musics.push({ address: 'http://localhost:9999/music/7.mp3', cover: 'http://localhost:9999/album/7.png', name: 'Thalidomide Chocolat', artist: 'Sound.AVE', album: 'Reliance' });
+  }
+
+  async getMusicsByKeyword(userId: number, keyword: string): Promise<Music[]> {
+    const musics =  await this.MusicRepository.find({ name: Like('%' + keyword + '%') });
+
+    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: userId}});
+    console.log(user);
+    const likes = user.likes;
+    musics.forEach((m) => {
+      likes.forEach((l) => {
+        if(m.id === l.id) {
+          m.likedByCurrentUser = true;
+        }
+      })
+    });
+    
+    return musics;
   }
 
   async getMusicListByCollectionName(userId: number, name: string): Promise<Music[]> {

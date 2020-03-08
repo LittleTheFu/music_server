@@ -5,3 +5,7 @@ export class LikeMusicDto {
 export class GetMusicByCollectionNameDto {
     name: string;
 }
+
+export class GetMusicByKeywordDto {
+    keyword: string;
+}
