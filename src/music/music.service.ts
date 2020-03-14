@@ -158,4 +158,15 @@ export class MusicService {
     const collections = privateCollections.concat(publicCollections);
     return collections;
   }
+
+  async addMusicToPersonalCollection(username: string, musicId: number): Promise<Music[]> {
+    const privateCollectionName = 'privateCollection_' + username;
+    const privateCollection = await this.MusicCollectionRepository.findOne( { relations: ['musics'], where: { name: privateCollectionName } });
+    const music = await this.MusicRepository.findOne( {id: musicId} );
+    console.log('private_collection : ' + privateCollection.id + '  ' + privateCollection.name);
+    console.log('musics : ...' + privateCollection.musics);
+    privateCollection.musics = privateCollection.musics.concat(music);
+    await this.MusicCollectionRepository.save(privateCollection);
+    return privateCollection.musics;
+  }
 }
