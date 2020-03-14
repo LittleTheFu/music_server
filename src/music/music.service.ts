@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 // import { Music } from './interfaces/music.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
+import { Repository, Like, Not } from 'typeorm';
 import { Music, MusicCollection } from './entity/music.entity';
 import { User } from '../users/entity/user.entity';
-
 
 @Injectable()
 export class MusicService {
@@ -44,7 +43,7 @@ export class MusicService {
         }
       })
     });
-    
+
     return musics;
   }
 
@@ -152,8 +151,11 @@ export class MusicService {
     return retMusic;
   }
 
-  async getMusicCollections(): Promise<MusicCollection[]> {
-    const collections = await this.MusicCollectionRepository.find();
+  async getMusicCollections(username: string): Promise<MusicCollection[]> {
+    const privateCollectionName = 'privateCollection_' + username;
+    const privateCollections = await this.MusicCollectionRepository.find( {name: privateCollectionName});
+    const publicCollections = await this.MusicCollectionRepository.find( {name: Not(Like('%' + 'privateCollection_' + '%'))});
+    const collections = privateCollections.concat(publicCollections);
     return collections;
   }
 }

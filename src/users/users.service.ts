@@ -29,7 +29,7 @@ export class UsersService {
     user.password = password;
 
     const collection = new MusicCollection();
-    collection.name = username;
+    collection.name = 'privateCollection_' + username;
     collection.cover = 'http://localhost:9999/album/1.png';
 
     user.playlist = collection;

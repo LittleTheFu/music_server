@@ -43,10 +43,11 @@ export class MusicController {
     return this.musicService.getMusics(req.user.userId);
   }
 
-  @Get('Collections')
-  async getMusicCollections(): Promise<object> {
+  @UseGuards(JwtAuthGuard)
+  @Post('Collections')
+  async getMusicCollections(@Request() req): Promise<object> {
     // console.log('req.user : ' + JSON.stringify(req.user));
-    return this.musicService.getMusicCollections();
+    return this.musicService.getMusicCollections(req.user.username);
   }
 
   @UseGuards(JwtAuthGuard)
