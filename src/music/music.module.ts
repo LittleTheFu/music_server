@@ -11,5 +11,6 @@ import { AuthModule } from '../auth/auth.module';
   imports: [UsersModule, TypeOrmModule.forFeature([Music, MusicCollection, User]) ],
   controllers: [MusicController],
   providers: [MusicService],
+  exports: [MusicService]
 })
 export class MusicModule {}

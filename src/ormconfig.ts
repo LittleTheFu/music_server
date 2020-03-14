@@ -1,5 +1,5 @@
 import {ConnectionOptions} from 'typeorm';
-
+import { Music } from '../src/music/entity/music.entity';
 // You can load you .env file here synchronously using dotenv package (not installed here),
 // import * as dotenv from 'dotenv';
 // import * as fs from 'fs';
@@ -16,7 +16,10 @@ const config: ConnectionOptions = {
   entities: [__dirname + '/**/*.entity{.ts,.js}'],
 
   // We are using migrations, synchronize should be set to false.
-  synchronize: false,
+//   synchronize: false,
+
+    synchronize: true,
+
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.
