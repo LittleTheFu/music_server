@@ -12,10 +12,10 @@ export class MusicService {
   constructor(
     @InjectRepository(MusicCollection)
     private readonly MusicCollectionRepository: Repository<MusicCollection>,
-    
+
     @InjectRepository(Music)
     private readonly MusicRepository: Repository<Music>,
-    
+
     @InjectRepository(User)
     private readonly UserRepository: Repository<User>) {
 
@@ -31,14 +31,14 @@ export class MusicService {
   }
 
   async getMusicsByKeyword(userId: number, keyword: string): Promise<Music[]> {
-    const musics =  await this.MusicRepository.find({ name: Like('%' + keyword + '%') });
+    const musics = await this.MusicRepository.find({ name: Like('%' + keyword + '%') });
 
-    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: userId}});
+    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
     console.log(user);
     const likes = user.likes;
     musics.forEach((m) => {
       likes.forEach((l) => {
-        if(m.id === l.id) {
+        if (m.id === l.id) {
           m.likedByCurrentUser = true;
         }
       })
@@ -56,12 +56,12 @@ export class MusicService {
     console.log(collection);
     // console.log(musics);
 
-    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: userId}});
+    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
     console.log(user);
     const likes = user.likes;
     musics.forEach((m) => {
       likes.forEach((l) => {
-        if(m.id === l.id) {
+        if (m.id === l.id) {
           m.likedByCurrentUser = true;
         }
       })
@@ -72,7 +72,7 @@ export class MusicService {
 
   async getPlayListMusicList(userId: number, username: string): Promise<Music[]> {
     const privateCollectionName = 'privateCollection_' + username;
-    const collection = await this.MusicCollectionRepository.findOne( { relations: ['musics'], where: { name: privateCollectionName } });
+    const collection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { name: privateCollectionName } });
 
     // const collection = await this.MusicCollectionRepository.findOne({
     //   relations: ['musics'],
@@ -82,12 +82,12 @@ export class MusicService {
     console.log(collection);
     // console.log(musics);
 
-    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: userId}});
+    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
     console.log(user);
     const likes = user.likes;
     musics.forEach((m) => {
       likes.forEach((l) => {
-        if(m.id === l.id) {
+        if (m.id === l.id) {
           m.likedByCurrentUser = true;
         }
       })
@@ -105,12 +105,12 @@ export class MusicService {
     // console.log(collection);
     console.log(musics);
 
-    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: userId}});
+    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
     console.log(user);
     const likes = user.likes;
     musics.forEach((m) => {
       likes.forEach((l) => {
-        if(m.id === l.id) {
+        if (m.id === l.id) {
           m.likedByCurrentUser = true;
         }
       })
@@ -126,7 +126,7 @@ export class MusicService {
     const retMusic = await this.MusicRepository.save(music);
     retMusic.likedByCurrentUser = true;
 
-    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: userId}});
+    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
     user.likes.push(retMusic);
 
     await this.UserRepository.save(user);
@@ -143,8 +143,8 @@ export class MusicService {
     const retMusic = await this.MusicRepository.save(music);
     retMusic.likedByCurrentUser = false;
 
-    const user = await this.UserRepository.findOne({relations: ['likes'], where: { id: userId}});
-    const newLikes = user.likes.filter((m) => {return m.id !== retMusic.id});
+    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
+    const newLikes = user.likes.filter((m) => { return m.id !== retMusic.id });
     user.likes = newLikes;
 
     await this.UserRepository.save(user);
@@ -156,17 +156,17 @@ export class MusicService {
 
   async getMusicCollections(username: string): Promise<MusicCollection[]> {
     const privateCollectionName = 'privateCollection_' + username;
-    const privateCollections = await this.MusicCollectionRepository.find( {name: privateCollectionName});
-    const publicCollections = await this.MusicCollectionRepository.find( {name: Not(Like('%' + 'privateCollection_' + '%'))});
+    const privateCollections = await this.MusicCollectionRepository.find({ name: privateCollectionName });
+    const publicCollections = await this.MusicCollectionRepository.find({ name: Not(Like('%' + 'privateCollection_' + '%')) });
     const collections = privateCollections.concat(publicCollections);
     return collections;
   }
 
   async addMusicToPersonalCollection(username: string, musicId: number): Promise<Music[]> {
     const privateCollectionName = 'privateCollection_' + username;
-    const privateCollection = await this.MusicCollectionRepository.findOne( { relations: ['musics'], where: { name: privateCollectionName } });
+    const privateCollection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { name: privateCollectionName } });
 
-    const music = await this.MusicRepository.findOne( {id: musicId} );
+    const music = await this.MusicRepository.findOne({ id: musicId });
 
     console.log('private_collection : ' + privateCollection.id + '  ' + privateCollection.name);
     console.log('musics : ...' + privateCollection.musics);
@@ -187,7 +187,7 @@ export class MusicService {
     console.log('musics : ...' + privateCollection.musics);
     console.log('remove....id : ' + musicId);
 
-    privateCollection.musics = privateCollection.musics.filter(m => { return ( m.id != musicId ); });
+    privateCollection.musics = privateCollection.musics.filter(m => { return (m.id != musicId); });
 
     await this.MusicCollectionRepository.save(privateCollection);
     return privateCollection.musics;
