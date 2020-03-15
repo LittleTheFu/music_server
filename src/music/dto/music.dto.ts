@@ -2,7 +2,7 @@ export class LikeMusicDto {
     musicId: number;
 }
 
-export class AddMusicDto {
+export class PersonalListMusicDto {
     musicId: number;
 }
 
