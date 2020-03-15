@@ -18,11 +18,11 @@ export class MusicController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('MusicList')
-  async getMusicList(@Request() req): Promise<object> {
+  @Get('PlayListMusicList')
+  async getPlayListMusicList(@Request() req): Promise<object> {
     // console.log('req.user : ' + JSON.stringify(req.user));
     console.log('req.header : ' + JSON.stringify(req.body));
-    return this.musicService.getMusicList(req.user.userId);
+    return this.musicService.getPlayListMusicList(req.user.userId, req.user.username);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -70,11 +70,14 @@ export class MusicService {
     return musics;
   }
 
-  async getMusicList(userId: number): Promise<Music[]> {
-    const collection = await this.MusicCollectionRepository.findOne({
-      relations: ['musics'],
-      where: { id: 1 }
-    });
+  async getPlayListMusicList(userId: number, username: string): Promise<Music[]> {
+    const privateCollectionName = 'privateCollection_' + username;
+    const collection = await this.MusicCollectionRepository.findOne( { relations: ['musics'], where: { name: privateCollectionName } });
+
+    // const collection = await this.MusicCollectionRepository.findOne({
+    //   relations: ['musics'],
+    //   where: { id: 1 }
+    // });
     const musics = collection.musics;
     console.log(collection);
     // console.log(musics);
