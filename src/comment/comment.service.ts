@@ -12,6 +12,9 @@ export class CommentService {
     }
 
     async getMusicComments(musicId: number): Promise<Comment[]> {
-        return this.CommentRepository.find();
+        // return this.CommentRepository.find({relations: ['music'], where: { music.id === musicId }});
+        return this.CommentRepository.createQueryBuilder('comment')
+                                    .innerJoin('comment.music', 'music')
+                                    .where('comment.music.id = :id', { id: musicId }).getMany();
     }
 }
