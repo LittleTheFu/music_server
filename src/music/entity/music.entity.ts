@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, AfterLoad } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable,  OneToMany } from 'typeorm';
+import { Comment } from '../../comment/entity/comment.entity';
 
 @Entity()
 export class Music {
@@ -29,6 +30,8 @@ export class Music {
 
   likedByCurrentUser: boolean;
 
+  @OneToMany(type => Comment, comment => comment.music)
+  comments: Comment[];
   // @AfterLoad()
   // updateCounters() {
   //   if( this.id === 1) {
