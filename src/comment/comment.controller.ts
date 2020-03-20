@@ -14,5 +14,12 @@ export class CommentController {
   async getMusicComments(@Request() req, @Body() getMusicCommentsDto: GetMusicCommentsDto): Promise<Comment[]> {
       return this.musicService.getMusicComments(getMusicCommentsDto.musicId);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('PostMusicComments')
+  async postMusicComments(@Request() req, @Body() getMusicCommentsDto: GetMusicCommentsDto): Promise<Comment[]> {
+      console.log('postMusicComments : music: ' + getMusicCommentsDto.musicId + '__ user:' + req.user.userId)
+      return this.musicService.postMusicComments(getMusicCommentsDto.musicId, req.user.userId, getMusicCommentsDto.content);
+  }
 }
 
