@@ -23,5 +23,5 @@ export class RetComment {
 
     content: string;
 
-    userName: string;
+    username: string;
 }

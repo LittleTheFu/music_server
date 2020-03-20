@@ -33,7 +33,7 @@ export class CommentService {
         const retComments = comments.map((c: Comment) => {
             const rc = new RetComment();
             rc.content = c.content;
-            rc.userName = c.user.name;
+            rc.username = c.user.name;
             rc.id = c.id;
             return rc;
         })
@@ -61,15 +61,18 @@ export class CommentService {
 
         const comments = await this.CommentRepository.createQueryBuilder('comment')
             .innerJoin('comment.music', 'music')
+            .innerJoinAndSelect('comment.user', 'user')
             .where('comment.music.id = :id', { id: musicId }).getMany();
 
         const retComments = comments.map((c: Comment) => {
             const rc = new RetComment();
             rc.content = c.content;
-            rc.userName = c.user.name;
+            rc.username = c.user.name;
             rc.id = c.id;
             return rc;
         })
+
+        console.log(retComments);
 
         return retComments;
     }
