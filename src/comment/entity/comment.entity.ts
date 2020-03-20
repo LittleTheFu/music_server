@@ -17,3 +17,11 @@ export class Comment {
   @ManyToOne(type => User, user=>user.comments)
   user: User;
 }
+
+export class RetComment {
+    id: number;
+
+    content: string;
+
+    userName: string;
+}
