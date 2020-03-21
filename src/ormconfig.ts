@@ -19,7 +19,7 @@ const config: ConnectionOptions = {
 //   synchronize: false,
 
     synchronize: true,
-
+ 
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.

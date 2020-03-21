@@ -12,7 +12,6 @@ export class Music {
 
   @Column()
   address: string;
-
   @Column()
   cover: string;
 

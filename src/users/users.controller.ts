@@ -8,6 +8,7 @@ export class UsersController {
     @Post('register')
     async register(@Body() regUser: RegUserDto): Promise<object> {
         this.usersService.createOne(regUser.username, regUser.password);
+        console.log('CREATE ONE USER');
         console.log(regUser);
         return {msg: 'successs'};
     }

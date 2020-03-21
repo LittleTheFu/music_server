@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersController } from './users.controller';
 import { MusicModule } from '../music/music.module';
 import { MusicCollection } from '../music/entity/music.entity';
+import { Profile } from '../profile/entity/profile.entity';
 
 @Module({
-  imports: [forwardRef(()=>MusicModule), TypeOrmModule.forFeature([User, MusicCollection])],
+  imports: [forwardRef(()=>MusicModule), TypeOrmModule.forFeature([User, MusicCollection, Profile])],
   controllers: [UsersController],
   providers: [UsersService],
   exports: [UsersService],

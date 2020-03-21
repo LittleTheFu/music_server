@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MusicModule } from './music/music.module';
 import { CommentModule } from './comment/comment.module';
+import { ProfileModule } from './profile/profile.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 // import { Music, MusicCollection } from './music/entity/music.entity';
@@ -22,6 +23,7 @@ export function DatabaseOrmModule(): DynamicModule {
     TypeOrmModule.forRoot(ormconfig),
     MusicModule,
     CommentModule,
+    ProfileModule,
     AuthModule],
   controllers: [AppController],
   providers: [AppService],
