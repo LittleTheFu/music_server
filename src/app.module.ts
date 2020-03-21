@@ -6,9 +6,8 @@ import { CommentModule } from './comment/comment.module';
 import { ProfileModule } from './profile/profile.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-// import { Music, MusicCollection } from './music/entity/music.entity';
-// import { User } from './users/entity/user.entity';
 import { AuthModule } from './auth/auth.module';
+import { MulterModule } from '@nestjs/platform-express';
 import * as ormconfig from './ormconfig';
 
 export function DatabaseOrmModule(): DynamicModule {
@@ -17,10 +16,17 @@ export function DatabaseOrmModule(): DynamicModule {
   console.log('DYNAMIC ORM CONFIG');
   return TypeOrmModule.forRoot(ormconfig);
 }
+
+// MulterModule.register({
+//   dest: '/upload',
+// });
  
 @Module({
   imports: [
     TypeOrmModule.forRoot(ormconfig),
+    MulterModule.register({
+      dest: __dirname + '../../public/album',
+    }),
     MusicModule,
     CommentModule,
     ProfileModule,
