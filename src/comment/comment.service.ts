@@ -25,6 +25,7 @@ export class CommentService {
         const comments = await this.CommentRepository.createQueryBuilder('comment')
             .innerJoin('comment.music', 'music')
             .innerJoinAndSelect('comment.user', 'user')
+            .innerJoinAndSelect('user.profile', 'pofile')
             .where('comment.music.id = :id', { id: musicId })
             .getMany();
 
@@ -35,10 +36,11 @@ export class CommentService {
             rc.content = c.content;
             rc.username = c.user.name;
             rc.id = c.id;
+            rc.avatar = c.user.profile.avatarUrl;
             return rc;
         })
 
-        console.log(retComments);
+        // console.log(retComments);
 
         return retComments;
     }
@@ -62,17 +64,21 @@ export class CommentService {
         const comments = await this.CommentRepository.createQueryBuilder('comment')
             .innerJoin('comment.music', 'music')
             .innerJoinAndSelect('comment.user', 'user')
+            .innerJoinAndSelect('user.profile', 'pofile')
             .where('comment.music.id = :id', { id: musicId }).getMany();
+
+        // console.log(comments);
 
         const retComments = comments.map((c: Comment) => {
             const rc = new RetComment();
             rc.content = c.content;
             rc.username = c.user.name;
             rc.id = c.id;
+            rc.avatar = c.user.profile.avatarUrl;
             return rc;
         })
 
-        console.log(retComments);
+        // console.log(retComments);
 
         return retComments;
     }

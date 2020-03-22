@@ -24,4 +24,6 @@ export class RetComment {
     content: string;
 
     username: string;
+
+    avatar: string;
 }
