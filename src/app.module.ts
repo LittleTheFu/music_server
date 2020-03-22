@@ -7,7 +7,6 @@ import { ProfileModule } from './profile/profile.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { AuthModule } from './auth/auth.module';
-import { MulterModule } from '@nestjs/platform-express';
 import * as ormconfig from './ormconfig';
 
 export function DatabaseOrmModule(): DynamicModule {
@@ -24,9 +23,6 @@ export function DatabaseOrmModule(): DynamicModule {
 @Module({
   imports: [
     TypeOrmModule.forRoot(ormconfig),
-    MulterModule.register({
-      dest: __dirname + '../../public/album',
-    }),
     MusicModule,
     CommentModule,
     ProfileModule,

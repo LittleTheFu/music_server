@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Request, Body, UseGuards, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 import { ProfileDto } from './dto/profile.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Profile } from './entity/profile.entity';
@@ -21,13 +22,19 @@ export class ProfileController {
     return this.musicService.getProfileByName(profileDto.username);
   }
 
-  
+  @UseGuards(JwtAuthGuard)
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file) {
+  @UseInterceptors(FileInterceptor('avatar'))
+  async uploadFile(@UploadedFile() file, @Request() req) {
     console.log('UPLOAD');
     console.log(file);
+    console.log(req.user);
+    // console.log(req);
 
-    return 'goood';
+    const url = await this.musicService.setProfileAvatar(req.user.username,file.filename);
+    const response = {
+      remoteUrl: url,
+    };
+    return response;
   }
 }

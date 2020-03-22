@@ -7,11 +7,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/entity/user.entity';
 import { Profile } from './entity/profile.entity';
 // import { AuthModule } from '../auth/auth.module';
+import { MulterModule } from '@nestjs/platform-express';
+
+// MulterModule.register({
+//     dest: __dirname + '../../public/album',
+//   }),
 
 @Module({
-  imports: [ TypeOrmModule.forFeature([Profile, User]) ],
-  controllers: [ProfileController],
-  providers: [ProfileService],
-//   exports: [MusicService]
+    imports: [MulterModule.register({
+        dest: './public/avatar',
+    }), TypeOrmModule.forFeature([Profile, User])],
+    controllers: [ProfileController],
+    providers: [ProfileService],
+    //   exports: [MusicService]
 })
-export class ProfileModule {}
+export class ProfileModule { }
