@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, Unique, 
 import { Music, MusicCollection } from '../../music/entity/music.entity';
 import { Comment } from '../../comment/entity/comment.entity';
 import { Profile } from '../../profile/entity/profile.entity';
+import { Mail } from '../../mail/entity/mail.entity';
 
 @Entity()
 @Unique(['name'])
@@ -29,4 +30,10 @@ export class User {
 
     @OneToMany(type => Comment, comment => comment.user)
     comments: Comment[];
+
+    @OneToMany(type => Mail, mail => mail.from)
+    sendMails: Mail[];
+
+    @OneToMany(type => Mail, mail => mail.to)
+    receiveMails: Comment[];
   }
