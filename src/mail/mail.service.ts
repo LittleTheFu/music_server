@@ -15,6 +15,35 @@ export class MailService {
 
     }
 
+    async deleteMail(userId: number, mailId: number): Promise<RetMail[]> {
+        console.log('mail : ' + mailId);
+        await this.MailRepository
+            .createQueryBuilder()
+            .delete()
+            .from(Mail)
+            .where("id = :id", { id: mailId })
+            .execute();
+
+        const mails = await this.MailRepository
+            .createQueryBuilder('mail')
+            .innerJoinAndSelect('mail.to', 'user')
+            .where('user.id = :id', { id: userId })
+            .getMany();
+
+
+        const retMails = mails.map((m) => {
+            const r = new RetMail();
+            r.content = m.content;
+            r.fromName = 'from';
+            r.toName = 'to';
+            r.id = m.id;
+
+            return r;
+        })
+
+        return retMails;
+    }
+
     async getMails(userId: number): Promise<RetMail[]> {
         const mails = await this.MailRepository
             .createQueryBuilder('mail')
@@ -23,7 +52,7 @@ export class MailService {
             .getMany();
 
 
-        const retMails = mails.map((m)=>{
+        const retMails = mails.map((m) => {
             const r = new RetMail();
             r.content = m.content;
             r.fromName = 'from';

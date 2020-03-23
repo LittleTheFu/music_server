@@ -1,5 +1,3 @@
-export class GetMusicCommentsDto {
-    fromUserId: number;
-    content: string;
-    toUserName: string;
+export class DeleteMailDto {
+    mailId: number;
 }
