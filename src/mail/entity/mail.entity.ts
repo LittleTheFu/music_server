@@ -18,9 +18,11 @@ export class Mail {
 }
  
 export class RetMail {
+    id: number;
+
     content: string;
 
     fromName: string;
-    
+
     toName: string;
 }

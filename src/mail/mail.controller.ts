@@ -10,7 +10,7 @@ export class MailController {
 
     @UseGuards(JwtAuthGuard)
     @Post('GetMails')
-    async getMails(): Promise<RetMail[]> {
-        return this.mailService.getMails(3);
+    async getMails(@Request() req): Promise<RetMail[]> {
+        return this.mailService.getMails(req.user.userId);
     }
 }
