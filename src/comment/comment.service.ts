@@ -37,6 +37,7 @@ export class CommentService {
             rc.username = c.user.name;
             rc.id = c.id;
             rc.avatar = c.user.profile.avatarUrl;
+            rc.userId = c.user.id;
             return rc;
         })
 
@@ -75,6 +76,7 @@ export class CommentService {
             rc.username = c.user.name;
             rc.id = c.id;
             rc.avatar = c.user.profile.avatarUrl;
+            rc.userId = c.user.id;
             return rc;
         })
 

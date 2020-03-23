@@ -2,7 +2,7 @@ import { Controller, Get, Post, Request, Body, UseGuards } from '@nestjs/common'
 import { MailService } from './mail.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RetMail } from './entity/mail.entity';
-import { DeleteMailDto } from './dto/mail.dto';
+import { DeleteMailDto, SendMailDto } from './dto/mail.dto';
 
 @Controller('mail')
 export class MailController {
@@ -20,5 +20,11 @@ export class MailController {
     async deleteMail(@Request() req, @Body() deleteMailDto: DeleteMailDto): Promise<RetMail[]> {
         console.log(deleteMailDto);
         return this.mailService.deleteMail(req.user.userId, deleteMailDto.mailId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('SendMail')
+    async sendMail(@Request() req, @Body() sendMailDto: SendMailDto): Promise<object> {
+        return this.mailService.sendMail(req.user.userId, sendMailDto.toId, sendMailDto.content)
     }
 }

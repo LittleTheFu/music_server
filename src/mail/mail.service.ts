@@ -15,6 +15,21 @@ export class MailService {
 
     }
 
+    async sendMail(fromId: number, toId: number, content: string): Promise<object> {
+        const mail = new Mail();
+        mail.content = 'content';
+
+        const fromUser = await this.userRepository.findOne({id: fromId});
+        const toUser = await this.userRepository.findOne({id: toId});
+
+        mail.from = fromUser;
+        mail.to = toUser;
+
+        await this.MailRepository.save(mail);
+
+        return {msg:'ok'};
+    }
+
     async deleteMail(userId: number, mailId: number): Promise<RetMail[]> {
         console.log('mail : ' + mailId);
         await this.MailRepository
@@ -27,15 +42,15 @@ export class MailService {
         const mails = await this.MailRepository
             .createQueryBuilder('mail')
             .innerJoinAndSelect('mail.to', 'user')
+            .innerJoinAndSelect('mail.from', 'tuser')
             .where('user.id = :id', { id: userId })
             .getMany();
-
 
         const retMails = mails.map((m) => {
             const r = new RetMail();
             r.content = m.content;
-            r.fromName = 'from';
-            r.toName = 'to';
+            r.fromName = m.from.name;
+            r.toName = m.to.name;
             r.id = m.id;
 
             return r;
@@ -48,6 +63,7 @@ export class MailService {
         const mails = await this.MailRepository
             .createQueryBuilder('mail')
             .innerJoinAndSelect('mail.to', 'user')
+            .innerJoinAndSelect('mail.from', 'tuser')
             .where('user.id = :id', { id: userId })
             .getMany();
 
@@ -55,8 +71,8 @@ export class MailService {
         const retMails = mails.map((m) => {
             const r = new RetMail();
             r.content = m.content;
-            r.fromName = 'from';
-            r.toName = 'to';
+            r.fromName = m.from.name;
+            r.toName = m.to.name;
             r.id = m.id;
 
             return r;

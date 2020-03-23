@@ -26,4 +26,6 @@ export class RetComment {
     username: string;
 
     avatar: string;
+
+    userId: number;
 }
