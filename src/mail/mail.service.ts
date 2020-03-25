@@ -17,7 +17,7 @@ export class MailService {
 
     async sendMail(fromId: number, toId: number, content: string): Promise<object> {
         const mail = new Mail();
-        mail.content = 'content';
+        mail.content = content;
 
         const fromUser = await this.userRepository.findOne({id: fromId});
         const toUser = await this.userRepository.findOne({id: toId});
