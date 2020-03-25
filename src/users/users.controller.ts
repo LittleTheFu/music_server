@@ -2,6 +2,7 @@ import { Controller, Get, Post, Request, Body, UseGuards } from '@nestjs/common'
 import { UsersService } from './users.service';
 import { RegUserDto, DetailUserDto } from './dto/user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RetUserDetail } from './entity/user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -15,7 +16,7 @@ export class UsersController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Post('detail')async detail(@Body() detailUserDto: DetailUserDto): Promise<object> {
+    @Post('detail')async detail(@Body() detailUserDto: DetailUserDto): Promise<RetUserDetail> {
         return this.usersService.getUserDetail(detailUserDto.userId);
         // console.log('CREATE ONE USER');
         // return {msg: 'detail'};

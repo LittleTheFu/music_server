@@ -37,3 +37,8 @@ export class User {
     @OneToMany(type => Mail, mail => mail.to)
     receiveMails: Comment[];
   }
+
+  export class RetUserDetail {
+    name: string;
+    avatarUrl: string;
+  }

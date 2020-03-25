@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './entity/user.entity';
+import { User,RetUserDetail } from './entity/user.entity';
 import { MusicCollection } from '../music/entity/music.entity';
 import { Profile } from '../profile/entity/profile.entity';
 
@@ -46,7 +46,7 @@ export class UsersService {
     return retUser;
   }
 
-  async getUserDetail(userId: number): Promise<User> {
+  async getUserDetail(userId: number): Promise<RetUserDetail> {
     // const user = await this.usersRepository.findOne({name: username});
     const user = await this.usersRepository.createQueryBuilder('user')
             // .leftJoinAndSelect('user.likes', 'music')
@@ -58,8 +58,14 @@ export class UsersService {
             .where('user.id = :id', {id: userId})
             .getOne();
 
+            
     console.log('GET USER DETAIL: ');
     console.log(user);
-    return user;
+
+    const retUser = new RetUserDetail();
+    retUser.name = user.name;
+    retUser.avatarUrl = user.profile.avatarUrl;
+
+    return retUser;
   }
 }
