@@ -4,5 +4,6 @@ export class RegUserDto {
 }
 
 export class DetailUserDto {
-    username: string;
+    // username: string;
+    userId: number;
 }

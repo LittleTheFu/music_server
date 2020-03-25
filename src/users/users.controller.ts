@@ -16,7 +16,7 @@ export class UsersController {
 
     @UseGuards(JwtAuthGuard)
     @Post('detail')async detail(@Body() detailUserDto: DetailUserDto): Promise<object> {
-        return this.usersService.getUserDetail(detailUserDto.username);
+        return this.usersService.getUserDetail(detailUserDto.userId);
         // console.log('CREATE ONE USER');
         // return {msg: 'detail'};
     }

@@ -46,16 +46,16 @@ export class UsersService {
     return retUser;
   }
 
-  async getUserDetail(username: string): Promise<User> {
+  async getUserDetail(userId: number): Promise<User> {
     // const user = await this.usersRepository.findOne({name: username});
     const user = await this.usersRepository.createQueryBuilder('user')
-            .leftJoinAndSelect('user.likes', 'music')
-            .leftJoinAndSelect('user.playlist', 'music_collection')
+            // .leftJoinAndSelect('user.likes', 'music')
+            // .leftJoinAndSelect('user.playlist', 'music_collection')
             .leftJoinAndSelect('user.profile', 'profile')
-            .leftJoinAndSelect('user.comments', 'comment')
-            .leftJoinAndSelect('user.sendMails', 'smail')
-            .leftJoinAndSelect('user.receiveMails', 'rmail')
-            .where('user.name = :name', {name: username})
+            // .leftJoinAndSelect('user.comments', 'comment')
+            // .leftJoinAndSelect('user.sendMails', 'smail')
+            // .leftJoinAndSelect('user.receiveMails', 'rmail')
+            .where('user.id = :id', {id: userId})
             .getOne();
 
     console.log('GET USER DETAIL: ');
