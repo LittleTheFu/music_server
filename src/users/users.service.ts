@@ -45,4 +45,21 @@ export class UsersService {
     const retUser = await this.usersRepository.save(user);
     return retUser;
   }
+
+  async getUserDetail(username: string): Promise<User> {
+    // const user = await this.usersRepository.findOne({name: username});
+    const user = await this.usersRepository.createQueryBuilder('user')
+            .leftJoinAndSelect('user.likes', 'music')
+            .leftJoinAndSelect('user.playlist', 'music_collection')
+            .leftJoinAndSelect('user.profile', 'profile')
+            .leftJoinAndSelect('user.comments', 'comment')
+            .leftJoinAndSelect('user.sendMails', 'smail')
+            .leftJoinAndSelect('user.receiveMails', 'rmail')
+            .where('user.name = :name', {name: username})
+            .getOne();
+
+    console.log('GET USER DETAIL: ');
+    console.log(user);
+    return user;
+  }
 }
