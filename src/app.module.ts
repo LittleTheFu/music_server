@@ -1,4 +1,4 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MusicModule } from './music/music.module';
@@ -10,12 +10,10 @@ import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import * as ormconfig from './ormconfig';
 
-export function DatabaseOrmModule(): DynamicModule {
-  // we could load the configuration from dotEnv here,
-  // but typeORM cli would not be able to find the configuration file.
-  console.log('DYNAMIC ORM CONFIG');
-  return TypeOrmModule.forRoot(ormconfig);
-}
+// export function DatabaseOrmModule(): DynamicModule {
+//   console.log('DYNAMIC ORM CONFIG');
+//   return TypeOrmModule.forRoot(ormconfig);
+// }
 
 // MulterModule.register({
 //   dest: '/upload',
@@ -33,5 +31,9 @@ export function DatabaseOrmModule(): DynamicModule {
   providers: [AppService],
 })
 export class AppModule {
-  constructor(private readonly connection: Connection) {}
+  constructor(private readonly connection: Connection) {
+    console.log('APP');
+    console.log(ormconfig.entities);
+    console.log('APP');
+  }
 }

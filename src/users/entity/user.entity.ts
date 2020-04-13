@@ -19,7 +19,6 @@ export class User {
     @ManyToMany(type => Music)
     @JoinTable()
     likes: Music[]; 
-
     @OneToOne(type => MusicCollection)
     @JoinColumn()
     playlist: MusicCollection;
