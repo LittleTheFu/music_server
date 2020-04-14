@@ -16,16 +16,17 @@ export class UsersController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Post('detail')async detail(@Body() detailUserDto: DetailUserDto): Promise<RetUserDetail> {
-        return this.usersService.getUserDetail(detailUserDto.userId);
-        // console.log('CREATE ONE USER');
-        // return {msg: 'detail'};
+    @Post('detail')async detail(@Request() req, @Body() detailUserDto: DetailUserDto): Promise<RetUserDetail> {
+        return this.usersService.getUserDetail(req.user.userId, detailUserDto.userId);
     }
 
     @UseGuards(JwtAuthGuard)
     @Post('follow')async follow(@Request() req, @Body() followUserDto: FollowUserDto): Promise<object> {
         return this.usersService.followUser(req.user.userId, followUserDto.userId);
-        // console.log('FOLLOW USER');
-        // return {msg: 'success'};
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('unfollow')async unfollow(@Request() req, @Body() followUserDto: FollowUserDto): Promise<object> {
+        return this.usersService.unfollowUser(req.user.userId, followUserDto.userId);
     }
 }

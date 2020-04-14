@@ -45,18 +45,19 @@ export class UsersService {
     return retUser;
   }
 
-  async getUserDetail(userId: number): Promise<RetUserDetail> {
+  async getUserDetail(meId: number, userId: number): Promise<RetUserDetail> {
+    const me = await this.usersRepository.findOne({ relations: ['following'], where: { id: meId}});
     const user = await this.usersRepository.createQueryBuilder('user')
             .leftJoinAndSelect('user.profile', 'profile')
             .where('user.id = :id', {id: userId})
             .getOne();
-            
-    console.log('GET USER DETAIL: ');
-    console.log(user);
+
+    const filteredFollower = me.following.find((u)=>{return u.id === user.id});
 
     const retUser = new RetUserDetail();
     retUser.name = user.name;
     retUser.avatarUrl = user.profile.avatarUrl;
+    retUser.isFollowed = (filteredFollower != null);
 
     return retUser;
   }
@@ -64,8 +65,19 @@ export class UsersService {
   async followUser(userId: number, followerId: number): Promise<object> {
     const user = await this.usersRepository.findOne({ relations: ['following'], where: { id: userId } });
     const follower = await this.usersRepository.findOne({id: followerId});
+    
     user.following.push(follower);
     await this.usersRepository.save(user);
+
+    return {msg: 'success'};
+  }
+
+  async unfollowUser(userId: number, followerId: number): Promise<object> {
+    const user = await this.usersRepository.findOne({ relations: ['following'], where: { id: userId } });
+    
+    user.following = user.following.filter((u)=>{u.id != followerId});
+    await this.usersRepository.save(user);
+
     return {msg: 'success'};
   }
 

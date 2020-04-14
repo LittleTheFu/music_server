@@ -45,4 +45,5 @@ export class User {
   export class RetUserDetail {
     name: string;
     avatarUrl: string;
+    isFollowed: boolean;
   }
