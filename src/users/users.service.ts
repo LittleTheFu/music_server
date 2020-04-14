@@ -27,7 +27,6 @@ export class UsersService {
   }
 
   async createOne(username: string, password: string): Promise<User> {
-    // const user = await this.usersRepository.create({name: username, password: password});
     const user = new User();
     user.name = username;
     user.password = password;
@@ -47,17 +46,10 @@ export class UsersService {
   }
 
   async getUserDetail(userId: number): Promise<RetUserDetail> {
-    // const user = await this.usersRepository.findOne({name: username});
     const user = await this.usersRepository.createQueryBuilder('user')
-            // .leftJoinAndSelect('user.likes', 'music')
-            // .leftJoinAndSelect('user.playlist', 'music_collection')
             .leftJoinAndSelect('user.profile', 'profile')
-            // .leftJoinAndSelect('user.comments', 'comment')
-            // .leftJoinAndSelect('user.sendMails', 'smail')
-            // .leftJoinAndSelect('user.receiveMails', 'rmail')
             .where('user.id = :id', {id: userId})
             .getOne();
-
             
     console.log('GET USER DETAIL: ');
     console.log(user);
@@ -68,4 +60,9 @@ export class UsersService {
 
     return retUser;
   }
+
+  async followUser(userId: number): Promise<object> {
+    return {msg: 'success'};
+  }
+
 }

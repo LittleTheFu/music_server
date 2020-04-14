@@ -19,6 +19,7 @@ export class User {
     @ManyToMany(type => Music)
     @JoinTable()
     likes: Music[]; 
+
     @OneToOne(type => MusicCollection)
     @JoinColumn()
     playlist: MusicCollection;
@@ -35,6 +36,10 @@ export class User {
 
     @OneToMany(type => Mail, mail => mail.to)
     receiveMails: Comment[];
+
+    @ManyToMany(type => User)
+    @JoinTable()
+    following: User[];
   }
 
   export class RetUserDetail {

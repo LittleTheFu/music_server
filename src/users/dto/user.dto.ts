@@ -7,3 +7,7 @@ export class DetailUserDto {
     // username: string;
     userId: number;
 }
+
+export class FollowUserDto {
+    userId: number;
+}
