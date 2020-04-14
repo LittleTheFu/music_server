@@ -23,8 +23,8 @@ export class UsersController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Post('follow')async follow(@Body() followUserDto: FollowUserDto): Promise<object> {
-        return this.usersService.followUser(followUserDto.userId);
+    @Post('follow')async follow(@Request() req, @Body() followUserDto: FollowUserDto): Promise<object> {
+        return this.usersService.followUser(req.user.userId, followUserDto.userId);
         // console.log('FOLLOW USER');
         // return {msg: 'success'};
     }

@@ -61,7 +61,11 @@ export class UsersService {
     return retUser;
   }
 
-  async followUser(userId: number): Promise<object> {
+  async followUser(userId: number, followerId: number): Promise<object> {
+    const user = await this.usersRepository.findOne({ relations: ['following'], where: { id: userId } });
+    const follower = await this.usersRepository.findOne({id: followerId});
+    user.following.push(follower);
+    await this.usersRepository.save(user);
     return {msg: 'success'};
   }
 
