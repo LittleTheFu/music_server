@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Request, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Request, Body, UseGuards, Res } from '@nestjs/common';
 import { MusicService } from './music.service';
 import { LikeMusicDto, GetMusicByCollectionNameDto, GetMusicByKeywordDto, PersonalListMusicDto } from './dto/music.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -74,5 +74,11 @@ export class MusicController {
   async dislike(@Request() req, @Body() likeMusicDto: LikeMusicDto): Promise<object> {
     // console.log(likeMusicDto);
     return this.musicService.dislikeMusic(req.user.userId,likeMusicDto.musicId);
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Post('getLyric')
+  async getLyric(@Res() res): Promise<void> {
+    return res.sendFile('1.lrc', { root: './public/lyric'});
   }
 }
