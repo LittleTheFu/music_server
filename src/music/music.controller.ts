@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Request, Body, UseGuards, Res } from '@nestjs/common';
 import { MusicService } from './music.service';
-import { LikeMusicDto, GetMusicByCollectionNameDto, GetMusicByKeywordDto, PersonalListMusicDto } from './dto/music.dto';
+import { LikeMusicDto, GetMusicByCollectionNameDto, GetMusicByKeywordDto, PersonalListMusicDto, GetMusicLyricDto } from './dto/music.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('music')
@@ -35,7 +35,7 @@ export class MusicController {
     const name = getMusicByCollectionNameDto.name;
     return this.musicService.getMusicListByCollectionName(req.user.userId, name);
   }
-  
+
   @UseGuards(JwtAuthGuard)
   @Get('Musics')
   async getMusics(@Request() req): Promise<object> {
@@ -73,12 +73,13 @@ export class MusicController {
   @Post('dislike')
   async dislike(@Request() req, @Body() likeMusicDto: LikeMusicDto): Promise<object> {
     // console.log(likeMusicDto);
-    return this.musicService.dislikeMusic(req.user.userId,likeMusicDto.musicId);
+    return this.musicService.dislikeMusic(req.user.userId, likeMusicDto.musicId);
   }
 
   // @UseGuards(JwtAuthGuard)
   @Post('getLyric')
-  async getLyric(@Res() res): Promise<void> {
-    return res.sendFile('1.lrc', { root: './public/lyric'});
+  async getLyric(@Res() res, @Body() getMusicLyricDto: GetMusicLyricDto): Promise<void> {
+    const fileName = getMusicLyricDto.musicId + '.lrc';
+    return res.sendFile(fileName, { root: './public/lyric' });
   }
 }

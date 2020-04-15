@@ -13,3 +13,7 @@ export class GetMusicByCollectionNameDto {
 export class GetMusicByKeywordDto {
     keyword: string;
 }
+
+export class GetMusicLyricDto {
+    musicId: number;
+}
