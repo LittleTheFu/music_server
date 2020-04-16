@@ -16,6 +16,9 @@ export class Comment {
 
   @ManyToOne(type => User, user=>user.comments)
   user: User;
+
+  @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
+  date: Date;
 }
 
 export class RetComment {
@@ -28,4 +31,6 @@ export class RetComment {
     avatar: string;
 
     userId: number;
+
+    date: Date;
 }

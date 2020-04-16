@@ -26,6 +26,7 @@ export class CommentService {
             .innerJoin('comment.music', 'music')
             .innerJoinAndSelect('comment.user', 'user')
             .innerJoinAndSelect('user.profile', 'pofile')
+            .orderBy("comment.date", "DESC")
             .where('comment.music.id = :id', { id: musicId })
             .getMany();
 
@@ -36,6 +37,7 @@ export class CommentService {
             rc.content = c.content;
             rc.username = c.user.name;
             rc.id = c.id;
+            rc.date = c.date;
             rc.avatar = c.user.profile.avatarUrl;
             rc.userId = c.user.id;
             return rc;
@@ -66,6 +68,7 @@ export class CommentService {
             .innerJoin('comment.music', 'music')
             .innerJoinAndSelect('comment.user', 'user')
             .innerJoinAndSelect('user.profile', 'pofile')
+            .orderBy("comment.date", "DESC")
             .where('comment.music.id = :id', { id: musicId }).getMany();
 
         // console.log(comments);
@@ -74,6 +77,7 @@ export class CommentService {
             const rc = new RetComment();
             rc.content = c.content;
             rc.username = c.user.name;
+            rc.date = c.date;
             rc.id = c.id;
             rc.avatar = c.user.profile.avatarUrl;
             rc.userId = c.user.id;
