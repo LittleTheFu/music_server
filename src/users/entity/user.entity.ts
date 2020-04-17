@@ -54,3 +54,9 @@ export class User {
     avatarUrl: string;
     isFollowed: boolean;
   }
+
+  export class RetMe {
+    id: number;
+    name: string;
+    avatarUrl: string;
+  }

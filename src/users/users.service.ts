@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User,RetUserDetail, RetFollower } from './entity/user.entity';
+import { User,RetUserDetail, RetFollower, RetMe } from './entity/user.entity';
 import { MusicCollection } from '../music/entity/music.entity';
 import { Profile } from '../profile/entity/profile.entity';
 
@@ -17,6 +17,26 @@ export class UsersService {
     
     @InjectRepository(Profile)
     private readonly profileRepository: Repository<Profile>) {
+  }
+
+  async getMe(userId: number) : Promise<RetMe> {
+    const result = await this.usersRepository
+    .createQueryBuilder('user')
+    .innerJoinAndSelect('user.profile', 'profile')
+    .where('user.id = :id', { id: userId })
+    .getOne();
+
+    // console.log(result);
+    const ret = new RetMe();
+    ret.id = result.id;
+    ret.name = result.name;
+    ret.avatarUrl = result.profile.avatarUrl;
+
+    // console.log('MEMEME');
+    // console.log(ret);
+    // console.log('MEMEME')
+
+    return ret;
   }
 
   async findOne(username: string): Promise<User | undefined> {

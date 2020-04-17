@@ -2,7 +2,7 @@ import { Controller, Get, Post, Request, Body, UseGuards } from '@nestjs/common'
 import { UsersService } from './users.service';
 import { RegUserDto, DetailUserDto, FollowUserDto, GetUserFollowersDto } from './dto/user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RetUserDetail } from './entity/user.entity';
+import { RetUserDetail, RetMe } from './entity/user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -13,6 +13,11 @@ export class UsersController {
         console.log('CREATE ONE USER');
         console.log(regUser);
         return {msg: 'successs'};
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('me')async me(@Request() req): Promise<RetMe> {
+        return this.usersService.getMe(req.user.userId);
     }
 
     @UseGuards(JwtAuthGuard)
