@@ -11,3 +11,7 @@ export class DetailUserDto {
 export class FollowUserDto {
     userId: number;
 }
+
+export class GetUserFollowersDto {
+    userId: number;
+}

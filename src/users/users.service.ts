@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User,RetUserDetail } from './entity/user.entity';
+import { User,RetUserDetail, RetFollower } from './entity/user.entity';
 import { MusicCollection } from '../music/entity/music.entity';
 import { Profile } from '../profile/entity/profile.entity';
 
@@ -81,4 +81,33 @@ export class UsersService {
     return {msg: 'success'};
   }
 
+  async getUserFollowers(meId: number, userId: number): Promise<RetFollower[]> {
+    const me = await this.usersRepository.findOne({ relations: ['following'], where: { id: meId}});
+    // const user = await this.usersRepository.findOne({ relations: ['following'], where: { id: userId}});
+
+    const user = await this.usersRepository.createQueryBuilder('user')
+    .leftJoinAndSelect('user.following', 'following')
+    .innerJoinAndSelect('following.profile', 'following_profile')
+    .where('user.id = :id', {id: userId})
+    .getOne();
+
+    const ret = user.following.map((f)=>{
+      const r = new RetFollower();
+      r.id = f.id;
+      r.avatarUrl = f.profile.avatarUrl;
+      r.name = f.name;
+      r.isFollowed = false;
+
+      me.following.forEach((mf)=>{if(mf.id === f.id) {
+        r.isFollowed = true;
+      }});
+
+      return r;
+    })
+
+    // console.log(user.following);
+    // console.log(ret);
+    
+    return ret;
+  }
 }

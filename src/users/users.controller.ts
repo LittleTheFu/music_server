@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Request, Body, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { RegUserDto, DetailUserDto, FollowUserDto } from './dto/user.dto';
+import { RegUserDto, DetailUserDto, FollowUserDto, GetUserFollowersDto } from './dto/user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RetUserDetail } from './entity/user.entity';
 
@@ -28,5 +28,10 @@ export class UsersController {
     @UseGuards(JwtAuthGuard)
     @Post('unfollow')async unfollow(@Request() req, @Body() followUserDto: FollowUserDto): Promise<object> {
         return this.usersService.unfollowUser(req.user.userId, followUserDto.userId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('getUserFollowers')async getUserFollowers(@Request() req, @Body() getUserFollowersDto: GetUserFollowersDto): Promise<object> {
+        return this.usersService.getUserFollowers(req.user.userId, getUserFollowersDto.userId);
     }
 }

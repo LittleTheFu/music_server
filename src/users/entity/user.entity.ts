@@ -47,3 +47,10 @@ export class User {
     avatarUrl: string;
     isFollowed: boolean;
   }
+
+  export class RetFollower {
+    id: number;
+    name: string;
+    avatarUrl: string;
+    isFollowed: boolean;
+  }
