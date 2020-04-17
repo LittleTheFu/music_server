@@ -87,7 +87,7 @@ export class UsersService {
 
     const user = await this.usersRepository.createQueryBuilder('user')
     .leftJoinAndSelect('user.following', 'following')
-    .innerJoinAndSelect('following.profile', 'following_profile')
+    .leftJoinAndSelect('following.profile', 'following_profile')
     .where('user.id = :id', {id: userId})
     .getOne();
 
@@ -107,7 +107,7 @@ export class UsersService {
 
     // console.log(user.following);
     // console.log(ret);
-    
+
     return ret;
   }
 }
