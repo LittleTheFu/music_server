@@ -10,6 +10,10 @@ export class GetMusicByCollectionNameDto {
     name: string;
 }
 
+export class GetMusicByCollectionIdDto {
+    id: number;
+}
+
 export class GetMusicByKeywordDto {
     keyword: string;
 }

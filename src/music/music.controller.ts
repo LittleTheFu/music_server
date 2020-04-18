@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Request, Body, UseGuards, Res } from '@nestjs/common';
 import { MusicService } from './music.service';
-import { CreateCollectionDto, LikeMusicDto, GetMusicByCollectionNameDto, GetMusicByKeywordDto, PersonalListMusicDto, GetMusicLyricDto } from './dto/music.dto';
+import { GetMusicByCollectionIdDto, CreateCollectionDto, LikeMusicDto, GetMusicByCollectionNameDto, GetMusicByKeywordDto, PersonalListMusicDto, GetMusicLyricDto } from './dto/music.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('music')
@@ -26,12 +26,14 @@ export class MusicController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('GetMusicsByCollectionId')
+  async getMusicsByCollectionId(@Request() req, @Body() getMusicByCollectionIdDto: GetMusicByCollectionIdDto): Promise<object> {
+    return this.musicService.getMusicListByCollectionId(req.user.userId, getMusicByCollectionIdDto.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('GetMusicsByCollectionName')
   async getMusicsByCollectionName(@Request() req, @Body() getMusicByCollectionNameDto: GetMusicByCollectionNameDto): Promise<object> {
-    // console.log('req.user : ' + JSON.stringify(req.user));
-    // console.log('req : ' + JSON.stringify(req.body));
-    // console.log('body : ' + JSON.stringify(getMusicByCollectionNameDto));
-    console.log('body : ' + getMusicByCollectionNameDto.name);
     const name = getMusicByCollectionNameDto.name;
     return this.musicService.getMusicListByCollectionName(req.user.userId, name);
   }

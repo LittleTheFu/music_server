@@ -47,6 +47,29 @@ export class MusicService {
     return musics;
   }
 
+  async getMusicListByCollectionId(userId: number, musicId: string): Promise<Music[]> {
+    const collection = await this.MusicCollectionRepository.findOne({
+      relations: ['musics'],
+      where: { id: musicId }
+    });
+    const musics = collection.musics;
+    console.log(collection);
+    // console.log(musics);
+
+    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
+    // console.log(musics);
+    const likes = user.likes;
+    musics.forEach((m) => {
+      likes.forEach((l) => {
+        if (m.id === l.id) {
+          m.likedByCurrentUser = true;
+        }
+      })
+    });
+
+    return musics;
+  }
+
   async getMusicListByCollectionName(userId: number, name: string): Promise<Music[]> {
     const collection = await this.MusicCollectionRepository.findOne({
       relations: ['musics'],
