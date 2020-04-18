@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable,  OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable,  OneToMany, ManyToOne } from 'typeorm';
 import { Comment } from '../../comment/entity/comment.entity';
+import { User } from '../../users/entity/user.entity';
 
 @Entity()
 export class Music {
@@ -16,7 +17,7 @@ export class Music {
   cover: string;
 
   @Column()
-  name: string;
+  name: string; 
 
   @Column()
   artist: string;
@@ -55,4 +56,7 @@ export class MusicCollection {
   @ManyToMany(type => Music)
   @JoinTable()
   musics: Music[];
+
+  @ManyToOne(type => User, user => user.playlist)
+  user: User;
 }

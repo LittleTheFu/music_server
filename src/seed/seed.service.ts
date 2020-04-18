@@ -9,6 +9,9 @@ import { Repository } from 'typeorm';
 export class SeedService {
 
     constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+
     @InjectRepository(Music)
     private readonly musicRepository: Repository<Music>,
     
@@ -68,9 +71,15 @@ export class SeedService {
 
         await this.musicRepository.save(m4);
 
+        const u = new User();
+        u.name = 'staff';
+        u.password = 'staff';
+        await this.userRepository.save(u);
+
         const c1 = new MusicCollection();
         c1.cover = 'http://localhost:9999/album/4.png';
         c1.name = 'recommend';
+        c1.user = u;
         c1.musics = [m1,m2,m3,m4];
 
         await this.collectionRepository.save(c1);

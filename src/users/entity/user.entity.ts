@@ -20,8 +20,7 @@ export class User {
     @JoinTable()
     likes: Music[]; 
 
-    @OneToOne(type => MusicCollection)
-    @JoinColumn()
+    @OneToMany(type => MusicCollection, collection => collection.user)
     playlist: MusicCollection;
 
     @OneToOne(type => Profile)
