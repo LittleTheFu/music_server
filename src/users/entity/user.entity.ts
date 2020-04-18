@@ -21,7 +21,7 @@ export class User {
     likes: Music[]; 
 
     @OneToMany(type => MusicCollection, collection => collection.user)
-    playlist: MusicCollection;
+    playlist: MusicCollection[];
 
     @OneToOne(type => Profile)
     @JoinColumn()
