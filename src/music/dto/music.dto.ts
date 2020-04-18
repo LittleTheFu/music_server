@@ -17,3 +17,7 @@ export class GetMusicByKeywordDto {
 export class GetMusicLyricDto {
     musicId: number;
 }
+
+export class CreateCollectionDto {
+    name: string;
+}

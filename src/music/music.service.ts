@@ -192,4 +192,21 @@ export class MusicService {
     await this.MusicCollectionRepository.save(privateCollection);
     return privateCollection.musics;
   }
+
+  async createCollection(userId: number, name: string): Promise<MusicCollection> {
+    const user = await this.UserRepository.findOne(userId);
+
+    const collection = new MusicCollection();
+    collection.name = name;
+    collection.user = user;
+    collection.cover = 'http://localhost:9999/album/7.png';
+
+    const retCollection = await this.MusicCollectionRepository.save(collection);
+
+    console.log('create collection');
+    console.log(retCollection);
+
+    return retCollection;
+  }
+
 }
