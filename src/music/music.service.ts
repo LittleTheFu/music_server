@@ -47,7 +47,7 @@ export class MusicService {
     return musics;
   }
 
-  async getMusicListByCollectionId(userId: number, musicId: string): Promise<Music[]> {
+  async getMusicListByCollectionId(userId: number, musicId: number): Promise<Music[]> {
     const collection = await this.MusicCollectionRepository.findOne({
       relations: ['musics'],
       where: { id: musicId }
