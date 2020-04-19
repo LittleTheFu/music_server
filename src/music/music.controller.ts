@@ -57,6 +57,11 @@ export class MusicController {
     return this.musicService.getPrivateMusicCollections(req.user.userId);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('getPublicMusicCollections')
+  async getPublicMusicCollections(): Promise<object> {
+    return this.musicService.getPublicMusicCollections();
+  }
 
   @UseGuards(JwtAuthGuard)
   @Post('AddMusicToMyList')

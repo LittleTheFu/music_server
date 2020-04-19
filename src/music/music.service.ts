@@ -190,6 +190,11 @@ export class MusicService {
     return user.playlist;
   }
 
+  async getPublicMusicCollections(): Promise<MusicCollection[]> {
+    const user = await this.UserRepository.findOne({ relations: ['playlist'], where: { id: 1 } });
+    return user.playlist;
+  }
+
   async addMusicToPersonalCollection(username: string, musicId: number): Promise<Music[]> {
     const privateCollectionName = 'privateCollection_' + username;
     const privateCollection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { name: privateCollectionName } });
