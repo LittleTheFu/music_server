@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 // import { Music } from './interfaces/music.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like, Not } from 'typeorm';
-import { Music, MusicCollection } from './entity/music.entity';
+import { Music, MusicCollection, RetCollectionDetail } from './entity/music.entity';
 import { User } from '../users/entity/user.entity';
 
 @Injectable()
@@ -45,6 +45,38 @@ export class MusicService {
     });
 
     return musics;
+  }
+
+  async getCollectionDetailById(userId: number, collectionId: number): Promise<RetCollectionDetail> {
+    const collection = await this.MusicCollectionRepository.findOne({
+      relations: ['musics'],
+      where: { id: collectionId }
+    });
+    const musics = collection.musics;
+
+    const user = await this.UserRepository.findOne({ relations: ['likes', 'playlist'], where: { id: userId } });
+    const likes = user.likes;
+    musics.forEach((m) => {
+      likes.forEach((l) => {
+        if (m.id === l.id) {
+          m.likedByCurrentUser = true;
+        }
+      })
+    });
+
+    const foundCollection = user.playlist.find((c) =>{ return c.id === collectionId });
+    console.log('BEGIN foundCollection');
+    console.log(foundCollection);
+    console.log('END foundCollection');
+
+    const r = new RetCollectionDetail();
+    r.musics = musics;
+    r.name = collection.name;
+    r.canBeDeleted = (foundCollection != null);
+
+    console.log(r);
+
+    return r;
   }
 
   async getMusicListByCollectionId(userId: number, musicId: number): Promise<Music[]> {

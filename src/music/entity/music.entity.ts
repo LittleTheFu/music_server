@@ -60,3 +60,9 @@ export class MusicCollection {
   @ManyToOne(type => User, user => user.playlist)
   user: User;
 }
+
+export class RetCollectionDetail {
+  name: string;
+  canBeDeleted: boolean;
+  musics: Music[];
+}

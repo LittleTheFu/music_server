@@ -32,6 +32,12 @@ export class MusicController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('GetCollectionDetailById')
+  async getCollectionDetailById(@Request() req, @Body() getMusicByCollectionIdDto: GetMusicByCollectionIdDto): Promise<object> {
+    return this.musicService.getCollectionDetailById(req.user.userId, getMusicByCollectionIdDto.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('GetMusicsByCollectionName')
   async getMusicsByCollectionName(@Request() req, @Body() getMusicByCollectionNameDto: GetMusicByCollectionNameDto): Promise<object> {
     const name = getMusicByCollectionNameDto.name;
