@@ -10,12 +10,13 @@ import { MailModule } from '../mail/mail.module';
 import * as ormconfig from '../ormconfig';
 import { Music, MusicCollection } from '../music/entity/music.entity';
 import { User } from '../users/entity/user.entity';
+import { Profile } from '../profile/entity/profile.entity';
  
 @Module({
   imports: [
     TypeOrmModule.forRoot(ormconfig),
     MusicModule,
-    TypeOrmModule.forFeature([Music, MusicCollection, User]),
+    TypeOrmModule.forFeature([Music, MusicCollection, User, Profile]),
     CommentModule,
     ProfileModule,
     MailModule,],

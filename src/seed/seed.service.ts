@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '../users/entity/user.entity';
+import { Profile } from '../profile/entity/profile.entity';
 import { Music, MusicCollection } from '../music/entity/music.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -14,6 +15,9 @@ export class SeedService {
 
     @InjectRepository(Music)
     private readonly musicRepository: Repository<Music>,
+
+    @InjectRepository(Profile)
+    private readonly profileReposity: Repository<Profile>,
     
     @InjectRepository(MusicCollection)
     private  readonly collectionRepository: Repository<MusicCollection>) {
@@ -71,9 +75,14 @@ export class SeedService {
 
         await this.musicRepository.save(m4);
 
+        const profile = new Profile();
+        profile.avatarUrl = 'http://localhost:9999/avatar/2.jpeg';
+        const savedProfile = await this.profileReposity.save(profile);
+
         const u = new User();
         u.name = 'staff';
         u.password = 'staff';
+        u.profile = savedProfile;
         await this.userRepository.save(u);
 
         const c1 = new MusicCollection();
