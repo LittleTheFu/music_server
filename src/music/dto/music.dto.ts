@@ -14,6 +14,10 @@ export class GetMusicByCollectionIdDto {
     id: number;
 }
 
+export class DeleteCollectionDto {
+    id: number;
+}
+
 export class GetMusicByKeywordDto {
     keyword: string;
 }

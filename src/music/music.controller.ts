@@ -1,6 +1,15 @@
 import { Controller, Get, Post, Request, Body, UseGuards, Res } from '@nestjs/common';
 import { MusicService } from './music.service';
-import { GetMusicByCollectionIdDto, CreateCollectionDto, LikeMusicDto, GetMusicByCollectionNameDto, GetMusicByKeywordDto, PersonalListMusicDto, GetMusicLyricDto } from './dto/music.dto';
+import {
+  GetMusicByCollectionIdDto,
+  CreateCollectionDto,
+  LikeMusicDto,
+  GetMusicByCollectionNameDto,
+  GetMusicByKeywordDto,
+  PersonalListMusicDto,
+  GetMusicLyricDto,
+  DeleteCollectionDto
+} from './dto/music.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('music')
@@ -35,6 +44,12 @@ export class MusicController {
   @Post('GetCollectionDetailById')
   async getCollectionDetailById(@Request() req, @Body() getMusicByCollectionIdDto: GetMusicByCollectionIdDto): Promise<object> {
     return this.musicService.getCollectionDetailById(req.user.userId, getMusicByCollectionIdDto.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('DeleteCollection')
+  async deleteCollection(@Body() deleteCollectionDto: DeleteCollectionDto): Promise<object> {
+    return this.musicService.deleteCollection(deleteCollectionDto.id);
   }
 
   @UseGuards(JwtAuthGuard)

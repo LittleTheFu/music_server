@@ -64,7 +64,7 @@ export class MusicService {
       })
     });
 
-    const foundCollection = user.playlist.find((c) =>{ return c.id === collectionId });
+    const foundCollection = user.playlist.find((c) => { return c.id === collectionId });
     console.log('BEGIN foundCollection');
     console.log(foundCollection);
     console.log('END foundCollection');
@@ -123,6 +123,18 @@ export class MusicService {
     });
 
     return musics;
+  }
+
+  async deleteCollection(collectionId: number): Promise<object> {
+
+    await this.MusicCollectionRepository
+      .createQueryBuilder()
+      .delete()
+      .from(MusicCollection)
+      .where("id = :id", { id: collectionId })
+      .execute();
+
+    return { msg: 'success' };
   }
 
   async getPlayListMusicList(userId: number, username: string): Promise<Music[]> {
