@@ -137,6 +137,21 @@ export class MusicService {
     return { msg: 'success' };
   }
 
+  async addMusicToCollection(collectionId: number, musicId: number): Promise<object> {
+    // const privateCollectionName = 'privateCollection_' + username;
+    const collection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { id: collectionId } });
+    const music = await this.MusicRepository.findOne({ id: musicId });
+
+    if( collection.musics.find(m => {m.id === music.id})) {
+      return {msg: 'already in this list'}
+    }
+
+    collection.musics = collection.musics.concat(music);
+    await this.MusicCollectionRepository.save(collection);
+
+    return {msg: "success"}
+  }
+
   async getPlayListMusicList(userId: number, username: string): Promise<Music[]> {
     const privateCollectionName = 'privateCollection_' + username;
     const collection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { name: privateCollectionName } });

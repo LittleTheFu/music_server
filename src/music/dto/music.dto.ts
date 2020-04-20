@@ -18,6 +18,11 @@ export class DeleteCollectionDto {
     id: number;
 }
 
+export class AddMusicToCollectionDto {
+    collectionId: number;
+    musicId: number;
+}
+
 export class GetMusicByKeywordDto {
     keyword: string;
 }
