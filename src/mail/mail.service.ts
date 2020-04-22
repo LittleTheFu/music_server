@@ -52,6 +52,7 @@ export class MailService {
             r.fromName = m.from.name;
             r.toName = m.to.name;
             r.id = m.id;
+            r.fromId = m.from.id;
 
             return r;
         })
@@ -73,6 +74,7 @@ export class MailService {
         retMail.fromName = mail.from.name;
         retMail.toName = mail.to.name;
         retMail.content = mail.content;
+        retMail.fromId = mail.from.id;
 
         return retMail;
     }
@@ -92,6 +94,7 @@ export class MailService {
             r.fromName = m.from.name;
             r.toName = m.to.name;
             r.id = m.id;
+            r.fromId = m.from.id;
 
             return r;
         })

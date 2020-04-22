@@ -25,4 +25,6 @@ export class RetMail {
     fromName: string;
 
     toName: string;
+
+    fromId: number;
 }
