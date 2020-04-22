@@ -59,6 +59,24 @@ export class MailService {
         return retMails;
     }
 
+    async getMail(mailId: number): Promise<RetMail> {
+        // const mail = await this.MailRepository.findOne(mailId);
+        const mail = await this.MailRepository
+            .createQueryBuilder('mail')
+            .innerJoinAndSelect('mail.to', 'user')
+            .innerJoinAndSelect('mail.from', 'tuser')
+            .where('mail.id = :id', { id: mailId })
+            .getOne();
+
+        const retMail = new RetMail();
+        retMail.id = mail.id;
+        retMail.fromName = mail.from.name;
+        retMail.toName = mail.to.name;
+        retMail.content = mail.content;
+
+        return retMail;
+    }
+
     async getMails(userId: number): Promise<RetMail[]> {
         const mails = await this.MailRepository
             .createQueryBuilder('mail')
