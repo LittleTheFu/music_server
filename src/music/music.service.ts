@@ -152,6 +152,16 @@ export class MusicService {
     return {msg: "success"}
   }
 
+  async removeMusicFromCollection(musicId: number, collectionId: number): Promise<object> {
+    const collection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { id: collectionId } });
+    console.log('remove : ' + collectionId);
+    console.log(collection);
+    collection.musics = collection.musics.filter((m) => { return m.id !== musicId; });
+    await this.MusicCollectionRepository.save(collection);
+
+    return {msg: 'success'};
+  }
+
   async getPlayListMusicList(userId: number, username: string): Promise<Music[]> {
     const privateCollectionName = 'privateCollection_' + username;
     const collection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { name: privateCollectionName } });

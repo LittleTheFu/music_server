@@ -69,6 +69,7 @@ export class UsersService {
     const me = await this.usersRepository.findOne({ relations: ['following'], where: { id: meId}});
     const user = await this.usersRepository.createQueryBuilder('user')
             .leftJoinAndSelect('user.profile', 'profile')
+            .leftJoinAndSelect('user.playlist', 'collections')
             .where('user.id = :id', {id: userId})
             .getOne();
 
@@ -77,6 +78,7 @@ export class UsersService {
     const retUser = new RetUserDetail();
     retUser.name = user.name;
     retUser.avatarUrl = user.profile.avatarUrl;
+    retUser.collections = user.playlist;
     retUser.isFollowed = (filteredFollower != null);
 
     return retUser;

@@ -45,6 +45,7 @@ export class User {
     name: string;
     avatarUrl: string;
     isFollowed: boolean;
+    collections: MusicCollection[];
   }
 
   export class RetFollower {

@@ -9,7 +9,8 @@ import {
   PersonalListMusicDto,
   GetMusicLyricDto,
   DeleteCollectionDto,
-  AddMusicToCollectionDto
+  AddMusicToCollectionDto,
+  RemoveMusicFromCollectionDto,
 } from './dto/music.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -113,11 +114,10 @@ export class MusicController {
   @UseGuards(JwtAuthGuard)
   @Post('dislike')
   async dislike(@Request() req, @Body() likeMusicDto: LikeMusicDto): Promise<object> {
-    // console.log(likeMusicDto);
     return this.musicService.dislikeMusic(req.user.userId, likeMusicDto.musicId);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('getLyric')
   async getLyric(@Res() res, @Body() getMusicLyricDto: GetMusicLyricDto): Promise<void> {
     const fileName = getMusicLyricDto.musicId + '.lrc';
@@ -127,7 +127,12 @@ export class MusicController {
   @UseGuards(JwtAuthGuard)
   @Post('createCollection')
   async createCollection(@Request() req, @Body() createCollectionDto: CreateCollectionDto): Promise<object> {
-    // console.log(likeMusicDto);
     return this.musicService.createCollection(req.user.userId, createCollectionDto.name);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('removeMusicFromCollection')
+  async removeMusicFromCollection(@Body() removeMusicFromCollectionDto: RemoveMusicFromCollectionDto): Promise<object> {
+    return this.musicService.removeMusicFromCollection(removeMusicFromCollectionDto.musicId, removeMusicFromCollectionDto.collectionId);
   }
 }

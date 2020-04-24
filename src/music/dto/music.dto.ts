@@ -34,3 +34,8 @@ export class GetMusicLyricDto {
 export class CreateCollectionDto {
     name: string;
 }
+
+export class RemoveMusicFromCollectionDto {
+    musicId: number;
+    collectionId: number;
+}
