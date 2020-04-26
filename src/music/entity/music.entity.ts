@@ -62,6 +62,7 @@ export class MusicCollection {
 }
 
 export class RetCollectionDetail {
+  cover: string;
   name: string;
   canBeDeleted: boolean;
   musics: Music[];

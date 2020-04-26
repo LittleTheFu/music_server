@@ -72,6 +72,7 @@ export class MusicService {
     const r = new RetCollectionDetail();
     r.musics = musics;
     r.name = collection.name;
+    r.cover = collection.cover;
     r.canBeDeleted = (foundCollection != null);
 
     console.log(r);
