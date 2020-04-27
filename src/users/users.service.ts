@@ -47,15 +47,15 @@ export class UsersService {
   }
 
   async createOne(username: string, password: string): Promise<User> {
+    const exsitUser = await this.findOne(username)
+
+    if( exsitUser !== null ) {
+      return null;
+    }
+ 
     const user = new User();
     user.name = username;
     user.password = password;
-
-    // const collection = new MusicCollection();
-    // collection.name = 'privateCollection_' + username;
-    // collection.cover = 'http://localhost:9999/album/1.png';
-    // user.playlist = collection;
-    // await this.musicCollectionRepository.save(collection);
 
     const profile = new Profile();
     user.profile = profile;
