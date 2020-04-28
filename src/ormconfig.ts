@@ -1,5 +1,4 @@
 import {ConnectionOptions} from 'typeorm';
-import { Music } from '../src/music/entity/music.entity';
 // You can load you .env file here synchronously using dotenv package (not installed here),
 // import * as dotenv from 'dotenv';
 // import * as fs from 'fs';
