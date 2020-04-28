@@ -36,3 +36,4 @@ lerna-debug.log*
 /public/avatar
 
 db
+db copy
