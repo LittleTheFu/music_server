@@ -32,14 +32,6 @@ export class Music {
 
   @OneToMany(type => Comment, comment => comment.music)
   comments: Comment[];
-  // @AfterLoad()
-  // updateCounters() {
-  //   if( this.id === 1) {
-  //     this.likedByCurrentUser = true;
-  //   } else {
-  //     this.likedByCurrentUser = false;
-  //   }
-  // }
 }
 
 @Entity()
