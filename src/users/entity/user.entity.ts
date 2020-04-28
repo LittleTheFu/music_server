@@ -20,14 +20,14 @@ export class User {
     @JoinTable()
     likes: Music[]; 
 
-    @OneToMany(type => MusicCollection, collection => collection.user)
+    @OneToMany(type => MusicCollection, collection => collection.user, { onDelete: "CASCADE" })
     playlist: MusicCollection[];
 
-    @OneToOne(type => Profile)
+    @OneToOne(type => Profile, { onDelete: "CASCADE" })
     @JoinColumn()
     profile: Profile;
 
-    @OneToMany(type => Comment, comment => comment.user)
+    @OneToMany(type => Comment, comment => comment.user, { onDelete: "CASCADE" })
     comments: Comment[];
 
     @OneToMany(type => Mail, mail => mail.from)
@@ -36,7 +36,7 @@ export class User {
     @OneToMany(type => Mail, mail => mail.to)
     receiveMails: Comment[];
 
-    @ManyToMany(type => User)
+    @ManyToMany(type => User, { onDelete: "CASCADE" })
     @JoinTable()
     following: User[];
   }

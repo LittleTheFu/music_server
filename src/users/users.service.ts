@@ -53,7 +53,7 @@ export class UsersService {
     if( exsitUser != null ) {
       return null;
     }
-    return null;
+    
     const user = new User();
     user.name = username;
     user.password = Md5.hashStr(password) as string;

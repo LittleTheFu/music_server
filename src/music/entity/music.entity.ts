@@ -57,7 +57,7 @@ export class MusicCollection {
   @JoinTable()
   musics: Music[];
 
-  @ManyToOne(type => User, user => user.playlist)
+  @ManyToOne(type => User, user => user.playlist, { onDelete: "CASCADE" })
   user: User;
 }
 

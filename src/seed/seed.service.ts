@@ -4,6 +4,7 @@ import { Profile } from '../profile/entity/profile.entity';
 import { Music, MusicCollection } from '../music/entity/music.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Md5 } from 'ts-md5/dist/md5';
 
 
 @Injectable()
@@ -81,7 +82,7 @@ export class SeedService {
 
         const u = new User();
         u.name = 'staff';
-        u.password = 'staff';
+        u.password = Md5.hashStr('staff') as string;
         u.profile = savedProfile;
         await this.userRepository.save(u);
 
