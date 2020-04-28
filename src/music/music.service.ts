@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 // import { Music } from './interfaces/music.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like, Not } from 'typeorm';
-import { Music, MusicCollection, RetCollectionDetail } from './entity/music.entity';
+import { Music, MusicCollection, RetCollectionDetail, Artist } from './entity/music.entity';
 import { User } from '../users/entity/user.entity';
 
 @Injectable()
@@ -10,6 +10,9 @@ export class MusicService {
   // index: number;
   // private readonly musics: Music[] = [];
   constructor(
+    @InjectRepository(Artist)
+    private readonly artistRepository: Repository<Artist>,
+
     @InjectRepository(MusicCollection)
     private readonly MusicCollectionRepository: Repository<MusicCollection>,
 
@@ -310,6 +313,12 @@ export class MusicService {
     console.log(retCollection);
 
     return retCollection;
+  }
+
+  async getArtistInfo(artistId: number): Promise<Artist> {
+    const artist = await this.artistRepository.findOne({ relations: ['musicAlbums'], where: { id: artistId } });
+
+    return artist;
   }
 
 }

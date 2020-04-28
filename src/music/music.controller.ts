@@ -11,6 +11,7 @@ import {
   DeleteCollectionDto,
   AddMusicToCollectionDto,
   RemoveMusicFromCollectionDto,
+  GetArtistInfoDto,
 } from './dto/music.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -134,5 +135,11 @@ export class MusicController {
   @Post('removeMusicFromCollection')
   async removeMusicFromCollection(@Body() removeMusicFromCollectionDto: RemoveMusicFromCollectionDto): Promise<object> {
     return this.musicService.removeMusicFromCollection(removeMusicFromCollectionDto.musicId, removeMusicFromCollectionDto.collectionId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('getArtistInfo')
+  async getArtistInfo(@Body() getArtistInfoDtG: GetArtistInfoDto): Promise<object> {
+    return this.musicService.getArtistInfo(getArtistInfoDtG.artistId);
   }
 }
