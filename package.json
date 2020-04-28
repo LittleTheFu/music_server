@@ -38,6 +38,7 @@
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.4",
     "sqlite3": "^4.1.1",
+    "ts-md5": "^1.2.7",
     "typeorm": "^0.2.22"
   },
   "devDependencies": {

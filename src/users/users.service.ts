@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { User,RetUserDetail, RetFollower, RetMe } from './entity/user.entity';
 import { MusicCollection } from '../music/entity/music.entity';
 import { Profile } from '../profile/entity/profile.entity';
+import { Md5 } from 'ts-md5/dist/md5';
 
 @Injectable()
 export class UsersService {
@@ -49,13 +50,13 @@ export class UsersService {
   async createOne(username: string, password: string): Promise<User> {
     const exsitUser = await this.findOne(username)
 
-    if( exsitUser !== null ) {
+    if( exsitUser != null ) {
       return null;
     }
- 
+    return null;
     const user = new User();
     user.name = username;
-    user.password = password;
+    user.password = Md5.hashStr(password) as string;
 
     const profile = new Profile();
     user.profile = profile;
