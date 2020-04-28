@@ -1,6 +1,46 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable,  OneToMany, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, ManyToOne } from 'typeorm';
 import { Comment } from '../../comment/entity/comment.entity';
 import { User } from '../../users/entity/user.entity';
+
+@Entity()
+export class MusicAlbum {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  name: string;
+
+  @OneToMany(type => Music, music => music.album)
+  musics: Music[];
+}
+
+@Entity()
+export class Artist {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  name: string;
+
+  @ManyToMany(type => MusicAlbum, { cascade: true })
+  @JoinTable()
+  musicAlbums: MusicAlbum[];
+}
+
+@Entity()
+export class RawMusic {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  name: string;
+
+  @ManyToOne(type => MusicAlbum)
+  musicAlbum: MusicAlbum;
+
+  @ManyToOne(type => Artist)
+  musicArtist: Artist;
+}
 
 @Entity()
 export class Music {
@@ -13,11 +53,12 @@ export class Music {
 
   @Column()
   address: string;
+
   @Column()
   cover: string;
 
   @Column()
-  name: string; 
+  name: string;
 
   @Column()
   artist: string;
@@ -32,6 +73,12 @@ export class Music {
 
   @OneToMany(type => Comment, comment => comment.music)
   comments: Comment[];
+
+  @ManyToOne(type => MusicAlbum)
+  musicAlbum: MusicAlbum;
+
+  @ManyToOne(type => Artist)
+  musicArtist: Artist;
 }
 
 @Entity()
@@ -52,6 +99,8 @@ export class MusicCollection {
   @ManyToOne(type => User, user => user.playlist, { onDelete: "CASCADE" })
   user: User;
 }
+
+
 
 export class RetCollectionDetail {
   cover: string;
