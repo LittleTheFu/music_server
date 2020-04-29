@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
-import { Music, RawMusic } from '../../music/entity/music.entity';
+import { RawMusic } from '../../music/entity/music.entity';
 import { User } from '../../users/entity/user.entity';
 
 

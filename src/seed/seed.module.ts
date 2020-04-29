@@ -8,7 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { MailModule } from '../mail/mail.module';
 import * as ormconfig from '../ormconfig';
-import { Music, MusicCollection, RawMusic, MusicAlbum, Artist } from '../music/entity/music.entity';
+import { MusicCollection, RawMusic, MusicAlbum, Artist } from '../music/entity/music.entity';
 import { User } from '../users/entity/user.entity';
 import { Profile } from '../profile/entity/profile.entity';
  
@@ -16,7 +16,7 @@ import { Profile } from '../profile/entity/profile.entity';
   imports: [
     TypeOrmModule.forRoot(ormconfig),
     MusicModule,
-    TypeOrmModule.forFeature([RawMusic, MusicAlbum, Artist, Music, MusicCollection, User, Profile]),
+    TypeOrmModule.forFeature([RawMusic, MusicAlbum, Artist, MusicCollection, User, Profile]),
     CommentModule,
     ProfileModule,
     MailModule,],

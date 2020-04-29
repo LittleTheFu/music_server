@@ -1,12 +1,10 @@
-import { Controller, Get, Post, Request, Body, UseGuards, Res } from '@nestjs/common';
+import { Controller, Post, Request, Body, UseGuards, Res } from '@nestjs/common';
 import { MusicService } from './music.service';
 import {
   GetMusicByCollectionIdDto,
   CreateCollectionDto,
   LikeMusicDto,
-  GetMusicByCollectionNameDto,
   GetMusicByKeywordDto,
-  PersonalListMusicDto,
   GetMusicLyricDto,
   DeleteCollectionDto,
   AddMusicToCollectionDto,

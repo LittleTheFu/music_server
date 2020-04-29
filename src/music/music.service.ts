@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-// import { Music } from './interfaces/music.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like, Not } from 'typeorm';
 import {
@@ -13,7 +12,6 @@ import {
   RetAlbumDetail,
 } from './entity/music.entity';
 import { User } from '../users/entity/user.entity';
-import { rmdir } from 'fs';
 
 @Injectable()
 export class MusicService {
@@ -32,9 +30,6 @@ export class MusicService {
     @InjectRepository(MusicCollection)
     private readonly MusicCollectionRepository: Repository<MusicCollection>,
 
-    @InjectRepository(Music)
-    private readonly MusicRepository: Repository<Music>,
-
     @InjectRepository(User)
     private readonly UserRepository: Repository<User>) {
 
@@ -50,20 +45,25 @@ export class MusicService {
   }
 
   async getMusicsByKeyword(userId: number, keyword: string): Promise<Music[]> {
-    const musics = await this.MusicRepository.find({ name: Like('%' + keyword + '%') });
+    const musics = await this.rawMusicRepository.find({ name: Like('%' + keyword + '%') });
 
-    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
-    console.log(user);
-    const likes = user.likes;
-    musics.forEach((m) => {
-      likes.forEach((l) => {
-        if (m.id === l.id) {
-          m.likedByCurrentUser = true;
-        }
-      })
+    const rmusics = musics.map((m) => {
+      const rm = new Music();
+      rm.id = m.id;
+      rm.name = m.name;
+      rm.like = m.like;
+      rm.artist = m.musicArtist.name;
+      rm.album = m.musicAlbum.name;
+      rm.address = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
+      rm.cover = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + 'cover.png';
+      rm.likedByCurrentUser = false;
+
+      return rm;
     });
 
-    return musics;
+    console.log(musics);
+
+    return rmusics;
   }
 
   async getCollectionDetailById(userId: number, collectionId: number): Promise<RetCollectionDetail> {
@@ -137,7 +137,7 @@ export class MusicService {
       return rm;
     });
 
-  console.log(musics);
+    console.log(musics);
 
     return musics;
   }

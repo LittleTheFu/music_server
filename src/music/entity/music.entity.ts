@@ -48,7 +48,6 @@ export class RawMusic {
   comments: Comment[];
 }
 
-@Entity()
 export class Music {
   constructor() {
     this.likedByCurrentUser = false;
