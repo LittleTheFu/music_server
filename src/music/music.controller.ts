@@ -121,8 +121,8 @@ export class MusicController {
   @UseGuards(JwtAuthGuard)
   @Post('getLyric')
   async getLyric(@Res() res, @Body() getMusicLyricDto: GetMusicLyricDto): Promise<void> {
-    const fileName = getMusicLyricDto.musicId + '.lrc';
-    return res.sendFile('1.lrc', { root: './public/lyric' });
+    const fileName = await this.musicService.getLyricFileName(getMusicLyricDto.musicId);
+    return res.sendFile(fileName, { root: './public/musics/' });
   }
 
   @UseGuards(JwtAuthGuard)

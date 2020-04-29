@@ -345,6 +345,11 @@ export class MusicService {
     return artist;
   }
 
+  async getLyricFileName(musicId: number): Promise<string> {
+    const music = await this.rawMusicRepository.findOne( { relations: ['musicAlbum'], where: { id: musicId} });
+    return music.musicAlbum.name + '/' + music.name + '.lrc';
+  }
+
   async getAllAlbums(userId: number): Promise<RetAlbum[]> {
     const albums = await this.albumRepository.find({ relations: ['musics', 'musics.musicArtist'] });
     const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
