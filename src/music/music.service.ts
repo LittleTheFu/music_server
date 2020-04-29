@@ -9,6 +9,7 @@ import {
   Artist,
   RetAlbum,
   MusicAlbum,
+  RawMusic,
 } from './entity/music.entity';
 import { User } from '../users/entity/user.entity';
 
@@ -17,6 +18,9 @@ export class MusicService {
   // index: number;
   // private readonly musics: Music[] = [];
   constructor(
+    @InjectRepository(RawMusic)
+    private readonly rawMusicRepository: Repository<RawMusic>,
+
     @InjectRepository(MusicAlbum)
     private readonly albumRepository: Repository<MusicAlbum>,
 
@@ -226,38 +230,45 @@ export class MusicService {
   }
 
   async likeMusic(userId: number, musicId: number): Promise<Music> {
-    const music = await this.MusicRepository.findOne(musicId);
-    music.like++;
+    const music = await this.rawMusicRepository.findOne( { relations: ['musicAlbum', 'musicArtist'], where: { id: musicId} });
+    // music.like++;
 
-    const retMusic = await this.MusicRepository.save(music);
-    retMusic.likedByCurrentUser = true;
+    const rMusic = new Music();
+    rMusic.id = music.id;
+    rMusic.cover = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + 'cover.png';
+    rMusic.name = music.name;
+    rMusic.artist = music.musicArtist.name;
+    rMusic.likedByCurrentUser = true;
+    rMusic.like = 99;
+    rMusic.address = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + music.name + '.mp3';
 
     const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
-    user.likes.push(retMusic);
+    user.likes.push(rMusic);
 
     await this.UserRepository.save(user);
 
-    console.log('like : ' + retMusic.like);
-
-    return retMusic;
+    return rMusic;
   }
 
   async dislikeMusic(userId: number, musicId: number): Promise<Music> {
-    const music = await this.MusicRepository.findOne(musicId);
-    music.like--;
+    const music = await this.rawMusicRepository.findOne( { relations: ['musicAlbum', 'musicArtist'], where: { id: musicId} });
+    // music.like--;
 
-    const retMusic = await this.MusicRepository.save(music);
-    retMusic.likedByCurrentUser = false;
+    const rMusic = new Music();
+    rMusic.id = music.id;
+    rMusic.cover = music.musicAlbum.name;
+    rMusic.name = music.name;
+    rMusic.artist = music.musicArtist.name;
+    rMusic.likedByCurrentUser = false;
+    rMusic.like = 3;
 
     const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
-    const newLikes = user.likes.filter((m) => { return m.id !== retMusic.id });
+    const newLikes = user.likes.filter((m) => { return m.id !== rMusic.id });
     user.likes = newLikes;
 
     await this.UserRepository.save(user);
 
-    console.log('dislike : ' + retMusic.like);
-
-    return retMusic;
+    return rMusic;
   }
 
   async getMusicCollections(username: string): Promise<MusicCollection[]> {
