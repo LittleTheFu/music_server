@@ -2,12 +2,6 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMan
 import { Comment } from '../../comment/entity/comment.entity';
 import { User } from '../../users/entity/user.entity';
 
-export class RetAlbum {
-  id: number;
-  cover: string;
-  name: string;
-}
-
 @Entity()
 export class MusicAlbum {
   @PrimaryGeneratedColumn()
@@ -16,7 +10,10 @@ export class MusicAlbum {
   @Column()
   name: string;
 
-  @OneToMany(type => Music, music => music.album)
+  @Column()
+  locationName: string;
+
+  @OneToMany(type => RawMusic, music => music.musicAlbum)
   musics: Music[];
 }
 
@@ -40,6 +37,9 @@ export class RawMusic {
 
   @Column()
   name: string;
+
+  @Column()
+  locationName: string;
 
   @ManyToOne(type => MusicAlbum)
   musicAlbum: MusicAlbum;
@@ -112,5 +112,19 @@ export class RetCollectionDetail {
   cover: string;
   name: string;
   canBeDeleted: boolean;
+  musics: Music[];
+}
+
+export class RetAlbum {
+  id: number;
+  cover: string;
+  name: string;
+  musics: Music[];
+}
+
+export class RetAlbumDetail {
+  id: number;
+  cover: string;
+  name: string;
   musics: Music[];
 }

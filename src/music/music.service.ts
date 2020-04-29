@@ -331,8 +331,10 @@ export class MusicService {
     return artist;
   }
 
-  async getAllAlbums(): Promise<RetAlbum[]> {
-    const albums = await this.albumRepository.find();
+  async getAllAlbums(userId: number): Promise<RetAlbum[]> {
+    const albums = await this.albumRepository.find({ relations: ['musics', 'musics.musicArtist'] });
+    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
+    console.log(user);
 
     const retAlbums = albums.map((album) => {
       const retAlbum = new RetAlbum();
@@ -341,8 +343,38 @@ export class MusicService {
       retAlbum.name = album.name;
       retAlbum.cover = 'http://localhost:9999/musics/' + retAlbum.name + '/cover.png';
 
+      const retMusics = album.musics.map((music) => {
+        const retMusic = new Music();
+
+        retMusic.id = music.id;
+        retMusic.address = 'http://localhost:9999/musics/' + retAlbum.name + '/' + music.name;
+        retMusic.cover = retAlbum.cover;
+        retMusic.artist = music.musicArtist.name;
+        retMusic.album = retAlbum.name;
+
+        retMusic.like = 10;
+
+
+        retMusic.likedByCurrentUser = false;
+        const likes = user.likes;
+        likes.forEach((l) => {
+          if (retMusic.id === l.id) {
+            retMusic.likedByCurrentUser = true;
+          }
+        });
+
+        retMusic.comments = [];
+
+        return retMusic;
+      })
+
+      retAlbum.musics = retMusics;
+
       return retAlbum;
     });
+
+    console.log('RETURN ALBUNMS')
+    console.log(retAlbums);
 
     return retAlbums;
   }

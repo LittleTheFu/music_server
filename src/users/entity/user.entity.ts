@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, Unique, OneToOne, JoinColumn, OneToMany } from 'typeorm';
-import { Music, MusicCollection } from '../../music/entity/music.entity';
+import { Music, MusicCollection, RawMusic } from '../../music/entity/music.entity';
 import { Comment } from '../../comment/entity/comment.entity';
 import { Profile } from '../../profile/entity/profile.entity';
 import { Mail } from '../../mail/entity/mail.entity';
@@ -16,9 +16,9 @@ export class User {
     @Column()
     password: string;
 
-    @ManyToMany(type => Music)
+    @ManyToMany(type => RawMusic)
     @JoinTable()
-    likes: Music[]; 
+    likes: RawMusic[]; 
 
     @OneToMany(type => MusicCollection, collection => collection.user, { onDelete: "CASCADE" })
     playlist: MusicCollection[];

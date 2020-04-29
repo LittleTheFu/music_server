@@ -9,7 +9,9 @@ import { Profile } from '../profile/entity/profile.entity';
 import { MailModule } from '../mail/mail.module';
 
 @Module({
-  imports: [forwardRef(()=>MailModule), forwardRef(()=>MusicModule),  TypeOrmModule.forFeature([User, MusicCollection, Profile])],
+  imports: [forwardRef(()=>MailModule), 
+    forwardRef(()=>MusicModule),  
+    TypeOrmModule.forFeature([User, MusicCollection, Profile])],
   controllers: [UsersController],
   providers: [UsersService],
   exports: [UsersService],

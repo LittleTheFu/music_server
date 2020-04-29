@@ -122,7 +122,7 @@ export class MusicController {
   @Post('getLyric')
   async getLyric(@Res() res, @Body() getMusicLyricDto: GetMusicLyricDto): Promise<void> {
     const fileName = getMusicLyricDto.musicId + '.lrc';
-    return res.sendFile(fileName, { root: './public/lyric' });
+    return res.sendFile('1.lrc', { root: './public/lyric' });
   }
 
   @UseGuards(JwtAuthGuard)
@@ -145,7 +145,13 @@ export class MusicController {
 
   @UseGuards(JwtAuthGuard)
   @Post('getAlbums')
-  async getAlbums(): Promise<object> {
-    return this.musicService.getAllAlbums();
+  async getAlbums(@Request() req): Promise<object> {
+    return this.musicService.getAllAlbums(req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('getAlbumDetail')
+  async getAlbumDetail(@Request() req): Promise<object> {
+    return this.musicService.getAllAlbums(req.user.userId);
   }
 }
