@@ -2,6 +2,12 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMan
 import { Comment } from '../../comment/entity/comment.entity';
 import { User } from '../../users/entity/user.entity';
 
+export class RetAlbum {
+  id: number;
+  cover: string;
+  name: string;
+}
+
 @Entity()
 export class MusicAlbum {
   @PrimaryGeneratedColumn()

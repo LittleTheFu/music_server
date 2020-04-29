@@ -2,7 +2,14 @@ import { Injectable } from '@nestjs/common';
 // import { Music } from './interfaces/music.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like, Not } from 'typeorm';
-import { Music, MusicCollection, RetCollectionDetail, Artist } from './entity/music.entity';
+import {
+  Music,
+  MusicCollection,
+  RetCollectionDetail,
+  Artist,
+  RetAlbum,
+  MusicAlbum,
+} from './entity/music.entity';
 import { User } from '../users/entity/user.entity';
 
 @Injectable()
@@ -10,6 +17,9 @@ export class MusicService {
   // index: number;
   // private readonly musics: Music[] = [];
   constructor(
+    @InjectRepository(MusicAlbum)
+    private readonly albumRepository: Repository<MusicAlbum>,
+
     @InjectRepository(Artist)
     private readonly artistRepository: Repository<Artist>,
 
@@ -146,14 +156,14 @@ export class MusicService {
     const collection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { id: collectionId } });
     const music = await this.MusicRepository.findOne({ id: musicId });
 
-    if( collection.musics.find(m => {m.id === music.id})) {
-      return {msg: 'already in this list'}
+    if (collection.musics.find(m => { m.id === music.id })) {
+      return { msg: 'already in this list' }
     }
 
     collection.musics = collection.musics.concat(music);
     await this.MusicCollectionRepository.save(collection);
 
-    return {msg: "success"}
+    return { msg: "success" }
   }
 
   async removeMusicFromCollection(musicId: number, collectionId: number): Promise<object> {
@@ -163,7 +173,7 @@ export class MusicService {
     collection.musics = collection.musics.filter((m) => { return m.id !== musicId; });
     await this.MusicCollectionRepository.save(collection);
 
-    return {msg: 'success'};
+    return { msg: 'success' };
   }
 
   async getPlayListMusicList(userId: number, username: string): Promise<Music[]> {
@@ -319,6 +329,22 @@ export class MusicService {
     const artist = await this.artistRepository.findOne({ relations: ['musicAlbums'], where: { id: artistId } });
 
     return artist;
+  }
+
+  async getAllAlbums(): Promise<RetAlbum[]> {
+    const albums = await this.albumRepository.find();
+
+    const retAlbums = albums.map((album) => {
+      const retAlbum = new RetAlbum();
+
+      retAlbum.id = album.id;
+      retAlbum.name = album.name;
+      retAlbum.cover = 'http://localhost:9999/musics/' + retAlbum.name + '/cover.png';
+
+      return retAlbum;
+    });
+
+    return retAlbums;
   }
 
 }

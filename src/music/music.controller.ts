@@ -142,4 +142,10 @@ export class MusicController {
   async getArtistInfo(@Body() getArtistInfoDtG: GetArtistInfoDto): Promise<object> {
     return this.musicService.getArtistInfo(getArtistInfoDtG.artistId);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('getAlbums')
+  async getAlbums(): Promise<object> {
+    return this.musicService.getAllAlbums();
+  }
 }
