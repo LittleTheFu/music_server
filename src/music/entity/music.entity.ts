@@ -14,6 +14,8 @@ export class MusicAlbum {
   musics: RawMusic[];
 }
 
+
+
 @Entity()
 export class Artist {
   @PrimaryGeneratedColumn()
@@ -67,6 +69,9 @@ export class Music {
 
   @Column()
   artist: string;
+
+  @Column()
+  artistId: number;
 
   @Column()
   album: string;
@@ -126,4 +131,11 @@ export class RetAlbumDetail {
   cover: string;
   name: string;
   musics: Music[];
+}
+
+export class RetArtist {
+  id: number;
+  name: string;
+  avatar: string;
+  musicAlbums: MusicAlbum[];
 }

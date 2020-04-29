@@ -10,6 +10,7 @@ import {
   MusicAlbum,
   RawMusic,
   RetAlbumDetail,
+  RetArtist,
 } from './entity/music.entity';
 import { User } from '../users/entity/user.entity';
 
@@ -53,6 +54,7 @@ export class MusicService {
       rm.name = m.name;
       rm.like = m.like;
       rm.artist = m.musicArtist.name;
+      rm.artistId = m.musicArtist.id;
       rm.album = m.musicAlbum.name;
       rm.address = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
       rm.cover = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + 'cover.png';
@@ -81,6 +83,7 @@ export class MusicService {
       rm.name = m.name;
       rm.like = m.like;
       rm.artist = m.musicArtist.name;
+      rm.artistId = m.musicArtist.id;
       rm.album = m.musicAlbum.name;
       rm.address = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
       rm.cover = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + 'cover.png';
@@ -123,6 +126,7 @@ export class MusicService {
       rm.name = m.name;
       rm.like = m.like;
       rm.artist = m.musicArtist.name;
+      rm.artistId = m.musicArtist.id;
       rm.album = m.musicAlbum.name;
       rm.address = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
       rm.cover = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + 'cover.png';
@@ -191,6 +195,7 @@ export class MusicService {
     rMusic.cover = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + 'cover.png';
     rMusic.name = music.name;
     rMusic.artist = music.musicArtist.name;
+    rMusic.artistId = music.musicArtist.id;
     rMusic.likedByCurrentUser = true;
     rMusic.like = music.like;
     rMusic.address = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + music.name + '.mp3';
@@ -213,6 +218,7 @@ export class MusicService {
     rMusic.cover = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + 'cover.png';
     rMusic.name = music.name;
     rMusic.artist = music.musicArtist.name;
+    rMusic.artistId = music.musicArtist.id;
     rMusic.likedByCurrentUser = false;
     rMusic.like = music.like;
     rMusic.address = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + music.name + '.mp3';
@@ -260,10 +266,16 @@ export class MusicService {
     return retCollection;
   }
 
-  async getArtistInfo(artistId: number): Promise<Artist> {
+  async getArtistInfo(artistId: number): Promise<RetArtist> {
     const artist = await this.artistRepository.findOne({ relations: ['musicAlbums'], where: { id: artistId } });
-
-    return artist;
+    
+    const r = new RetArtist();
+    r.id = artist.id;
+    r.name = artist.name;
+    r.musicAlbums = artist.musicAlbums;
+    r.avatar = 'http://localhost:9999/artist/' + artist.name + '.png';
+    
+    return r;
   }
 
   async getLyricFileName(musicId: number): Promise<string> {
@@ -287,6 +299,7 @@ export class MusicService {
       const rMusic = new Music();
       rMusic.id = m.id;
       rMusic.artist = m.musicArtist.name;
+      rMusic.artistId = m.musicArtist.id;
       rMusic.cover = retAlbum.cover;
       rMusic.name = m.name;
       rMusic.address = 'http://localhost:9999/musics/' + retAlbum.name + '/' + m.name + '.mp3';
@@ -320,6 +333,7 @@ export class MusicService {
         retMusic.address = 'http://localhost:9999/musics/' + retAlbum.name + '/' + music.name + '.mp3';
         retMusic.cover = retAlbum.cover;
         retMusic.artist = music.musicArtist.name;
+        retMusic.artistId = music.musicArtist.id;
         retMusic.album = retAlbum.name;
 
         retMusic.like = music.like;
