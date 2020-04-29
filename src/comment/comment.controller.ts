@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Request, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Request, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CommentService } from './comment.service';
-import { Comment, RetComment } from './entity/comment.entity';
+import { RetComment } from './entity/comment.entity';
 import { GetMusicCommentsDto } from './dto/comment.dto';
 
 @Controller('comment')

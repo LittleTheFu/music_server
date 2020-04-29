@@ -2,10 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like, Not } from 'typeorm';
 import { Comment, RetComment } from './entity/comment.entity';
-import { Music } from '../music/entity/music.entity';
+import { RawMusic } from '../music/entity/music.entity';
 import { User } from '../users/entity/user.entity';
-import { rootCertificates } from 'tls';
-
 
 @Injectable()
 export class CommentService {
@@ -13,8 +11,8 @@ export class CommentService {
         @InjectRepository(Comment)
         private readonly CommentRepository: Repository<Comment>,
 
-        @InjectRepository(Music)
-        private readonly musicRepository: Repository<Music>,
+        @InjectRepository(RawMusic)
+        private readonly rawMusicRepository: Repository<RawMusic>,
 
         @InjectRepository(User)
         private readonly userRepository: Repository<User>) {
@@ -52,15 +50,24 @@ export class CommentService {
         const comment = new Comment;
         comment.content = content;
 
-        const music = await this.musicRepository.findOne({
+        // const musics = await this.rawMusicRepository.find();
+        // console.log(musics);
+
+        // console.log('MUSIC ID : ' + musicId);
+        const music = await this.rawMusicRepository.findOne({
             id: musicId,
         });
+        // console.log('MUSIC  : ' + music);
+
         comment.music = music;
 
         const user = await this.userRepository.findOne({
             id: userId,
         });
         comment.user = user;
+
+        console.log('comment : ');
+        console.log(comment);
 
         await this.CommentRepository.save(comment);
 

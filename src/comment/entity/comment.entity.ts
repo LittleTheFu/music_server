@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
-import { Music } from '../../music/entity/music.entity';
+import { Music, RawMusic } from '../../music/entity/music.entity';
 import { User } from '../../users/entity/user.entity';
 
 
@@ -11,8 +11,8 @@ export class Comment {
   @Column()
   content: string;
 
-  @ManyToOne(type => Music, music=>music.comments)
-  music: Music;
+  @ManyToOne(type => RawMusic, music=>music.comments)
+  music: RawMusic;
 
   @ManyToOne(type => User, user=>user.comments)
   user: User;

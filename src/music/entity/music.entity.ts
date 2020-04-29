@@ -43,6 +43,9 @@ export class RawMusic {
 
   @Column({default: 0})
   like: number;
+
+  @OneToMany(type => Comment, comment => comment.music)
+  comments: Comment[];
 }
 
 @Entity()
