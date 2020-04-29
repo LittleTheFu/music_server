@@ -258,11 +258,12 @@ export class MusicService {
 
     const rMusic = new Music();
     rMusic.id = music.id;
-    rMusic.cover = music.musicAlbum.name;
+    rMusic.cover = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + 'cover.png';
     rMusic.name = music.name;
     rMusic.artist = music.musicArtist.name;
     rMusic.likedByCurrentUser = false;
     rMusic.like = music.like;
+    rMusic.address = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + music.name + '.mp3';
 
     const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
     const newLikes = user.likes.filter((m) => { return m.id !== rMusic.id });
