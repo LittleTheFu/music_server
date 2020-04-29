@@ -347,7 +347,7 @@ export class MusicService {
         const retMusic = new Music();
 
         retMusic.id = music.id;
-        retMusic.address = 'http://localhost:9999/musics/' + retAlbum.name + '/' + music.name;
+        retMusic.address = 'http://localhost:9999/musics/' + retAlbum.name + '/' + music.name + '.mp3';
         retMusic.cover = retAlbum.cover;
         retMusic.artist = music.musicArtist.name;
         retMusic.album = retAlbum.name;

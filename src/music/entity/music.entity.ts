@@ -10,9 +10,6 @@ export class MusicAlbum {
   @Column()
   name: string;
 
-  @Column()
-  locationName: string;
-
   @OneToMany(type => RawMusic, music => music.musicAlbum)
   musics: Music[];
 }
@@ -37,9 +34,6 @@ export class RawMusic {
 
   @Column()
   name: string;
-
-  @Column()
-  locationName: string;
 
   @ManyToOne(type => MusicAlbum)
   musicAlbum: MusicAlbum;
