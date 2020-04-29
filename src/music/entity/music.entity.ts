@@ -98,9 +98,9 @@ export class MusicCollection {
   @Column()
   cover: string;
 
-  @ManyToMany(type => Music)
+  @ManyToMany(type => RawMusic)
   @JoinTable()
-  musics: Music[];
+  musics: RawMusic[];
 
   @ManyToOne(type => User, user => user.playlist, { onDelete: "CASCADE" })
   user: User;

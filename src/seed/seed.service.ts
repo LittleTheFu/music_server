@@ -109,7 +109,7 @@ export class SeedService {
         c1.cover = 'http://localhost:9999/album/4.png';
         c1.name = 'recommend';
         c1.user = u;
-        c1.musics = [m1, m2, m3, m4];
+        c1.musics = [];
 
         await this.collectionRepository.save(c1);
 

@@ -13,6 +13,7 @@ import {
   RetAlbumDetail,
 } from './entity/music.entity';
 import { User } from '../users/entity/user.entity';
+import { rmdir } from 'fs';
 
 @Injectable()
 export class MusicService {
@@ -67,31 +68,40 @@ export class MusicService {
 
   async getCollectionDetailById(userId: number, collectionId: number): Promise<RetCollectionDetail> {
     const collection = await this.MusicCollectionRepository.findOne({
-      relations: ['musics'],
+      relations: ['musics', 'musics.musicArtist', 'musics.musicAlbum'],
       where: { id: collectionId }
     });
-    const musics = collection.musics;
 
     const user = await this.UserRepository.findOne({ relations: ['likes', 'playlist'], where: { id: userId } });
     const likes = user.likes;
-    musics.forEach((m) => {
+
+    const musics = collection.musics.map((m) => {
+      const rm = new Music();
+      rm.id = m.id;
+      rm.name = m.name;
+      rm.like = m.like;
+      rm.artist = m.musicArtist.name;
+      rm.album = m.musicAlbum.name;
+      rm.address = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
+      rm.cover = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + 'cover.png';
+      rm.likedByCurrentUser = false;
+
       likes.forEach((l) => {
         if (m.id === l.id) {
-          m.likedByCurrentUser = true;
+          rm.likedByCurrentUser = true;
         }
       })
+
+      return rm;
     });
 
     const foundCollection = user.playlist.find((c) => { return c.id === collectionId });
-    console.log('BEGIN foundCollection');
-    console.log(foundCollection);
-    console.log('END foundCollection');
 
     const r = new RetCollectionDetail();
-    r.musics = musics;
     r.name = collection.name;
     r.cover = collection.cover;
     r.canBeDeleted = (foundCollection != null);
+    r.musics = musics;
 
     console.log(r);
 
@@ -100,46 +110,34 @@ export class MusicService {
 
   async getMusicListByCollectionId(userId: number, musicId: number): Promise<Music[]> {
     const collection = await this.MusicCollectionRepository.findOne({
-      relations: ['musics'],
+      relations: ['musics', 'musics.musicArtist', 'musics.musicAlbum'],
       where: { id: musicId }
     });
-    const musics = collection.musics;
-    console.log(collection);
-    // console.log(musics);
 
-    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
-    // console.log(musics);
+    const user = await this.UserRepository.findOne({ relations: ['likes', 'playlist'], where: { id: userId } });
     const likes = user.likes;
-    musics.forEach((m) => {
+
+    const musics = collection.musics.map((m) => {
+      const rm = new Music();
+      rm.id = m.id;
+      rm.name = m.name;
+      rm.like = m.like;
+      rm.artist = m.musicArtist.name;
+      rm.album = m.musicAlbum.name;
+      rm.address = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
+      rm.cover = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + 'cover.png';
+      rm.likedByCurrentUser = false;
+
       likes.forEach((l) => {
         if (m.id === l.id) {
-          m.likedByCurrentUser = true;
+          rm.likedByCurrentUser = true;
         }
       })
+
+      return rm;
     });
 
-    return musics;
-  }
-
-  async getMusicListByCollectionName(userId: number, name: string): Promise<Music[]> {
-    const collection = await this.MusicCollectionRepository.findOne({
-      relations: ['musics'],
-      where: { name: name }
-    });
-    const musics = collection.musics;
-    console.log(collection);
-    // console.log(musics);
-
-    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
-    console.log(user);
-    const likes = user.likes;
-    musics.forEach((m) => {
-      likes.forEach((l) => {
-        if (m.id === l.id) {
-          m.likedByCurrentUser = true;
-        }
-      })
-    });
+  console.log(musics);
 
     return musics;
   }
@@ -157,9 +155,11 @@ export class MusicService {
   }
 
   async addMusicToCollection(collectionId: number, musicId: number): Promise<object> {
-    // const privateCollectionName = 'privateCollection_' + username;
     const collection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { id: collectionId } });
-    const music = await this.MusicRepository.findOne({ id: musicId });
+    const music = await this.rawMusicRepository.findOne({ id: musicId });
+
+    console.log('+++++++++');
+    console.log(collection);
 
     if (collection.musics.find(m => { m.id === music.id })) {
       return { msg: 'already in this list' }
@@ -179,55 +179,6 @@ export class MusicService {
     await this.MusicCollectionRepository.save(collection);
 
     return { msg: 'success' };
-  }
-
-  async getPlayListMusicList(userId: number, username: string): Promise<Music[]> {
-    const privateCollectionName = 'privateCollection_' + username;
-    const collection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { name: privateCollectionName } });
-
-    // const collection = await this.MusicCollectionRepository.findOne({
-    //   relations: ['musics'],
-    //   where: { id: 1 }
-    // });
-    const musics = collection.musics;
-    console.log(collection);
-    // console.log(musics);
-
-    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
-    console.log(user);
-    const likes = user.likes;
-    musics.forEach((m) => {
-      likes.forEach((l) => {
-        if (m.id === l.id) {
-          m.likedByCurrentUser = true;
-        }
-      })
-    });
-
-    return musics;
-  }
-
-  async getMusics(userId: number): Promise<Music[]> {
-    const collection = await this.MusicCollectionRepository.findOne({
-      relations: ['musics'],
-      where: { id: 2 }
-    });
-    const musics = collection.musics;
-    // console.log(collection);
-    console.log(musics);
-
-    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
-    console.log(user);
-    const likes = user.likes;
-    musics.forEach((m) => {
-      likes.forEach((l) => {
-        if (m.id === l.id) {
-          m.likedByCurrentUser = true;
-        }
-      })
-    });
-
-    return musics;
   }
 
   async likeMusic(userId: number, musicId: number): Promise<Music> {
@@ -291,37 +242,6 @@ export class MusicService {
   async getPublicMusicCollections(): Promise<MusicCollection[]> {
     const user = await this.UserRepository.findOne({ relations: ['playlist'], where: { id: 1 } });
     return user.playlist;
-  }
-
-  async addMusicToPersonalCollection(username: string, musicId: number): Promise<Music[]> {
-    const privateCollectionName = 'privateCollection_' + username;
-    const privateCollection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { name: privateCollectionName } });
-
-    const music = await this.MusicRepository.findOne({ id: musicId });
-
-    console.log('private_collection : ' + privateCollection.id + '  ' + privateCollection.name);
-    console.log('musics : ...' + privateCollection.musics);
-
-    privateCollection.musics = privateCollection.musics.concat(music);
-
-    await this.MusicCollectionRepository.save(privateCollection);
-    return privateCollection.musics;
-  }
-
-  async removeMusicFromPersonalCollection(username: string, musicId: number): Promise<Music[]> {
-    const privateCollectionName = 'privateCollection_' + username;
-    const privateCollection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { name: privateCollectionName } });
-
-    // const music = await this.MusicRepository.findOne( {id: musicId} );
-
-    console.log('private_collection : ' + privateCollection.id + '  ' + privateCollection.name);
-    console.log('musics : ...' + privateCollection.musics);
-    console.log('remove....id : ' + musicId);
-
-    privateCollection.musics = privateCollection.musics.filter(m => { return (m.id != musicId); });
-
-    await this.MusicCollectionRepository.save(privateCollection);
-    return privateCollection.musics;
   }
 
   async createCollection(userId: number, name: string): Promise<MusicCollection> {

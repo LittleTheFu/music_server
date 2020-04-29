@@ -31,14 +31,6 @@ export class MusicController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('PlayListMusicList')
-  async getPlayListMusicList(@Request() req): Promise<object> {
-    // console.log('req.user : ' + JSON.stringify(req.user));
-    console.log('req.header : ' + JSON.stringify(req.body));
-    return this.musicService.getPlayListMusicList(req.user.userId, req.user.username);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Post('GetMusicsByCollectionId')
   async getMusicsByCollectionId(@Request() req, @Body() getMusicByCollectionIdDto: GetMusicByCollectionIdDto): Promise<object> {
     return this.musicService.getMusicListByCollectionId(req.user.userId, getMusicByCollectionIdDto.id);
@@ -63,20 +55,6 @@ export class MusicController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('GetMusicsByCollectionName')
-  async getMusicsByCollectionName(@Request() req, @Body() getMusicByCollectionNameDto: GetMusicByCollectionNameDto): Promise<object> {
-    const name = getMusicByCollectionNameDto.name;
-    return this.musicService.getMusicListByCollectionName(req.user.userId, name);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('Musics')
-  async getMusics(@Request() req): Promise<object> {
-    console.log('req.user : ' + JSON.stringify(req.user));
-    return this.musicService.getMusics(req.user.userId);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Post('Collections')
   async getMusicCollections(@Request() req): Promise<object> {
     return this.musicService.getMusicCollections(req.user.username);
@@ -92,18 +70,6 @@ export class MusicController {
   @Post('getPublicMusicCollections')
   async getPublicMusicCollections(): Promise<object> {
     return this.musicService.getPublicMusicCollections();
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('AddMusicToMyList')
-  async addMusicToMyList(@Request() req, @Body() addMusicDto: PersonalListMusicDto): Promise<object> {
-    return this.musicService.addMusicToPersonalCollection(req.user.username, addMusicDto.musicId);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('RemoveMusicFromMyList')
-  async removeMusicFromMyList(@Request() req, @Body() removeMusicDto: PersonalListMusicDto): Promise<object> {
-    return this.musicService.removeMusicFromPersonalCollection(req.user.username, removeMusicDto.musicId);
   }
 
   @UseGuards(JwtAuthGuard)
