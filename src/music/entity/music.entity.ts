@@ -40,6 +40,9 @@ export class RawMusic {
 
   @ManyToOne(type => Artist)
   musicArtist: Artist;
+
+  @Column({default: 0})
+  like: number;
 }
 
 @Entity()

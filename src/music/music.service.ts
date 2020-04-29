@@ -231,7 +231,8 @@ export class MusicService {
 
   async likeMusic(userId: number, musicId: number): Promise<Music> {
     const music = await this.rawMusicRepository.findOne( { relations: ['musicAlbum', 'musicArtist'], where: { id: musicId} });
-    // music.like++;
+    music.like++;
+    this.rawMusicRepository.save(music);
 
     const rMusic = new Music();
     rMusic.id = music.id;
@@ -239,7 +240,7 @@ export class MusicService {
     rMusic.name = music.name;
     rMusic.artist = music.musicArtist.name;
     rMusic.likedByCurrentUser = true;
-    rMusic.like = 99;
+    rMusic.like = music.like;
     rMusic.address = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + music.name + '.mp3';
 
     const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
@@ -252,7 +253,8 @@ export class MusicService {
 
   async dislikeMusic(userId: number, musicId: number): Promise<Music> {
     const music = await this.rawMusicRepository.findOne( { relations: ['musicAlbum', 'musicArtist'], where: { id: musicId} });
-    // music.like--;
+    music.like--;
+    this.rawMusicRepository.save(music);
 
     const rMusic = new Music();
     rMusic.id = music.id;
@@ -260,7 +262,7 @@ export class MusicService {
     rMusic.name = music.name;
     rMusic.artist = music.musicArtist.name;
     rMusic.likedByCurrentUser = false;
-    rMusic.like = 3;
+    rMusic.like = music.like;
 
     const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
     const newLikes = user.likes.filter((m) => { return m.id !== rMusic.id });
@@ -363,8 +365,7 @@ export class MusicService {
         retMusic.artist = music.musicArtist.name;
         retMusic.album = retAlbum.name;
 
-        retMusic.like = 10;
-
+        retMusic.like = music.like;
 
         retMusic.likedByCurrentUser = false;
         const likes = user.likes;
