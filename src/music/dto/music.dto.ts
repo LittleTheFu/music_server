@@ -43,3 +43,7 @@ export class RemoveMusicFromCollectionDto {
 export class GetArtistInfoDto {
     artistId: number;
 }
+
+export class GetAlbumDetailDto {
+    albumId: number;
+}

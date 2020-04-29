@@ -12,6 +12,7 @@ import {
   AddMusicToCollectionDto,
   RemoveMusicFromCollectionDto,
   GetArtistInfoDto,
+  GetAlbumDetailDto,
 } from './dto/music.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -151,7 +152,7 @@ export class MusicController {
 
   @UseGuards(JwtAuthGuard)
   @Post('getAlbumDetail')
-  async getAlbumDetail(@Request() req): Promise<object> {
-    return this.musicService.getAllAlbums(req.user.userId);
+  async getAlbumDetail(@Body() getAlbumDetailDto: GetAlbumDetailDto): Promise<object> {
+    return this.musicService.getAlbum(getAlbumDetailDto.albumId);
   }
 }

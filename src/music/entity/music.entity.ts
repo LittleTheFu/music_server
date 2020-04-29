@@ -11,7 +11,7 @@ export class MusicAlbum {
   name: string;
 
   @OneToMany(type => RawMusic, music => music.musicAlbum)
-  musics: Music[];
+  musics: RawMusic[];
 }
 
 @Entity()

@@ -10,6 +10,7 @@ import {
   RetAlbum,
   MusicAlbum,
   RawMusic,
+  RetAlbumDetail,
 } from './entity/music.entity';
 import { User } from '../users/entity/user.entity';
 
@@ -230,7 +231,7 @@ export class MusicService {
   }
 
   async likeMusic(userId: number, musicId: number): Promise<Music> {
-    const music = await this.rawMusicRepository.findOne( { relations: ['musicAlbum', 'musicArtist'], where: { id: musicId} });
+    const music = await this.rawMusicRepository.findOne({ relations: ['musicAlbum', 'musicArtist'], where: { id: musicId } });
     music.like++;
     this.rawMusicRepository.save(music);
 
@@ -252,7 +253,7 @@ export class MusicService {
   }
 
   async dislikeMusic(userId: number, musicId: number): Promise<Music> {
-    const music = await this.rawMusicRepository.findOne( { relations: ['musicAlbum', 'musicArtist'], where: { id: musicId} });
+    const music = await this.rawMusicRepository.findOne({ relations: ['musicAlbum', 'musicArtist'], where: { id: musicId } });
     music.like--;
     this.rawMusicRepository.save(music);
 
@@ -346,8 +347,38 @@ export class MusicService {
   }
 
   async getLyricFileName(musicId: number): Promise<string> {
-    const music = await this.rawMusicRepository.findOne( { relations: ['musicAlbum'], where: { id: musicId} });
+    const music = await this.rawMusicRepository.findOne({ relations: ['musicAlbum'], where: { id: musicId } });
     return music.musicAlbum.name + '/' + music.name + '.lrc';
+  }
+
+  async getAlbum(albumId: number): Promise<RetAlbumDetail> {
+    const album = await this.albumRepository.findOne(
+      {
+        relations: ['musics', 'musics.musicArtist'],
+        where: { id: albumId }
+      });
+
+    const retAlbum = new RetAlbumDetail();
+    retAlbum.id = album.id;
+    retAlbum.cover = 'http://localhost:9999/musics/' + album.name + '/cover.png';
+    retAlbum.name = album.name;
+
+    const retMusics = album.musics.map((m) => {
+      const rMusic = new Music();
+      rMusic.id = m.id;
+      rMusic.artist = m.musicArtist.name;
+      rMusic.cover = retAlbum.cover;
+      rMusic.name = m.name;
+      rMusic.address = 'http://localhost:9999/musics/' + retAlbum.name + '/' + m.name + '.mp3';
+
+      return rMusic;
+    })
+
+    retAlbum.musics = retMusics;
+
+    console.log(retAlbum);
+
+    return retAlbum;
   }
 
   async getAllAlbums(userId: number): Promise<RetAlbum[]> {
