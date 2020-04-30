@@ -46,7 +46,12 @@ export class MusicService {
   }
 
   async getMusicsByKeyword(userId: number, keyword: string): Promise<Music[]> {
-    const musics = await this.rawMusicRepository.find({ name: Like('%' + keyword + '%') });
+    const musics = await this.rawMusicRepository.find({
+      relations: ['musicAlbum', 'musicArtist'],
+      where: { name: Like('%' + keyword + '%') }
+    });
+
+    console.log(musics);
 
     const rmusics = musics.map((m) => {
       const rm = new Music();
@@ -273,7 +278,7 @@ export class MusicService {
 
   async getArtistInfo(artistId: number): Promise<RetArtist> {
     const artist = await this.artistRepository.findOne({ relations: ['musicAlbums', 'musicAlbums.musics'], where: { id: artistId } });
-    
+
     const r = new RetArtist();
     r.id = artist.id;
     r.name = artist.name;
@@ -291,7 +296,7 @@ export class MusicService {
         rMusic.cover = retAlbum.cover;
         rMusic.name = m.name;
         rMusic.address = 'http://localhost:9999/musics/' + retAlbum.name + '/' + m.name + '.mp3';
-        
+
         return rMusic;
       })
 
@@ -299,7 +304,7 @@ export class MusicService {
     });
 
     r.avatar = 'http://localhost:9999/artist/' + artist.name + '.png';
-    
+
     return r;
   }
 
