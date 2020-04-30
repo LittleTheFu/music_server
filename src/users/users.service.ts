@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User,RetUserDetail, RetFollower, RetMe } from './entity/user.entity';
+import { User,RetUserDetail, RetFollower, RetSimpleUser } from './entity/user.entity';
 import { MusicCollection } from '../music/entity/music.entity';
 import { Profile } from '../profile/entity/profile.entity';
 import { Md5 } from 'ts-md5/dist/md5';
@@ -20,7 +20,7 @@ export class UsersService {
     private readonly profileRepository: Repository<Profile>) {
   }
 
-  async getMe(userId: number) : Promise<RetMe> {
+  async getMe(userId: number) : Promise<RetSimpleUser> {
     const result = await this.usersRepository
     .createQueryBuilder('user')
     .innerJoinAndSelect('user.profile', 'profile')
@@ -28,7 +28,7 @@ export class UsersService {
     .getOne();
 
     // console.log(result);
-    const ret = new RetMe();
+    const ret = new RetSimpleUser();
     ret.id = result.id;
     ret.name = result.name;
     ret.avatarUrl = result.profile.avatarUrl;
@@ -103,6 +103,23 @@ export class UsersService {
 
     return {msg: 'success'};
   }
+
+  async getAllUsers(): Promise<RetSimpleUser[]> {
+    const users = await this.usersRepository.find( { relations: ['profile'] });
+
+    const retUsers = users.map((u) => {
+      const r = new RetSimpleUser();
+      
+      r.id = u.id;
+      r.name = u.name;
+      r.avatarUrl = u.profile.avatarUrl;
+
+      return r;
+    })
+
+    return retUsers;
+  }
+
 
   async getUserFollowers(meId: number, userId: number): Promise<RetFollower[]> {
     const me = await this.usersRepository.findOne({ relations: ['following'], where: { id: meId}});

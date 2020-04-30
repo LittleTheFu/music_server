@@ -55,7 +55,7 @@ export class User {
     isFollowed: boolean;
   }
 
-  export class RetMe {
+  export class RetSimpleUser {
     id: number;
     name: string;
     avatarUrl: string;
