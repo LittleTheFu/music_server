@@ -112,5 +112,5 @@ export class RetArtist {
   id: number;
   name: string;
   avatar: string;
-  musicAlbums: MusicAlbum[];
+  albums: RetAlbumDetail[];
 }

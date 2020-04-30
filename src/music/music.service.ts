@@ -272,12 +272,32 @@ export class MusicService {
   }
 
   async getArtistInfo(artistId: number): Promise<RetArtist> {
-    const artist = await this.artistRepository.findOne({ relations: ['musicAlbums'], where: { id: artistId } });
+    const artist = await this.artistRepository.findOne({ relations: ['musicAlbums', 'musicAlbums.musics'], where: { id: artistId } });
     
     const r = new RetArtist();
     r.id = artist.id;
     r.name = artist.name;
-    r.musicAlbums = artist.musicAlbums;
+    r.albums = artist.musicAlbums.map((album) => {
+      const retAlbum = new RetAlbum();
+      retAlbum.id = album.id;
+      retAlbum.name = album.name;
+      retAlbum.cover = 'http://localhost:9999/musics/' + album.name + '/cover.png';
+      retAlbum.musics = album.musics.map((m) => {
+        const rMusic = new Music();
+        rMusic.id = m.id;
+        rMusic.artist = artist.name;
+        rMusic.artistId = artist.id;
+        rMusic.albumId = album.id;
+        rMusic.cover = retAlbum.cover;
+        rMusic.name = m.name;
+        rMusic.address = 'http://localhost:9999/musics/' + retAlbum.name + '/' + m.name + '.mp3';
+        
+        return rMusic;
+      })
+
+      return retAlbum;
+    });
+
     r.avatar = 'http://localhost:9999/artist/' + artist.name + '.png';
     
     return r;
