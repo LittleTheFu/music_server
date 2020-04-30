@@ -55,6 +55,7 @@ export class MusicService {
       rm.like = m.like;
       rm.artist = m.musicArtist.name;
       rm.artistId = m.musicArtist.id;
+      rm.albumId = m.musicAlbum.id;
       rm.album = m.musicAlbum.name;
       rm.address = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
       rm.cover = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + 'cover.png';
@@ -84,6 +85,7 @@ export class MusicService {
       rm.like = m.like;
       rm.artist = m.musicArtist.name;
       rm.artistId = m.musicArtist.id;
+      rm.albumId = m.musicAlbum.id;
       rm.album = m.musicAlbum.name;
       rm.address = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
       rm.cover = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + 'cover.png';
@@ -127,6 +129,7 @@ export class MusicService {
       rm.like = m.like;
       rm.artist = m.musicArtist.name;
       rm.artistId = m.musicArtist.id;
+      rm.albumId = m.musicAlbum.id;
       rm.album = m.musicAlbum.name;
       rm.address = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
       rm.cover = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + 'cover.png';
@@ -196,6 +199,7 @@ export class MusicService {
     rMusic.name = music.name;
     rMusic.artist = music.musicArtist.name;
     rMusic.artistId = music.musicArtist.id;
+    rMusic.albumId = music.musicAlbum.id;
     rMusic.likedByCurrentUser = true;
     rMusic.like = music.like;
     rMusic.address = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + music.name + '.mp3';
@@ -219,6 +223,7 @@ export class MusicService {
     rMusic.name = music.name;
     rMusic.artist = music.musicArtist.name;
     rMusic.artistId = music.musicArtist.id;
+    rMusic.albumId = music.musicAlbum.id;
     rMusic.likedByCurrentUser = false;
     rMusic.like = music.like;
     rMusic.address = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + music.name + '.mp3';
@@ -300,6 +305,7 @@ export class MusicService {
       rMusic.id = m.id;
       rMusic.artist = m.musicArtist.name;
       rMusic.artistId = m.musicArtist.id;
+      rMusic.albumId = album.id;
       rMusic.cover = retAlbum.cover;
       rMusic.name = m.name;
       rMusic.address = 'http://localhost:9999/musics/' + retAlbum.name + '/' + m.name + '.mp3';
@@ -334,6 +340,7 @@ export class MusicService {
         retMusic.cover = retAlbum.cover;
         retMusic.artist = music.musicArtist.name;
         retMusic.artistId = music.musicArtist.id;
+        retMusic.albumId = album.id;
         retMusic.album = retAlbum.name;
 
         retMusic.like = music.like;

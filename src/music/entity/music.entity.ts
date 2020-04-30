@@ -51,43 +51,18 @@ export class RawMusic {
 }
 
 export class Music {
-  constructor() {
-    this.likedByCurrentUser = false;
-  }
-
-  @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
   address: string;
-
-  @Column()
   cover: string;
-
-  @Column()
   name: string;
-
-  @Column()
   artist: string;
-
-  @Column()
   artistId: number;
-
-  @Column()
   album: string;
-
-  @Column()
+  albumId: number;
   like: number;
-
   likedByCurrentUser: boolean;
-
-  @OneToMany(type => Comment, comment => comment.music)
   comments: Comment[];
-
-  @ManyToOne(type => MusicAlbum)
   musicAlbum: MusicAlbum;
-
-  @ManyToOne(type => Artist)
   musicArtist: Artist;
 }
 
