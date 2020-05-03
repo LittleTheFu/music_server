@@ -13,13 +13,13 @@ import * as ormconfig from './ormconfig';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(ormconfig),
     MusicModule,
     CommentModule,
     ProfileModule,
     MailModule,
-    AuthModule,
-    ConfigModule.forRoot({ isGlobal: true })],
+    AuthModule,],
   controllers: [AppController],
   providers: [AppService],
 })

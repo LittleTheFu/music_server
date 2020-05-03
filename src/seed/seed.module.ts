@@ -11,9 +11,11 @@ import * as ormconfig from '../ormconfig';
 import { MusicCollection, RawMusic, MusicAlbum, Artist } from '../music/entity/music.entity';
 import { User } from '../users/entity/user.entity';
 import { Profile } from '../profile/entity/profile.entity';
- 
+import { ConfigModule } from '@nestjs/config';
+
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(ormconfig),
     MusicModule,
     TypeOrmModule.forFeature([RawMusic, MusicAlbum, Artist, MusicCollection, User, Profile]),
