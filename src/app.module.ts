@@ -9,10 +9,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
+import { HelperModule } from './helper/helper.module';
 import * as ormconfig from './ormconfig';
 
 @Module({
   imports: [
+    HelperModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(ormconfig),
     MusicModule,

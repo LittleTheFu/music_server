@@ -5,14 +5,13 @@ import { MusicCollection, RawMusic, Artist, MusicAlbum } from '../music/entity/m
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Md5 } from 'ts-md5/dist/md5';
-import { ConfigService } from '@nestjs/config';
-
+import { HelperService } from '../helper/helper.service';
 
 @Injectable()
 export class SeedService {
     host: string;
     constructor(
-        private configService: ConfigService,
+        private helperService: HelperService,
 
         @InjectRepository(RawMusic)
         private readonly rawMusicRepository: Repository<RawMusic>,
@@ -32,7 +31,7 @@ export class SeedService {
         @InjectRepository(MusicCollection)
         private readonly collectionRepository: Repository<MusicCollection>) {
 
-            this.host = this.configService.get<string>('HOST');
+            this.host = this.helperService.getHost();
 
     }
 

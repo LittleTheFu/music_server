@@ -1,16 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { SeedModule } from './seed/seed.module';
 import { SeedService } from './seed/seed.service';
-import { ConfigService } from '@nestjs/config';
-
+import { HelperService } from './helper/helper.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(SeedModule);
 
-  const configService = app.get(ConfigService);
+  const helperService = app.get(HelperService);
 
-  const hostName = configService.get<string>('HOSTNAME');
-  const port = configService.get<string>('PORT');
+  const hostName = helperService.getHostName();
+  const port = helperService.getProt();
 
   await app.listen(port, hostName);
 

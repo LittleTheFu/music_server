@@ -13,13 +13,13 @@ import {
   RetArtist,
 } from './entity/music.entity';
 import { User } from '../users/entity/user.entity';
-import { ConfigService } from '@nestjs/config';
+import { HelperService } from '../helper/helper.service';
 
 @Injectable()
 export class MusicService {
   host: string;
   constructor(
-    private configService: ConfigService,
+    private helperService: HelperService,
 
     @InjectRepository(RawMusic)
     private readonly rawMusicRepository: Repository<RawMusic>,
@@ -35,7 +35,7 @@ export class MusicService {
 
     @InjectRepository(User)
     private readonly UserRepository: Repository<User>) {
-      this.host = this.configService.get<string>('HOST');
+      this.host = this.helperService.getHost();
   }
 
   async getMusicsByKeyword(userId: number, keyword: string): Promise<Music[]> {

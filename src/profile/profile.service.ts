@@ -3,21 +3,21 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Profile } from './entity/profile.entity';
 import { User } from '../users/entity/user.entity';
-import { ConfigService } from '@nestjs/config';
+import { HelperService } from '../helper/helper.service';
 
 @Injectable()
 export class ProfileService {
     host: string;
 
     constructor(
-        private configService: ConfigService,
+        private helperService: HelperService,
 
         @InjectRepository(Profile)
         private readonly ProfileRepository: Repository<Profile>,
         
         @InjectRepository(User)
         private readonly UserRepository: Repository<User>) {
-            this.host = this.configService.get<string>('HOST');
+            this.host = this.helperService.getHost();
     }
 
     async getProfileByName(username: string): Promise<Profile> {
