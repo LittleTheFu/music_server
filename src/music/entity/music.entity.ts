@@ -10,7 +10,7 @@ export class MusicAlbum {
   @Column()
   name: string;
 
-  @OneToMany(type => RawMusic, music => music.musicAlbum)
+  @OneToMany(() => RawMusic, music => music.musicAlbum)
   musics: RawMusic[];
 }
 
@@ -24,7 +24,7 @@ export class Artist {
   @Column()
   name: string;
 
-  @ManyToMany(type => MusicAlbum, { cascade: true })
+  @ManyToMany(() => MusicAlbum, { cascade: true })
   @JoinTable()
   musicAlbums: MusicAlbum[];
 }
@@ -37,16 +37,16 @@ export class RawMusic {
   @Column()
   name: string;
 
-  @ManyToOne(type => MusicAlbum)
+  @ManyToOne(() => MusicAlbum)
   musicAlbum: MusicAlbum;
 
-  @ManyToOne(type => Artist)
+  @ManyToOne(() => Artist)
   musicArtist: Artist;
 
   @Column({default: 0})
   like: number;
 
-  @OneToMany(type => Comment, comment => comment.music)
+  @OneToMany(() => Comment, comment => comment.music)
   comments: Comment[];
 }
 
@@ -77,11 +77,11 @@ export class MusicCollection {
   @Column()
   cover: string;
 
-  @ManyToMany(type => RawMusic)
+  @ManyToMany(() => RawMusic)
   @JoinTable()
   musics: RawMusic[];
 
-  @ManyToOne(type => User, user => user.playlist, { onDelete: "CASCADE" })
+  @ManyToOne(() => User, user => user.playlist, { onDelete: "CASCADE" })
   user: User;
 }
 

@@ -16,27 +16,27 @@ export class User {
     @Column()
     password: string;
 
-    @ManyToMany(type => RawMusic)
+    @ManyToMany(() => RawMusic)
     @JoinTable()
     likes: RawMusic[]; 
 
-    @OneToMany(type => MusicCollection, collection => collection.user, { onDelete: "CASCADE" })
+    @OneToMany(() => MusicCollection, collection => collection.user, { onDelete: "CASCADE" })
     playlist: MusicCollection[];
 
-    @OneToOne(type => Profile, { onDelete: "CASCADE" })
+    @OneToOne(() => Profile, { onDelete: "CASCADE" })
     @JoinColumn()
     profile: Profile;
 
-    @OneToMany(type => Comment, comment => comment.user, { onDelete: "CASCADE" })
+    @OneToMany(() => Comment, comment => comment.user, { onDelete: "CASCADE" })
     comments: Comment[];
 
-    @OneToMany(type => Mail, mail => mail.from)
+    @OneToMany(() => Mail, mail => mail.from)
     sendMails: Mail[];
 
-    @OneToMany(type => Mail, mail => mail.to)
+    @OneToMany(() => Mail, mail => mail.to)
     receiveMails: Comment[];
 
-    @ManyToMany(type => User, { onDelete: "CASCADE" })
+    @ManyToMany(() => User, { onDelete: "CASCADE" })
     @JoinTable()
     following: User[];
   }

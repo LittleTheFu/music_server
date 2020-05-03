@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like, Not } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Comment, RetComment } from './entity/comment.entity';
 import { RawMusic } from '../music/entity/music.entity';
 import { User } from '../users/entity/user.entity';
