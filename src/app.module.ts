@@ -19,7 +19,7 @@ import * as ormconfig from './ormconfig';
     ProfileModule,
     MailModule,
     AuthModule,
-    ConfigModule.forRoot()],
+    ConfigModule.forRoot({ isGlobal: true })],
   controllers: [AppController],
   providers: [AppService],
 })

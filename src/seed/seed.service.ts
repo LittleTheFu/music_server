@@ -5,12 +5,15 @@ import { MusicCollection, RawMusic, Artist, MusicAlbum } from '../music/entity/m
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Md5 } from 'ts-md5/dist/md5';
+import { ConfigService } from '@nestjs/config';
 
 
 @Injectable()
 export class SeedService {
-
+    host: string;
     constructor(
+        private configService: ConfigService,
+
         @InjectRepository(RawMusic)
         private readonly rawMusicRepository: Repository<RawMusic>,
 
@@ -28,6 +31,8 @@ export class SeedService {
 
         @InjectRepository(MusicCollection)
         private readonly collectionRepository: Repository<MusicCollection>) {
+
+            this.host = this.configService.get<string>('HOST');
 
     }
 
@@ -53,7 +58,7 @@ export class SeedService {
         console.log('init db data');
 
         const profile = new Profile();
-        profile.avatarUrl = 'http://localhost:9999/avatar/2.jpeg';
+        profile.avatarUrl = this.host + 'avatar/2.jpeg';
         const savedProfile = await this.profileReposity.save(profile);
 
         const u = new User();
@@ -63,7 +68,7 @@ export class SeedService {
         await this.userRepository.save(u);
 
         const c1 = new MusicCollection();
-        c1.cover = 'http://localhost:9999/album/4.png';
+        c1.cover = this.host + 'album/4.png';
         c1.name = 'recommend';
         c1.user = u;
         c1.musics = [];

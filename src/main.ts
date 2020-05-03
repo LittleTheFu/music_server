@@ -12,7 +12,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   const hostName = configService.get<string>('HOSTNAME');
-  const port = configService.get<string>('POST');
+  const port = configService.get<string>('PORT');
 
   console.log('BEGIN ADDRESS');
   console.log(configService.get<string>('HOST'));

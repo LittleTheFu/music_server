@@ -3,16 +3,21 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Profile } from './entity/profile.entity';
 import { User } from '../users/entity/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ProfileService {
+    host: string;
 
     constructor(
+        private configService: ConfigService,
+
         @InjectRepository(Profile)
         private readonly ProfileRepository: Repository<Profile>,
         
         @InjectRepository(User)
         private readonly UserRepository: Repository<User>) {
+            this.host = this.configService.get<string>('HOST');
     }
 
     async getProfileByName(username: string): Promise<Profile> {
@@ -26,13 +31,6 @@ export class ProfileService {
     }
 
     async setProfileAvatar(username: string, avatarUrl: string): Promise<string> {
-        // const user = await this.UserRepository.findOne({ relations: ['profile'], where: { id: userId } });
-        // console.log('AFTER');
-        // console.log(user);
-        // user.profile.avatarUrl = avatarUrl;
-        // await this.UserRepository.save(user);
-        // const profile = await this.UserRepository.findOne
-
         const result = await this.UserRepository
         .createQueryBuilder('user')
         .innerJoinAndSelect('user.profile', 'profile')
@@ -41,7 +39,7 @@ export class ProfileService {
 
         console.log(result);
 
-        result.profile.avatarUrl = 'http://localhost:9999/avatar/' + avatarUrl;
+        result.profile.avatarUrl = this.host + 'avatar/' + avatarUrl;
         this.ProfileRepository.save(result.profile);
 
         return result.profile.avatarUrl;

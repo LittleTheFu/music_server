@@ -13,12 +13,14 @@ import {
   RetArtist,
 } from './entity/music.entity';
 import { User } from '../users/entity/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MusicService {
-  // index: number;
-  // private readonly musics: Music[] = [];
+  host: string;
   constructor(
+    private configService: ConfigService,
+
     @InjectRepository(RawMusic)
     private readonly rawMusicRepository: Repository<RawMusic>,
 
@@ -33,16 +35,7 @@ export class MusicService {
 
     @InjectRepository(User)
     private readonly UserRepository: Repository<User>) {
-
-    // this.index = 0;
-    // this.musics.push({ address: 'http://localhost:9999/music/0.mp3', cover: 'http://localhost:9999/album/0.png', name: 'Honey Bunny My Love', artist: 'SHAKING PINK', album: 'しぇいきんぐ!SHAKING PINK' });
-    // this.musics.push({ address: 'http://localhost:9999/music/1.mp3', cover: 'http://localhost:9999/album/1.png', name: 'Tasty Carrots', artist: 'Shou (Discandy)', album: 'TastyCarrots' });
-    // this.musics.push({ address: 'http://localhost:9999/music/2.mp3', cover: 'http://localhost:9999/album/2.png', name: '萃梦想歌', artist: 'Silver Forest', album: 'Vermillion Summer' });
-    // this.musics.push({ address: 'http://localhost:9999/music/3.mp3', cover: 'http://localhost:9999/album/3.png', name: 'What’s Love?', artist: 'SKELT 8 BAMBINO', album: 'Whats Love? feat.SoulJa' });
-    // this.musics.push({ address: 'http://localhost:9999/music/4.mp3', cover: 'http://localhost:9999/album/4.png', name: 'Will ( Original Mix )', artist: 'SnoweeD', album: 'Will' });
-    // this.musics.push({ address: 'http://localhost:9999/music/5.mp3', cover: 'http://localhost:9999/album/5.png', name: 'Bubbles', artist: 'SnowFlakez!', album: 'Bubbles' });
-    // this.musics.push({ address: 'http://localhost:9999/music/6.mp3', cover: 'http://localhost:9999/album/6.png', name: 'Grayedout-Antifront- (Soleily Remix)', artist: 'Soleily', album: 'ANTiFRONT GEARS' });
-    // this.musics.push({ address: 'http://localhost:9999/music/7.mp3', cover: 'http://localhost:9999/album/7.png', name: 'Thalidomide Chocolat', artist: 'Sound.AVE', album: 'Reliance' });
+      this.host = this.configService.get<string>('HOST');
   }
 
   async getMusicsByKeyword(userId: number, keyword: string): Promise<Music[]> {
@@ -62,8 +55,8 @@ export class MusicService {
       rm.artistId = m.musicArtist.id;
       rm.albumId = m.musicAlbum.id;
       rm.album = m.musicAlbum.name;
-      rm.address = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
-      rm.cover = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + 'cover.png';
+      rm.address = this.host + 'musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
+      rm.cover = this.host + 'musics/' + m.musicAlbum.name + '/' + 'cover.png';
       rm.likedByCurrentUser = false;
 
       return rm;
@@ -92,8 +85,8 @@ export class MusicService {
       rm.artistId = m.musicArtist.id;
       rm.albumId = m.musicAlbum.id;
       rm.album = m.musicAlbum.name;
-      rm.address = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
-      rm.cover = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + 'cover.png';
+      rm.address = this.host + 'musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
+      rm.cover = this.host + 'musics/' + m.musicAlbum.name + '/' + 'cover.png';
       rm.likedByCurrentUser = false;
 
       likes.forEach((l) => {
@@ -136,8 +129,8 @@ export class MusicService {
       rm.artistId = m.musicArtist.id;
       rm.albumId = m.musicAlbum.id;
       rm.album = m.musicAlbum.name;
-      rm.address = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
-      rm.cover = 'http://localhost:9999/musics/' + m.musicAlbum.name + '/' + 'cover.png';
+      rm.address = this.host + 'musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
+      rm.cover = this.host + 'musics/' + m.musicAlbum.name + '/' + 'cover.png';
       rm.likedByCurrentUser = false;
 
       likes.forEach((l) => {
@@ -200,14 +193,14 @@ export class MusicService {
 
     const rMusic = new Music();
     rMusic.id = music.id;
-    rMusic.cover = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + 'cover.png';
+    rMusic.cover = this.host + 'musics/' + music.musicAlbum.name + '/' + 'cover.png';
     rMusic.name = music.name;
     rMusic.artist = music.musicArtist.name;
     rMusic.artistId = music.musicArtist.id;
     rMusic.albumId = music.musicAlbum.id;
     rMusic.likedByCurrentUser = true;
     rMusic.like = music.like;
-    rMusic.address = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + music.name + '.mp3';
+    rMusic.address = this.host + 'musics/' + music.musicAlbum.name + '/' + music.name + '.mp3';
 
     const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
     user.likes.push(rMusic);
@@ -224,14 +217,14 @@ export class MusicService {
 
     const rMusic = new Music();
     rMusic.id = music.id;
-    rMusic.cover = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + 'cover.png';
+    rMusic.cover = this.host + 'musics/' + music.musicAlbum.name + '/' + 'cover.png';
     rMusic.name = music.name;
     rMusic.artist = music.musicArtist.name;
     rMusic.artistId = music.musicArtist.id;
     rMusic.albumId = music.musicAlbum.id;
     rMusic.likedByCurrentUser = false;
     rMusic.like = music.like;
-    rMusic.address = 'http://localhost:9999/musics/' + music.musicAlbum.name + '/' + music.name + '.mp3';
+    rMusic.address = this.host + 'musics/' + music.musicAlbum.name + '/' + music.name + '.mp3';
 
     const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
     const newLikes = user.likes.filter((m) => { return m.id !== rMusic.id });
@@ -266,7 +259,7 @@ export class MusicService {
     const collection = new MusicCollection();
     collection.name = name;
     collection.user = user;
-    collection.cover = 'http://localhost:9999/album/7.png';
+    collection.cover = this.host + 'album/7.png';
 
     const retCollection = await this.MusicCollectionRepository.save(collection);
 
@@ -286,7 +279,7 @@ export class MusicService {
       const retAlbum = new RetAlbum();
       retAlbum.id = album.id;
       retAlbum.name = album.name;
-      retAlbum.cover = 'http://localhost:9999/musics/' + album.name + '/cover.png';
+      retAlbum.cover = this.host + 'musics/' + album.name + '/cover.png';
       retAlbum.musics = album.musics.map((m) => {
         const rMusic = new Music();
         rMusic.id = m.id;
@@ -295,7 +288,7 @@ export class MusicService {
         rMusic.albumId = album.id;
         rMusic.cover = retAlbum.cover;
         rMusic.name = m.name;
-        rMusic.address = 'http://localhost:9999/musics/' + retAlbum.name + '/' + m.name + '.mp3';
+        rMusic.address = this.host + 'musics/' + retAlbum.name + '/' + m.name + '.mp3';
 
         return rMusic;
       })
@@ -303,7 +296,7 @@ export class MusicService {
       return retAlbum;
     });
 
-    r.avatar = 'http://localhost:9999/artist/' + artist.name + '.png';
+    r.avatar = this.host + 'artist/' + artist.name + '.png';
 
     return r;
   }
@@ -322,7 +315,7 @@ export class MusicService {
 
     const retAlbum = new RetAlbumDetail();
     retAlbum.id = album.id;
-    retAlbum.cover = 'http://localhost:9999/musics/' + album.name + '/cover.png';
+    retAlbum.cover = this.host + 'musics/' + album.name + '/cover.png';
     retAlbum.name = album.name;
 
     const retMusics = album.musics.map((m) => {
@@ -333,7 +326,7 @@ export class MusicService {
       rMusic.albumId = album.id;
       rMusic.cover = retAlbum.cover;
       rMusic.name = m.name;
-      rMusic.address = 'http://localhost:9999/musics/' + retAlbum.name + '/' + m.name + '.mp3';
+      rMusic.address = this.host + 'musics/' + retAlbum.name + '/' + m.name + '.mp3';
 
       return rMusic;
     })
@@ -355,13 +348,13 @@ export class MusicService {
 
       retAlbum.id = album.id;
       retAlbum.name = album.name;
-      retAlbum.cover = 'http://localhost:9999/musics/' + retAlbum.name + '/cover.png';
+      retAlbum.cover = this.host + 'musics/' + retAlbum.name + '/cover.png';
 
       const retMusics = album.musics.map((music) => {
         const retMusic = new Music();
 
         retMusic.id = music.id;
-        retMusic.address = 'http://localhost:9999/musics/' + retAlbum.name + '/' + music.name + '.mp3';
+        retMusic.address = this.host + 'musics/' + retAlbum.name + '/' + music.name + '.mp3';
         retMusic.cover = retAlbum.cover;
         retMusic.artist = music.musicArtist.name;
         retMusic.artistId = music.musicArtist.id;
