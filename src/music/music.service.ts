@@ -73,7 +73,7 @@ export class MusicService {
       where: { id: collectionId }
     });
 
-    const user = await this.UserRepository.findOne({ relations: ['likes', 'playlist'], where: { id: userId } });
+    const user = await this.UserRepository.findOne({ relations: ['likes', 'mixes'], where: { id: userId } });
     const likes = user.likes;
 
     const musics = collection.musics.map((m) => {
@@ -117,7 +117,7 @@ export class MusicService {
       where: { id: musicId }
     });
 
-    const user = await this.UserRepository.findOne({ relations: ['likes', 'playlist'], where: { id: userId } });
+    const user = await this.UserRepository.findOne({ relations: ['likes', 'mixes'], where: { id: userId } });
     const likes = user.likes;
 
     const musics = collection.musics.map((m) => {
@@ -236,12 +236,12 @@ export class MusicService {
   }
 
   async getPrivateMusicCollections(userId: number): Promise<MusicCollection[]> {
-    const user = await this.UserRepository.findOne({ relations: ['playlist'], where: { id: userId } });
+    const user = await this.UserRepository.findOne({ relations: ['mixes'], where: { id: userId } });
     return user.mixes;
   }
 
   async getPublicMusicCollections(): Promise<MusicCollection[]> {
-    const user = await this.UserRepository.findOne({ relations: ['playlist'], where: { id: 1 } });
+    const user = await this.UserRepository.findOne({ relations: ['mixes'], where: { id: 1 } });
     return user.mixes;
   }
 

@@ -70,7 +70,7 @@ export class UsersService {
     const me = await this.usersRepository.findOne({ relations: ['following'], where: { id: meId}});
     const user = await this.usersRepository.createQueryBuilder('user')
             .leftJoinAndSelect('user.profile', 'profile')
-            .leftJoinAndSelect('user.playlist', 'collections')
+            .leftJoinAndSelect('user.mixes', 'collections')
             .where('user.id = :id', {id: userId})
             .getOne();
 
