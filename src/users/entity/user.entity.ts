@@ -21,7 +21,7 @@ export class User {
     likes: RawMusic[]; 
 
     @OneToMany(() => MusicCollection, collection => collection.user, { onDelete: "CASCADE" })
-    playlist: MusicCollection[];
+    mixes: MusicCollection[];
 
     @OneToOne(() => Profile, { onDelete: "CASCADE" })
     @JoinColumn()

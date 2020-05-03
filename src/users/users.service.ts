@@ -79,7 +79,7 @@ export class UsersService {
     const retUser = new RetUserDetail();
     retUser.name = user.name;
     retUser.avatarUrl = user.profile.avatarUrl;
-    retUser.collections = user.playlist;
+    retUser.collections = user.mixes;
     retUser.isFollowed = (filteredFollower != null);
 
     return retUser;

@@ -81,7 +81,7 @@ export class MusicCollection {
   @JoinTable()
   musics: RawMusic[];
 
-  @ManyToOne(() => User, user => user.playlist, { onDelete: "CASCADE" })
+  @ManyToOne(() => User, user => user.mixes, { onDelete: "CASCADE" })
   user: User;
 }
 

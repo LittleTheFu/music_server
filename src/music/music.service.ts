@@ -98,7 +98,7 @@ export class MusicService {
       return rm;
     });
 
-    const foundCollection = user.playlist.find((c) => { return c.id === collectionId });
+    const foundCollection = user.mixes.find((c) => { return c.id === collectionId });
 
     const r = new RetCollectionDetail();
     r.name = collection.name;
@@ -237,12 +237,12 @@ export class MusicService {
 
   async getPrivateMusicCollections(userId: number): Promise<MusicCollection[]> {
     const user = await this.UserRepository.findOne({ relations: ['playlist'], where: { id: userId } });
-    return user.playlist;
+    return user.mixes;
   }
 
   async getPublicMusicCollections(): Promise<MusicCollection[]> {
     const user = await this.UserRepository.findOne({ relations: ['playlist'], where: { id: 1 } });
-    return user.playlist;
+    return user.mixes;
   }
 
   async createCollection(userId: number, name: string): Promise<MusicCollection> {
