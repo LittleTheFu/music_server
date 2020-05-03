@@ -39,7 +39,7 @@ export class ProfileService {
 
         console.log(result);
 
-        result.profile.avatarUrl = this.host + 'avatar/' + avatarUrl;
+        result.profile.avatarUrl = this.helperService.getAvatarAddress(avatarUrl);
         this.ProfileRepository.save(result.profile);
 
         return result.profile.avatarUrl;

@@ -35,7 +35,7 @@ export class MusicService {
 
     @InjectRepository(User)
     private readonly UserRepository: Repository<User>) {
-      this.host = this.helperService.getHost();
+    this.host = this.helperService.getHost();
   }
 
   async getMusicsByKeyword(userId: number, keyword: string): Promise<Music[]> {
@@ -55,8 +55,8 @@ export class MusicService {
       rm.artistId = m.musicArtist.id;
       rm.albumId = m.musicAlbum.id;
       rm.album = m.musicAlbum.name;
-      rm.address = this.host + 'musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
-      rm.cover = this.host + 'musics/' + m.musicAlbum.name + '/' + 'cover.png';
+      rm.address = this.helperService.getMusicAddress(m.musicAlbum.name, m.name);
+      rm.cover = this.helperService.getCoverAddress(m.musicAlbum.name);
       rm.likedByCurrentUser = false;
 
       return rm;
@@ -85,8 +85,8 @@ export class MusicService {
       rm.artistId = m.musicArtist.id;
       rm.albumId = m.musicAlbum.id;
       rm.album = m.musicAlbum.name;
-      rm.address = this.host + 'musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
-      rm.cover = this.host + 'musics/' + m.musicAlbum.name + '/' + 'cover.png';
+      rm.address = this.helperService.getMusicAddress(m.musicAlbum.name, m.name);
+      rm.cover = this.helperService.getCoverAddress(m.musicAlbum.name);
       rm.likedByCurrentUser = false;
 
       likes.forEach((l) => {
@@ -129,8 +129,8 @@ export class MusicService {
       rm.artistId = m.musicArtist.id;
       rm.albumId = m.musicAlbum.id;
       rm.album = m.musicAlbum.name;
-      rm.address = this.host + 'musics/' + m.musicAlbum.name + '/' + m.name + '.mp3';
-      rm.cover = this.host + 'musics/' + m.musicAlbum.name + '/' + 'cover.png';
+      rm.address = this.helperService.getMusicAddress(m.musicAlbum.name, m.name);
+      rm.cover = this.helperService.getCoverAddress(m.musicAlbum.name);
       rm.likedByCurrentUser = false;
 
       likes.forEach((l) => {
@@ -193,14 +193,14 @@ export class MusicService {
 
     const rMusic = new Music();
     rMusic.id = music.id;
-    rMusic.cover = this.host + 'musics/' + music.musicAlbum.name + '/' + 'cover.png';
+    rMusic.cover = this.helperService.getCoverAddress(music.musicAlbum.name);
     rMusic.name = music.name;
     rMusic.artist = music.musicArtist.name;
     rMusic.artistId = music.musicArtist.id;
     rMusic.albumId = music.musicAlbum.id;
     rMusic.likedByCurrentUser = true;
     rMusic.like = music.like;
-    rMusic.address = this.host + 'musics/' + music.musicAlbum.name + '/' + music.name + '.mp3';
+    rMusic.address = this.helperService.getMusicAddress(music.musicAlbum.name, music.name);
 
     const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
     user.likes.push(rMusic);
@@ -217,14 +217,14 @@ export class MusicService {
 
     const rMusic = new Music();
     rMusic.id = music.id;
-    rMusic.cover = this.host + 'musics/' + music.musicAlbum.name + '/' + 'cover.png';
+    rMusic.cover = this.helperService.getCoverAddress(music.musicAlbum.name);
     rMusic.name = music.name;
     rMusic.artist = music.musicArtist.name;
     rMusic.artistId = music.musicArtist.id;
     rMusic.albumId = music.musicAlbum.id;
     rMusic.likedByCurrentUser = false;
     rMusic.like = music.like;
-    rMusic.address = this.host + 'musics/' + music.musicAlbum.name + '/' + music.name + '.mp3';
+    rMusic.address = this.helperService.getMusicAddress(music.musicAlbum.name, music.name);
 
     const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
     const newLikes = user.likes.filter((m) => { return m.id !== rMusic.id });
@@ -279,16 +279,17 @@ export class MusicService {
       const retAlbum = new RetAlbum();
       retAlbum.id = album.id;
       retAlbum.name = album.name;
-      retAlbum.cover = this.host + 'musics/' + album.name + '/cover.png';
+      retAlbum.cover = this.helperService.getCoverAddress(album.name);
       retAlbum.musics = album.musics.map((m) => {
         const rMusic = new Music();
+
         rMusic.id = m.id;
         rMusic.artist = artist.name;
         rMusic.artistId = artist.id;
         rMusic.albumId = album.id;
         rMusic.cover = retAlbum.cover;
         rMusic.name = m.name;
-        rMusic.address = this.host + 'musics/' + retAlbum.name + '/' + m.name + '.mp3';
+        rMusic.address = this.helperService.getMusicAddress(retAlbum.name, m.name);
 
         return rMusic;
       })
@@ -296,7 +297,7 @@ export class MusicService {
       return retAlbum;
     });
 
-    r.avatar = this.host + 'artist/' + artist.name + '.png';
+    r.avatar = this.helperService.getArtistAddress(artist.name);
 
     return r;
   }
@@ -315,18 +316,19 @@ export class MusicService {
 
     const retAlbum = new RetAlbumDetail();
     retAlbum.id = album.id;
-    retAlbum.cover = this.host + 'musics/' + album.name + '/cover.png';
+    retAlbum.cover = this.helperService.getCoverAddress(album.name);
     retAlbum.name = album.name;
 
     const retMusics = album.musics.map((m) => {
       const rMusic = new Music();
+
       rMusic.id = m.id;
       rMusic.artist = m.musicArtist.name;
       rMusic.artistId = m.musicArtist.id;
       rMusic.albumId = album.id;
       rMusic.cover = retAlbum.cover;
       rMusic.name = m.name;
-      rMusic.address = this.host + 'musics/' + retAlbum.name + '/' + m.name + '.mp3';
+      rMusic.address = this.helperService.getMusicAddress(retAlbum.name, m.name);
 
       return rMusic;
     })
@@ -348,13 +350,13 @@ export class MusicService {
 
       retAlbum.id = album.id;
       retAlbum.name = album.name;
-      retAlbum.cover = this.host + 'musics/' + retAlbum.name + '/cover.png';
+      retAlbum.cover = this.helperService.getCoverAddress(album.name);
 
       const retMusics = album.musics.map((music) => {
         const retMusic = new Music();
 
         retMusic.id = music.id;
-        retMusic.address = this.host + 'musics/' + retAlbum.name + '/' + music.name + '.mp3';
+        retMusic.address = this.helperService.getMusicAddress(retAlbum.name, music.name);
         retMusic.cover = retAlbum.cover;
         retMusic.artist = music.musicArtist.name;
         retMusic.artistId = music.musicArtist.id;
