@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MusicModule } from './music/music.module';
@@ -10,15 +11,6 @@ import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import * as ormconfig from './ormconfig';
 
-// export function DatabaseOrmModule(): DynamicModule {
-//   console.log('DYNAMIC ORM CONFIG');
-//   return TypeOrmModule.forRoot(ormconfig);
-// }
-
-// MulterModule.register({
-//   dest: '/upload',
-// });
- 
 @Module({
   imports: [
     TypeOrmModule.forRoot(ormconfig),
@@ -26,7 +18,8 @@ import * as ormconfig from './ormconfig';
     CommentModule,
     ProfileModule,
     MailModule,
-    AuthModule],
+    AuthModule,
+    ConfigModule.forRoot()],
   controllers: [AppController],
   providers: [AppService],
 })

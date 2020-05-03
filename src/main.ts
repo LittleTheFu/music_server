@@ -2,16 +2,25 @@ import { NestFactory, APP_FILTER } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   // const app = await NestFactory.create(AppModule);
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: true,
   });
+
+  const configService = app.get(ConfigService);
+
+  const hostName = configService.get<string>('HOSTNAME');
+  const port = configService.get<string>('POST');
+
+  console.log('BEGIN ADDRESS');
+  console.log(configService.get<string>('HOST'));
+ 
   console.log(join(__dirname, '..', 'public'));
   app.useStaticAssets(join(__dirname, '..', 'public'));
-  // global['nestHttpServer'] = app;
-  // await app.listen(9999,'localhost');
-  await app.listen(9999);
+
+  await app.listen(port, hostName);
 }
 bootstrap();
