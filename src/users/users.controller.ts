@@ -2,7 +2,7 @@ import { Controller, Post, Request, Body, UseGuards, HttpStatus, HttpException }
 import { UsersService } from './users.service';
 import { RegUserDto, DetailUserDto, FollowUserDto, GetUserFollowersDto } from './dto/user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RetUserDetail, RetSimpleUser } from './entity/user.entity';
+import { RetUserDetail, RetSimpleUser, RetFollower } from './entity/user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -41,12 +41,12 @@ export class UsersController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Post('getUserFollowers') async getUserFollowers(@Request() req, @Body() getUserFollowersDto: GetUserFollowersDto): Promise<object> {
+    @Post('getUserFollowers') async getUserFollowers(@Request() req, @Body() getUserFollowersDto: GetUserFollowersDto): Promise<RetFollower[]> {
         return this.usersService.getUserFollowers(req.user.userId, getUserFollowersDto.userId);
     }
 
     @UseGuards(JwtAuthGuard)
-    @Post('getAllUsers') async getAllUsers(): Promise<object> {
+    @Post('getAllUsers') async getAllUsers(): Promise<RetSimpleUser[]> {
         return this.usersService.getAllUsers();
     }
 }

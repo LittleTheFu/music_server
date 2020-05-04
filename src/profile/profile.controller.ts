@@ -20,11 +20,6 @@ export class ProfileController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('avatar'))
   async uploadFile(@UploadedFile() file, @Request() req) {
-    console.log('UPLOAD');
-    console.log(file);
-    console.log(req.user);
-    // console.log(req);
-
     const url = await this.musicService.setProfileAvatar(req.user.username,file.filename);
     const response = {
       remoteUrl: url,

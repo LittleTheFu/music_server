@@ -52,14 +52,9 @@ export class CommentService {
         const comment = new Comment;
         comment.content = content;
 
-        // const musics = await this.rawMusicRepository.find();
-        // console.log(musics);
-
-        // console.log('MUSIC ID : ' + musicId);
         const music = await this.rawMusicRepository.findOne({
             id: musicId,
         });
-        // console.log('MUSIC  : ' + music);
 
         comment.music = music;
 

@@ -12,6 +12,14 @@ import {
   GetArtistInfoDto,
   GetAlbumDetailDto,
 } from './dto/music.dto';
+import {
+  Music,
+  MusicCollection,
+  RetCollectionDetail,
+  RetAlbum,
+  RetAlbumDetail,
+  RetArtist,
+} from './entity/music.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('music')
@@ -21,22 +29,20 @@ export class MusicController {
 
   @UseGuards(JwtAuthGuard)
   @Post('GetMusicsByKeyword')
-  async getMusicsByKeyword(@Request() req, @Body() getMusicByKeywordDto: GetMusicByKeywordDto): Promise<object> {
-    // console.log('req.user : ' + JSON.stringify(req.user));
-    // console.log('req.header : ' + JSON.stringify(req.body));
+  async getMusicsByKeyword(@Request() req, @Body() getMusicByKeywordDto: GetMusicByKeywordDto): Promise<Music[]> {
     const keyword = getMusicByKeywordDto.keyword;
     return this.musicService.getMusicsByKeyword(req.user.userId, keyword);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('GetMusicsByCollectionId')
-  async getMusicsByCollectionId(@Request() req, @Body() getMusicByCollectionIdDto: GetMusicByCollectionIdDto): Promise<object> {
+  async getMusicsByCollectionId(@Request() req, @Body() getMusicByCollectionIdDto: GetMusicByCollectionIdDto): Promise<Music[]> {
     return this.musicService.getMusicListByCollectionId(req.user.userId, getMusicByCollectionIdDto.id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('GetCollectionDetailById')
-  async getCollectionDetailById(@Request() req, @Body() getMusicByCollectionIdDto: GetMusicByCollectionIdDto): Promise<object> {
+  async getCollectionDetailById(@Request() req, @Body() getMusicByCollectionIdDto: GetMusicByCollectionIdDto): Promise<RetCollectionDetail> {
     return this.musicService.getCollectionDetailById(req.user.userId, getMusicByCollectionIdDto.id);
   }
 
@@ -55,26 +61,26 @@ export class MusicController {
 
   @UseGuards(JwtAuthGuard)
   @Post('getPrivateMusicCollections')
-  async getPrivateMusicCollections(@Request() req): Promise<object> {
+  async getPrivateMusicCollections(@Request() req): Promise<MusicCollection[]> {
     return this.musicService.getPrivateMusicCollections(req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('getPublicMusicCollections')
-  async getPublicMusicCollections(): Promise<object> {
+  async getPublicMusicCollections(): Promise<MusicCollection[]> {
     return this.musicService.getPublicMusicCollections();
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('like')
-  async like(@Request() req, @Body() likeMusicDto: LikeMusicDto): Promise<object> {
+  async like(@Request() req, @Body() likeMusicDto: LikeMusicDto): Promise<Music> {
     console.log(likeMusicDto);
     return this.musicService.likeMusic(req.user.userId, likeMusicDto.musicId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('dislike')
-  async dislike(@Request() req, @Body() likeMusicDto: LikeMusicDto): Promise<object> {
+  async dislike(@Request() req, @Body() likeMusicDto: LikeMusicDto): Promise<Music> {
     return this.musicService.dislikeMusic(req.user.userId, likeMusicDto.musicId);
   }
 
@@ -87,7 +93,7 @@ export class MusicController {
 
   @UseGuards(JwtAuthGuard)
   @Post('createCollection')
-  async createCollection(@Request() req, @Body() createCollectionDto: CreateCollectionDto): Promise<object> {
+  async createCollection(@Request() req, @Body() createCollectionDto: CreateCollectionDto): Promise<MusicCollection> {
     return this.musicService.createCollection(req.user.userId, createCollectionDto.name);
   }
 
@@ -99,19 +105,19 @@ export class MusicController {
 
   @UseGuards(JwtAuthGuard)
   @Post('getArtistInfo')
-  async getArtistInfo(@Request() req, @Body() getArtistInfoDtG: GetArtistInfoDto): Promise<object> {
+  async getArtistInfo(@Request() req, @Body() getArtistInfoDtG: GetArtistInfoDto): Promise<RetArtist> {
     return this.musicService.getArtistInfo(getArtistInfoDtG.artistId, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('getAlbums')
-  async getAlbums(@Request() req): Promise<object> {
+  async getAlbums(@Request() req): Promise<RetAlbum[]> {
     return this.musicService.getAllAlbums(req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('getAlbumDetail')
-  async getAlbumDetail(@Request() req, @Body() getAlbumDetailDto: GetAlbumDetailDto): Promise<object> {
+  async getAlbumDetail(@Request() req, @Body() getAlbumDetailDto: GetAlbumDetailDto): Promise<RetAlbumDetail> {
     return this.musicService.getAlbum(getAlbumDetailDto.albumId, req.user.userId);
   }
 }
