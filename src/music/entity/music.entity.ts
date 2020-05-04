@@ -48,6 +48,9 @@ export class RawMusic {
 
   @OneToMany(() => Comment, comment => comment.music)
   comments: Comment[];
+
+  @ManyToMany(() => User, user => user.likes)
+  liker: User[];
 }
 
 export class Music {

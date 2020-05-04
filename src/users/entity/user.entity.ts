@@ -16,7 +16,7 @@ export class User {
     @Column()
     password: string;
 
-    @ManyToMany(() => RawMusic)
+    @ManyToMany(() => RawMusic, music => music.liker)
     @JoinTable()
     likes: RawMusic[]; 
 
