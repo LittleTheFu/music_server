@@ -64,9 +64,6 @@ export class Music {
   albumId: number;
   like: number;
   likedByCurrentUser: boolean;
-  comments: Comment[];
-  musicAlbum: MusicAlbum;
-  musicArtist: Artist;
 }
 
 @Entity()

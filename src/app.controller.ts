@@ -1,7 +1,7 @@
 import { Controller, Get, Request, Post, UseGuards, UseInterceptors, UploadedFile} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+// import { FileInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
+// import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
 
@@ -25,20 +25,20 @@ export class AppController {
     return this.authService.login(req.user);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('profile')
-  getProfile(@Request() req) {
-    console.log('profile');
-    console.log(req);
-    return req.user;
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Post('profile')
+  // getProfile(@Request() req) {
+  //   console.log('profile');
+  //   console.log(req);
+  //   return req.user;
+  // }
 
-  @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file) {
-    console.log('UPLOAD');
-    console.log(file);
+  // @Post('upload')
+  // @UseInterceptors(FileInterceptor('file'))
+  // uploadFile(@UploadedFile() file) {
+  //   console.log('UPLOAD');
+  //   console.log(file);
 
-    return 'goood';
-  }
+  //   return 'goood';
+  // }
 }
