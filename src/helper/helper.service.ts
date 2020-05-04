@@ -58,4 +58,8 @@ export class HelperService {
     getAvatarAddress(file: string) {
         return this.getAvatarRoot() + file;
     }
+
+    getFakeCover(file: string) {
+        return this.getHost() + 'album' + '/' + file;
+    }
 }

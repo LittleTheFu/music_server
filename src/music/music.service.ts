@@ -186,7 +186,14 @@ export class MusicService {
 
   async getPrivateMusicCollections(userId: number): Promise<MusicCollection[]> {
     const user = await this.UserRepository.findOne({ relations: ['mixes'], where: { id: userId } });
-    return user.mixes;
+    const r = user.mixes.map((m) => {
+      let mix = new MusicCollection();
+      mix = m;
+      mix.cover = this.helperService.getFakeCover(m.cover);
+      return mix;
+    });
+
+    return r;
   }
 
   async getPublicMusicCollections(): Promise<MusicCollection[]> {
@@ -200,10 +207,11 @@ export class MusicService {
     const collection = new MusicCollection();
     collection.name = name;
     collection.user = user;
-    collection.cover = this.host + 'album/7.png';
+    collection.cover = '7.png';
 
     const retCollection = await this.MusicCollectionRepository.save(collection);
-
+    retCollection.cover = this.helperService.getFakeCover(retCollection.cover);
+    console.log(retCollection.cover);
     return retCollection;
   }
 

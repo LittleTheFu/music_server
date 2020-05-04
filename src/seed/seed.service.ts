@@ -67,7 +67,7 @@ export class SeedService {
         await this.userRepository.save(u);
 
         const c1 = new MusicCollection();
-        c1.cover = this.host + 'album/4.png';
+        c1.cover = '4.png';
         c1.name = 'recommend';
         c1.user = u;
         c1.musics = [];
