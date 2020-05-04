@@ -75,7 +75,7 @@ export class MusicService {
 
   async getMusicsByKeyword(userId: number, keyword: string): Promise<Music[]> {
     const musics = await this.rawMusicRepository.find({
-      relations: ['musicAlbum', 'musicArtist'],
+      relations: ['musicAlbum', 'musicArtist', 'liker'],
       where: { name: Like('%' + keyword + '%') }
     });
 
