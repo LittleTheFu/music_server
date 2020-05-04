@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like, Not } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from '../users/entity/user.entity';
 import { Mail, RetMail } from './entity/mail.entity';
 
@@ -15,19 +15,31 @@ export class MailService {
 
     }
 
+    private getReturnMail(m: Mail): RetMail {
+        const r = new RetMail();
+
+        r.id = m.id;
+        r.fromId = m.from.id;
+        r.fromName = m.from.name;
+        r.toName = m.to.name;
+        r.content = m.content;
+
+        return r;
+    }
+
     async sendMail(fromId: number, toId: number, content: string): Promise<object> {
         const mail = new Mail();
         mail.content = content;
 
-        const fromUser = await this.userRepository.findOne({id: fromId});
-        const toUser = await this.userRepository.findOne({id: toId});
+        const fromUser = await this.userRepository.findOne({ id: fromId });
+        const toUser = await this.userRepository.findOne({ id: toId });
 
         mail.from = fromUser;
         mail.to = toUser;
 
         await this.MailRepository.save(mail);
 
-        return {msg:'ok'};
+        return { msg: 'ok' };
     }
 
     async deleteMail(userId: number, mailId: number): Promise<RetMail[]> {
@@ -47,21 +59,13 @@ export class MailService {
             .getMany();
 
         const retMails = mails.map((m) => {
-            const r = new RetMail();
-            r.content = m.content;
-            r.fromName = m.from.name;
-            r.toName = m.to.name;
-            r.id = m.id;
-            r.fromId = m.from.id;
-
-            return r;
+            return this.getReturnMail(m);
         })
 
         return retMails;
     }
 
     async getMail(mailId: number): Promise<RetMail> {
-        // const mail = await this.MailRepository.findOne(mailId);
         const mail = await this.MailRepository
             .createQueryBuilder('mail')
             .innerJoinAndSelect('mail.to', 'user')
@@ -89,32 +93,10 @@ export class MailService {
 
 
         const retMails = mails.map((m) => {
-            const r = new RetMail();
-            r.content = m.content;
-            r.fromName = m.from.name;
-            r.toName = m.to.name;
-            r.id = m.id;
-            r.fromId = m.from.id;
-
-            return r;
+           return this.getReturnMail(m);
         })
 
         return retMails;
-
-        // const m = new RetMail();
-        // m.id = 1;
-        // m.content = 'hello';
-        // m.fromName = 'from';
-        // m.toName = 'to';
-
-        // const n = new RetMail();
-        // n.id = 2;
-        // n.content = 'n';
-        // n.fromName = 'from';
-        // n.toName = 'to';
-
-        // const ret = [m,n];
-        // return ret;
     }
 
 }
