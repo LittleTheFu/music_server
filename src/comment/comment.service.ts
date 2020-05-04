@@ -19,6 +19,19 @@ export class CommentService {
 
     }
 
+    private getRetComment(c: Comment): RetComment {
+        const r = new RetComment();
+
+        r.content = c.content;
+        r.username = c.user.name;
+        r.id = c.id;
+        r.date = c.date;
+        r.avatar = c.user.profile.avatarUrl;
+        r.userId = c.user.id;
+
+        return r;
+    }
+
     async getMusicComments(musicId: number): Promise<RetComment[]> {
         const comments = await this.CommentRepository.createQueryBuilder('comment')
             .innerJoin('comment.music', 'music')
@@ -28,20 +41,9 @@ export class CommentService {
             .where('comment.music.id = :id', { id: musicId })
             .getMany();
 
-        // console.log(comments);
-
         const retComments = comments.map((c: Comment) => {
-            const rc = new RetComment();
-            rc.content = c.content;
-            rc.username = c.user.name;
-            rc.id = c.id;
-            rc.date = c.date;
-            rc.avatar = c.user.profile.avatarUrl;
-            rc.userId = c.user.id;
-            return rc;
+            return this.getRetComment(c);
         })
-
-        // console.log(retComments);
 
         return retComments;
     }
@@ -78,20 +80,9 @@ export class CommentService {
             .orderBy("comment.date", "DESC")
             .where('comment.music.id = :id', { id: musicId }).getMany();
 
-        // console.log(comments);
-
         const retComments = comments.map((c: Comment) => {
-            const rc = new RetComment();
-            rc.content = c.content;
-            rc.username = c.user.name;
-            rc.date = c.date;
-            rc.id = c.id;
-            rc.avatar = c.user.profile.avatarUrl;
-            rc.userId = c.user.id;
-            return rc;
+            return this.getRetComment(c);
         })
-
-        // console.log(retComments);
 
         return retComments;
     }
