@@ -5,11 +5,14 @@ import { User,RetUserDetail, RetFollower, RetSimpleUser } from './entity/user.en
 import { MusicCollection } from '../music/entity/music.entity';
 import { Profile } from '../profile/entity/profile.entity';
 import { Md5 } from 'ts-md5/dist/md5';
+import { HelperService } from '../helper/helper.service';
 
 @Injectable()
 export class UsersService {
 
   constructor(
+    private readonly helperService: HelperService,
+
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>, 
     
@@ -31,7 +34,7 @@ export class UsersService {
     const ret = new RetSimpleUser();
     ret.id = result.id;
     ret.name = result.name;
-    ret.avatarUrl = result.profile.avatarUrl;
+    ret.avatarUrl = this.helperService.getAvatarAddress(result.profile.avatar);
 
     // console.log('MEMEME');
     // console.log(ret);
@@ -78,7 +81,7 @@ export class UsersService {
 
     const retUser = new RetUserDetail();
     retUser.name = user.name;
-    retUser.avatarUrl = user.profile.avatarUrl;
+    retUser.avatarUrl = this.helperService.getAvatarAddress(user.profile.avatar);
     retUser.collections = user.mixes;
     retUser.isFollowed = (filteredFollower != null);
 
@@ -112,7 +115,7 @@ export class UsersService {
       
       r.id = u.id;
       r.name = u.name;
-      r.avatarUrl = u.profile.avatarUrl;
+      r.avatarUrl = this.helperService.getAvatarAddress(u.profile.avatar);
 
       return r;
     })
@@ -134,7 +137,7 @@ export class UsersService {
     const ret = user.following.map((f)=>{
       const r = new RetFollower();
       r.id = f.id;
-      r.avatarUrl = f.profile.avatarUrl;
+      r.avatarUrl = this.helperService.getAvatarAddress(f.profile.avatar);
       r.name = f.name;
       r.isFollowed = false;
 

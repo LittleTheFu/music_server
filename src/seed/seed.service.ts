@@ -57,7 +57,7 @@ export class SeedService {
         console.log('init db data');
 
         const profile = new Profile();
-        profile.avatarUrl = this.host + 'avatar/2.jpeg';
+        profile.avatar = '2.jpeg';
         const savedProfile = await this.profileReposity.save(profile);
 
         const u = new User();

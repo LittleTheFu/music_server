@@ -30,7 +30,7 @@ export class ProfileService {
             return result.profile;
     }
 
-    async setProfileAvatar(username: string, avatarUrl: string): Promise<string> {
+    async setProfileAvatar(username: string, fileName: string): Promise<string> {
         const result = await this.UserRepository
         .createQueryBuilder('user')
         .innerJoinAndSelect('user.profile', 'profile')
@@ -39,9 +39,9 @@ export class ProfileService {
 
         console.log(result);
 
-        result.profile.avatarUrl = this.helperService.getAvatarAddress(avatarUrl);
+        result.profile.avatar = fileName;
         this.ProfileRepository.save(result.profile);
 
-        return result.profile.avatarUrl;
+        return this.helperService.getAvatarAddress(fileName);
     }
 }

@@ -4,10 +4,13 @@ import { Repository } from 'typeorm';
 import { Comment, RetComment } from './entity/comment.entity';
 import { RawMusic } from '../music/entity/music.entity';
 import { User } from '../users/entity/user.entity';
+import { HelperService } from '../helper/helper.service';
 
 @Injectable()
 export class CommentService {
     constructor(
+        private readonly helperService: HelperService,
+
         @InjectRepository(Comment)
         private readonly CommentRepository: Repository<Comment>,
 
@@ -26,7 +29,7 @@ export class CommentService {
         r.username = c.user.name;
         r.id = c.id;
         r.date = c.date;
-        r.avatar = c.user.profile.avatarUrl;
+        r.avatar = this.helperService.getAvatarAddress(c.user.profile.avatar);
         r.userId = c.user.id;
 
         return r;

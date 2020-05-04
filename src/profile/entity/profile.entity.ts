@@ -6,6 +6,6 @@ export class Profile {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ default: 'http://localhost:9999/avatar/1.jpeg'})
-    avatarUrl: string;
+    @Column({ default: '1.jpeg'})
+    avatar: string;
 }
