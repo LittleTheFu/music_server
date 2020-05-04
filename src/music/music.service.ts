@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like, Not } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import {
   Music,
   MusicCollection,
@@ -38,64 +38,64 @@ export class MusicService {
     this.host = this.helperService.getHost();
   }
 
+  private GetReturnMusic(r: RawMusic, userId: number): Music {
+    const m = new Music();
+    m.id = r.id;
+    m.name = r.name;
+    m.like = r.like;
+    m.artist = r.musicArtist.name;
+    m.artistId = r.musicArtist.id;
+    m.albumId = r.musicAlbum.id;
+    m.album = r.musicAlbum.name;
+    m.address = this.helperService.getMusicAddress(r.musicAlbum.name, r.name);
+    m.cover = this.helperService.getCoverAddress(r.musicAlbum.name);
+
+    m.likedByCurrentUser = false;
+    if (userId != null) {
+      if (r.liker.find((usr) => { return usr.id === userId; })) {
+        m.likedByCurrentUser = true;
+      }
+    }
+
+    return m;
+  }
+
+  private GetReturnAlbum(a: MusicAlbum, userId: number): RetAlbum {
+    const r = new RetAlbum();
+
+    r.id = a.id;
+    r.name = a.name;
+    r.cover = this.helperService.getCoverAddress(a.name);
+    r.musics = a.musics.map((m) => {
+      return this.GetReturnMusic(m, userId);
+    });
+
+    return r;
+  }
+
   async getMusicsByKeyword(userId: number, keyword: string): Promise<Music[]> {
     const musics = await this.rawMusicRepository.find({
       relations: ['musicAlbum', 'musicArtist'],
       where: { name: Like('%' + keyword + '%') }
     });
 
-    console.log(musics);
-
     const rmusics = musics.map((m) => {
-      const rm = new Music();
-      rm.id = m.id;
-      rm.name = m.name;
-      rm.like = m.like;
-      rm.artist = m.musicArtist.name;
-      rm.artistId = m.musicArtist.id;
-      rm.albumId = m.musicAlbum.id;
-      rm.album = m.musicAlbum.name;
-      rm.address = this.helperService.getMusicAddress(m.musicAlbum.name, m.name);
-      rm.cover = this.helperService.getCoverAddress(m.musicAlbum.name);
-      rm.likedByCurrentUser = false;
-
-      return rm;
+      return this.GetReturnMusic(m, userId);
     });
-
-    console.log(musics);
 
     return rmusics;
   }
 
   async getCollectionDetailById(userId: number, collectionId: number): Promise<RetCollectionDetail> {
     const collection = await this.MusicCollectionRepository.findOne({
-      relations: ['musics', 'musics.musicArtist', 'musics.musicAlbum'],
+      relations: ['musics', 'musics.musicArtist', 'musics.musicAlbum', 'musics.liker'],
       where: { id: collectionId }
     });
 
     const user = await this.UserRepository.findOne({ relations: ['likes', 'mixes'], where: { id: userId } });
-    const likes = user.likes;
 
     const musics = collection.musics.map((m) => {
-      const rm = new Music();
-      rm.id = m.id;
-      rm.name = m.name;
-      rm.like = m.like;
-      rm.artist = m.musicArtist.name;
-      rm.artistId = m.musicArtist.id;
-      rm.albumId = m.musicAlbum.id;
-      rm.album = m.musicAlbum.name;
-      rm.address = this.helperService.getMusicAddress(m.musicAlbum.name, m.name);
-      rm.cover = this.helperService.getCoverAddress(m.musicAlbum.name);
-      rm.likedByCurrentUser = false;
-
-      likes.forEach((l) => {
-        if (m.id === l.id) {
-          rm.likedByCurrentUser = true;
-        }
-      })
-
-      return rm;
+      return this.GetReturnMusic(m, userId);
     });
 
     const foundCollection = user.mixes.find((c) => { return c.id === collectionId });
@@ -106,43 +106,18 @@ export class MusicService {
     r.canBeDeleted = (foundCollection != null);
     r.musics = musics;
 
-    console.log(r);
-
     return r;
   }
 
   async getMusicListByCollectionId(userId: number, musicId: number): Promise<Music[]> {
     const collection = await this.MusicCollectionRepository.findOne({
-      relations: ['musics', 'musics.musicArtist', 'musics.musicAlbum'],
+      relations: ['musics', 'musics.musicArtist', 'musics.musicAlbum', 'musics.liker'],
       where: { id: musicId }
     });
 
-    const user = await this.UserRepository.findOne({ relations: ['likes', 'mixes'], where: { id: userId } });
-    const likes = user.likes;
-
     const musics = collection.musics.map((m) => {
-      const rm = new Music();
-      rm.id = m.id;
-      rm.name = m.name;
-      rm.like = m.like;
-      rm.artist = m.musicArtist.name;
-      rm.artistId = m.musicArtist.id;
-      rm.albumId = m.musicAlbum.id;
-      rm.album = m.musicAlbum.name;
-      rm.address = this.helperService.getMusicAddress(m.musicAlbum.name, m.name);
-      rm.cover = this.helperService.getCoverAddress(m.musicAlbum.name);
-      rm.likedByCurrentUser = false;
-
-      likes.forEach((l) => {
-        if (m.id === l.id) {
-          rm.likedByCurrentUser = true;
-        }
-      })
-
-      return rm;
+      return this.GetReturnMusic(m, userId);
     });
-
-    console.log(musics);
 
     return musics;
   }
@@ -163,9 +138,6 @@ export class MusicService {
     const collection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { id: collectionId } });
     const music = await this.rawMusicRepository.findOne({ id: musicId });
 
-    console.log('+++++++++');
-    console.log(collection);
-
     if (collection.musics.find(m => { m.id === music.id })) {
       return { msg: 'already in this list' }
     }
@@ -178,8 +150,6 @@ export class MusicService {
 
   async removeMusicFromCollection(musicId: number, collectionId: number): Promise<object> {
     const collection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { id: collectionId } });
-    console.log('remove : ' + collectionId);
-    console.log(collection);
     collection.musics = collection.musics.filter((m) => { return m.id !== musicId; });
     await this.MusicCollectionRepository.save(collection);
 
@@ -190,23 +160,12 @@ export class MusicService {
     const music = await this.rawMusicRepository.findOne({ relations: ['musicAlbum', 'musicArtist', 'liker'], where: { id: musicId } });
     music.like++;
 
-    const rMusic = new Music();
-    rMusic.id = music.id;
-    rMusic.cover = this.helperService.getCoverAddress(music.musicAlbum.name);
-    rMusic.name = music.name;
-    rMusic.artist = music.musicArtist.name;
-    rMusic.artistId = music.musicArtist.id;
-    rMusic.albumId = music.musicAlbum.id;
-    rMusic.likedByCurrentUser = true;
-    rMusic.like = music.like;
-    rMusic.address = this.helperService.getMusicAddress(music.musicAlbum.name, music.name);
-
     const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
-    user.likes.push(music);
-
     music.liker = music.liker.concat(user);
+
     await this.rawMusicRepository.save(music);
-    await this.UserRepository.save(user);
+
+    const rMusic = this.GetReturnMusic(music, userId);
 
     return rMusic;
   }
@@ -214,28 +173,13 @@ export class MusicService {
   async dislikeMusic(userId: number, musicId: number): Promise<Music> {
     const music = await this.rawMusicRepository.findOne({ relations: ['musicAlbum', 'musicArtist', 'liker'], where: { id: musicId } });
     music.like--;
-    // this.rawMusicRepository.save(music);
-
-    const rMusic = new Music();
-    rMusic.id = music.id;
-    rMusic.cover = this.helperService.getCoverAddress(music.musicAlbum.name);
-    rMusic.name = music.name;
-    rMusic.artist = music.musicArtist.name;
-    rMusic.artistId = music.musicArtist.id;
-    rMusic.albumId = music.musicAlbum.id;
-    rMusic.likedByCurrentUser = false;
-    rMusic.like = music.like;
-    rMusic.address = this.helperService.getMusicAddress(music.musicAlbum.name, music.name);
-
-    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
-    const newLikes = user.likes.filter((m) => { return m.id !== rMusic.id });
-    user.likes = newLikes;
 
     music.liker = music.liker.filter((u) => {
       return u.id !== userId;
     })
     await this.rawMusicRepository.save(music);
-    await this.UserRepository.save(user);
+
+    const rMusic = this.GetReturnMusic(music, userId);
 
     return rMusic;
   }
@@ -260,38 +204,24 @@ export class MusicService {
 
     const retCollection = await this.MusicCollectionRepository.save(collection);
 
-    console.log('create collection');
-    console.log(retCollection);
-
     return retCollection;
   }
 
-  async getArtistInfo(artistId: number): Promise<RetArtist> {
-    const artist = await this.artistRepository.findOne({ relations: ['musicAlbums', 'musicAlbums.musics'], where: { id: artistId } });
+  async getArtistInfo(artistId: number, userId: number): Promise<RetArtist> {
+    const artist = await this.artistRepository.findOne(
+      {
+        relations: ['musicAlbums',
+          'musicAlbums.musics',
+          'musicAlbums.musics.musicArtist',
+          'musicAlbums.musics.musicAlbum',
+          'musicAlbums.musics.liker'], where: { id: artistId }
+      });
 
     const r = new RetArtist();
     r.id = artist.id;
     r.name = artist.name;
     r.albums = artist.musicAlbums.map((album) => {
-      const retAlbum = new RetAlbum();
-      retAlbum.id = album.id;
-      retAlbum.name = album.name;
-      retAlbum.cover = this.helperService.getCoverAddress(album.name);
-      retAlbum.musics = album.musics.map((m) => {
-        const rMusic = new Music();
-
-        rMusic.id = m.id;
-        rMusic.artist = artist.name;
-        rMusic.artistId = artist.id;
-        rMusic.albumId = album.id;
-        rMusic.cover = retAlbum.cover;
-        rMusic.name = m.name;
-        rMusic.address = this.helperService.getMusicAddress(retAlbum.name, m.name);
-
-        return rMusic;
-      })
-
-      return retAlbum;
+      return this.GetReturnAlbum(album, userId);
     });
 
     r.avatar = this.helperService.getArtistAddress(artist.name);
@@ -304,84 +234,24 @@ export class MusicService {
     return music.musicAlbum.name + '/' + music.name + '.lrc';
   }
 
-  async getAlbum(albumId: number): Promise<RetAlbumDetail> {
+  async getAlbum(albumId: number, userId: number): Promise<RetAlbumDetail> {
     const album = await this.albumRepository.findOne(
       {
-        relations: ['musics', 'musics.musicArtist'],
+        relations: ['musics', 'musics.musicArtist', 'musics.musicAlbum', 'musics.liker'],
         where: { id: albumId }
       });
 
-    const retAlbum = new RetAlbumDetail();
-    retAlbum.id = album.id;
-    retAlbum.cover = this.helperService.getCoverAddress(album.name);
-    retAlbum.name = album.name;
-
-    const retMusics = album.musics.map((m) => {
-      const rMusic = new Music();
-
-      rMusic.id = m.id;
-      rMusic.artist = m.musicArtist.name;
-      rMusic.artistId = m.musicArtist.id;
-      rMusic.albumId = album.id;
-      rMusic.cover = retAlbum.cover;
-      rMusic.name = m.name;
-      rMusic.address = this.helperService.getMusicAddress(retAlbum.name, m.name);
-
-      return rMusic;
-    })
-
-    retAlbum.musics = retMusics;
-
-    console.log(retAlbum);
-
-    return retAlbum;
+    const r = this.GetReturnAlbum(album, userId);
+    return r;
   }
 
   async getAllAlbums(userId: number): Promise<RetAlbum[]> {
-    const albums = await this.albumRepository.find({ relations: ['musics', 'musics.musicArtist'] });
-    const user = await this.UserRepository.findOne({ relations: ['likes'], where: { id: userId } });
-    console.log(user);
+    const albums = await this.albumRepository.find(
+      { relations: ['musics', 'musics.musicArtist', 'musics.musicAlbum', 'musics.liker'] });
 
     const retAlbums = albums.map((album) => {
-      const retAlbum = new RetAlbum();
-
-      retAlbum.id = album.id;
-      retAlbum.name = album.name;
-      retAlbum.cover = this.helperService.getCoverAddress(album.name);
-
-      const retMusics = album.musics.map((music) => {
-        const retMusic = new Music();
-
-        retMusic.id = music.id;
-        retMusic.address = this.helperService.getMusicAddress(retAlbum.name, music.name);
-        retMusic.cover = retAlbum.cover;
-        retMusic.artist = music.musicArtist.name;
-        retMusic.artistId = music.musicArtist.id;
-        retMusic.albumId = album.id;
-        retMusic.album = retAlbum.name;
-
-        retMusic.like = music.like;
-
-        retMusic.likedByCurrentUser = false;
-        const likes = user.likes;
-        likes.forEach((l) => {
-          if (retMusic.id === l.id) {
-            retMusic.likedByCurrentUser = true;
-          }
-        });
-
-        retMusic.comments = [];
-
-        return retMusic;
-      })
-
-      retAlbum.musics = retMusics;
-
-      return retAlbum;
+      return this.GetReturnAlbum(album, userId);
     });
-
-    console.log('RETURN ALBUNMS')
-    console.log(retAlbums);
 
     return retAlbums;
   }

@@ -99,8 +99,8 @@ export class MusicController {
 
   @UseGuards(JwtAuthGuard)
   @Post('getArtistInfo')
-  async getArtistInfo(@Body() getArtistInfoDtG: GetArtistInfoDto): Promise<object> {
-    return this.musicService.getArtistInfo(getArtistInfoDtG.artistId);
+  async getArtistInfo(@Request() req, @Body() getArtistInfoDtG: GetArtistInfoDto): Promise<object> {
+    return this.musicService.getArtistInfo(getArtistInfoDtG.artistId, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -111,7 +111,7 @@ export class MusicController {
 
   @UseGuards(JwtAuthGuard)
   @Post('getAlbumDetail')
-  async getAlbumDetail(@Body() getAlbumDetailDto: GetAlbumDetailDto): Promise<object> {
-    return this.musicService.getAlbum(getAlbumDetailDto.albumId);
+  async getAlbumDetail(@Request() req, @Body() getAlbumDetailDto: GetAlbumDetailDto): Promise<object> {
+    return this.musicService.getAlbum(getAlbumDetailDto.albumId, req.user.userId);
   }
 }
