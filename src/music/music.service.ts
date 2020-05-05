@@ -13,12 +13,14 @@ import {
 } from './entity/music.entity';
 import { User } from '../users/entity/user.entity';
 import { HelperService } from '../helper/helper.service';
+import { ConverterService } from '../converter/converter.service';
 
 @Injectable()
 export class MusicService {
   host: string;
   constructor(
     private helperService: HelperService,
+    private converterService: ConverterService,
 
     @InjectRepository(RawMusic)
     private readonly rawMusicRepository: Repository<RawMusic>,
@@ -37,56 +39,6 @@ export class MusicService {
     this.host = this.helperService.getHost();
   }
 
-  private GetReturnMusic(r: RawMusic, userId: number): Music {
-    const m = new Music();
-    m.id = r.id;
-    m.name = r.name;
-    m.like = r.like;
-    m.artist = r.musicArtist.name;
-    m.artistId = r.musicArtist.id;
-    m.albumId = r.musicAlbum.id;
-    m.album = r.musicAlbum.name;
-    m.address = this.helperService.getMusicAddress(r.musicAlbum.name, r.name);
-    m.cover = this.helperService.getCoverAddress(r.musicAlbum.name);
-
-    m.likedByCurrentUser = false;
-    if (userId != null) {
-      if (r.liker.find((usr) => { return usr.id === userId; })) {
-        m.likedByCurrentUser = true;
-      }
-    }
-
-    return m;
-  }
-
-  private GetReturnAlbum(a: MusicAlbum, userId: number): RetAlbumDetail {
-    const r = new RetAlbumDetail();
-
-    r.id = a.id;
-    r.name = a.name;
-    r.cover = this.helperService.getCoverAddress(a.name);
-    r.musics = a.musics.map((m) => {
-      return this.GetReturnMusic(m, userId);
-    });
-
-    return r;
-  }
-
-  private getReturnMusicCollection(c: MusicCollection, userId: number, canBeDeleted = false): RetCollectionDetail {
-    const r = new RetCollectionDetail();
-
-    r.id = c.id;
-    r.cover = this.helperService.getFakeCover(c.cover);
-    r.name = c.name;
-    r.musics = c.musics.map((m) => {
-      return this.GetReturnMusic(m, userId);
-    });
-
-    r.canBeDeleted = canBeDeleted;
-
-    return r;
-  }
-
   async getMusicsByKeyword(userId: number, keyword: string): Promise<Music[]> {
     const musics = await this.rawMusicRepository.find({
       relations: ['musicAlbum', 'musicArtist', 'liker'],
@@ -94,7 +46,7 @@ export class MusicService {
     });
 
     const rmusics = musics.map((m) => {
-      return this.GetReturnMusic(m, userId);
+      return this.converterService.GetReturnMusic(m, userId);
     });
 
     return rmusics;
@@ -117,13 +69,13 @@ export class MusicService {
     });
 
     const musics = collection.musics.map((m) => {
-      return this.GetReturnMusic(m, userId);
+      return this.converterService.GetReturnMusic(m, userId);
     });
 
     const foundCollection = user.mixes.find((c) => { return c.id === collectionId });
 
     const canBeDeleted = (foundCollection != null);
-    const r = this.getReturnMusicCollection(collection, userId, canBeDeleted);
+    const r = this.converterService.getReturnMusicCollection(collection, userId, canBeDeleted);
 
     return r;
   }
@@ -135,7 +87,7 @@ export class MusicService {
     });
 
     const musics = collection.musics.map((m) => {
-      return this.GetReturnMusic(m, userId);
+      return this.converterService.GetReturnMusic(m, userId);
     });
 
     return musics;
@@ -184,7 +136,7 @@ export class MusicService {
 
     await this.rawMusicRepository.save(music);
 
-    const rMusic = this.GetReturnMusic(music, userId);
+    const rMusic = this.converterService.GetReturnMusic(music, userId);
 
     return rMusic;
   }
@@ -198,7 +150,7 @@ export class MusicService {
     })
     await this.rawMusicRepository.save(music);
 
-    const rMusic = this.GetReturnMusic(music, userId);
+    const rMusic = this.converterService.GetReturnMusic(music, userId);
 
     return rMusic;
   }
@@ -214,7 +166,7 @@ export class MusicService {
     });
 
     const r = user.mixes.map((c) => {
-      return this.getReturnMusicCollection(c, userId, true);
+      return this.converterService.getReturnMusicCollection(c, userId, true);
     })
 
     return r;
@@ -229,7 +181,7 @@ export class MusicService {
     collection.cover = '7.png';
 
     const c = await this.MusicCollectionRepository.save(collection);
-    const r = this.getReturnMusicCollection(c, userId, true);
+    const r = this.converterService.getReturnMusicCollection(c, userId, true);
 
     return r;
   }
@@ -248,7 +200,7 @@ export class MusicService {
     r.id = artist.id;
     r.name = artist.name;
     r.albums = artist.musicAlbums.map((album) => {
-      return this.GetReturnAlbum(album, userId);
+      return this.converterService.GetReturnAlbum(album, userId);
     });
 
     r.avatar = this.helperService.getArtistAddress(artist.name);
@@ -268,7 +220,7 @@ export class MusicService {
         where: { id: albumId }
       });
 
-    const r = this.GetReturnAlbum(album, userId);
+    const r = this.converterService.GetReturnAlbum(album, userId);
     return r;
   }
 
@@ -277,7 +229,7 @@ export class MusicService {
       { relations: ['musics', 'musics.musicArtist', 'musics.musicAlbum', 'musics.liker'] });
 
     const retAlbums = albums.map((album) => {
-      return this.GetReturnAlbum(album, userId);
+      return this.converterService.GetReturnAlbum(album, userId);
     });
 
     return retAlbums;
