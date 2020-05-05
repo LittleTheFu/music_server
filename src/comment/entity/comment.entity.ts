@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { RawMusic } from '../../music/entity/music.entity';
 import { User } from '../../users/entity/user.entity';
 
@@ -11,10 +11,10 @@ export class Comment {
   @Column()
   content: string;
 
-  @ManyToOne(type => RawMusic, music=>music.comments)
+  @ManyToOne(() => RawMusic, music=>music.comments)
   music: RawMusic;
 
-  @ManyToOne(type => User, user=>user.comments)
+  @ManyToOne(() => User, user=>user.comments)
   user: User;
 
   @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
