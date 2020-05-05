@@ -92,7 +92,15 @@ export class MusicService {
       where: { id: collectionId }
     });
 
-    const user = await this.UserRepository.findOne({ relations: ['likes', 'mixes'], where: { id: userId } });
+    const user = await this.UserRepository.findOne({
+      relations: ['likes',
+        'mixes',
+        'mixes.musics',
+        'mixes.musics.musicArtist',
+        'mixes.musics.musicAlbum',
+        'mixes.musics.liker'],
+      where: { id: userId }
+    });
 
     const musics = collection.musics.map((m) => {
       return this.GetReturnMusic(m, userId);
@@ -101,8 +109,9 @@ export class MusicService {
     const foundCollection = user.mixes.find((c) => { return c.id === collectionId });
 
     const r = new RetCollectionDetail();
+    r.id = collection.id;
     r.name = collection.name;
-    r.cover = collection.cover;
+    r.cover = this.helperService.getFakeCover(collection.cover);
     r.canBeDeleted = (foundCollection != null);
     r.musics = musics;
 
@@ -184,12 +193,33 @@ export class MusicService {
     return rMusic;
   }
 
-  async getPrivateMusicCollections(userId: number): Promise<MusicCollection[]> {
-    const user = await this.UserRepository.findOne({ relations: ['mixes'], where: { id: userId } });
-    return user.mixes;
+  async getPrivateMusicCollections(userId: number): Promise<RetCollectionDetail[]> {
+    const user = await this.UserRepository.findOne({
+      relations: [
+        'mixes',
+        'mixes.musics',
+        'mixes.musics.musicArtist',
+        'mixes.musics.musicAlbum',
+        'mixes.musics.liker'], where: { id: userId }
+    });
+    
+    const r = user.mixes.map((c) => {
+      const rc = new RetCollectionDetail();
+      rc.id = c.id;
+      rc.name = c.name;
+      rc.canBeDeleted = true;
+      rc.cover = this.helperService.getFakeCover(c.cover);
+      rc.musics = c.musics.map((m) => {
+        return this.GetReturnMusic(m, userId);
+      })
+
+      return rc;
+    })
+
+    return r;
   }
 
-  async createCollection(userId: number, name: string): Promise<MusicCollection> {
+  async createCollection(userId: number, name: string): Promise<RetCollectionDetail> {
     const user = await this.UserRepository.findOne(userId);
 
     const collection = new MusicCollection();
@@ -197,10 +227,14 @@ export class MusicService {
     collection.user = user;
     collection.cover = '7.png';
 
-    const retCollection = await this.MusicCollectionRepository.save(collection);
-    retCollection.cover = this.helperService.getFakeCover(retCollection.cover);
-    console.log(retCollection.cover);
-    return retCollection;
+    const c = await this.MusicCollectionRepository.save(collection);
+    const r = new RetCollectionDetail();
+    r.id = c.id;
+    r.name = c.name;
+    r.canBeDeleted = true;
+    r.cover = this.helperService.getFakeCover(c.cover);
+
+    return r;
   }
 
   async getArtistInfo(artistId: number, userId: number): Promise<RetArtist> {

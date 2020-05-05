@@ -88,6 +88,7 @@ export class MusicCollection {
 
 
 export class RetCollectionDetail {
+  id: number;
   cover: string;
   name: string;
   canBeDeleted: boolean;

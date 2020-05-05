@@ -58,17 +58,15 @@ export class MusicController {
     return this.musicService.addMusicToCollection(addMusicToCollectionDto.collectionId, addMusicToCollectionDto.musicId);
   }
 
-
   @UseGuards(JwtAuthGuard)
   @Post('getPrivateMusicCollections')
-  async getPrivateMusicCollections(@Request() req): Promise<MusicCollection[]> {
+  async getPrivateMusicCollections(@Request() req): Promise<RetCollectionDetail[]> {
     return this.musicService.getPrivateMusicCollections(req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('like')
   async like(@Request() req, @Body() likeMusicDto: LikeMusicDto): Promise<Music> {
-    console.log(likeMusicDto);
     return this.musicService.likeMusic(req.user.userId, likeMusicDto.musicId);
   }
 
@@ -87,7 +85,7 @@ export class MusicController {
 
   @UseGuards(JwtAuthGuard)
   @Post('createCollection')
-  async createCollection(@Request() req, @Body() createCollectionDto: CreateCollectionDto): Promise<MusicCollection> {
+  async createCollection(@Request() req, @Body() createCollectionDto: CreateCollectionDto): Promise<RetCollectionDetail> {
     return this.musicService.createCollection(req.user.userId, createCollectionDto.name);
   }
 
