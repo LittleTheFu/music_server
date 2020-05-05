@@ -14,6 +14,7 @@ import {
 import { User } from '../users/entity/user.entity';
 import { HelperService } from '../helper/helper.service';
 import { ConverterService } from '../converter/converter.service';
+import { RetMsgObj } from '../helper/entity/helper.entity.dto';
 
 @Injectable()
 export class MusicService {
@@ -93,7 +94,7 @@ export class MusicService {
     return musics;
   }
 
-  async deleteCollection(collectionId: number): Promise<object> {
+  async deleteCollection(collectionId: number): Promise<RetMsgObj> {
 
     await this.MusicCollectionRepository
       .createQueryBuilder()
@@ -102,29 +103,29 @@ export class MusicService {
       .where("id = :id", { id: collectionId })
       .execute();
 
-    return { msg: 'success' };
+      return new RetMsgObj()
   }
 
-  async addMusicToCollection(collectionId: number, musicId: number): Promise<object> {
+  async addMusicToCollection(collectionId: number, musicId: number): Promise<RetMsgObj> {
     const collection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { id: collectionId } });
     const music = await this.rawMusicRepository.findOne({ id: musicId });
 
     if (collection.musics.find(m => { m.id === music.id })) {
-      return { msg: 'already in this list' }
+      return new RetMsgObj('already added');
     }
 
     collection.musics = collection.musics.concat(music);
     await this.MusicCollectionRepository.save(collection);
 
-    return { msg: "success" }
+    return new RetMsgObj();
   }
 
-  async removeMusicFromCollection(musicId: number, collectionId: number): Promise<object> {
+  async removeMusicFromCollection(musicId: number, collectionId: number): Promise<RetMsgObj> {
     const collection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { id: collectionId } });
     collection.musics = collection.musics.filter((m) => { return m.id !== musicId; });
     await this.MusicCollectionRepository.save(collection);
 
-    return { msg: 'success' };
+    return new RetMsgObj();
   }
 
   async likeMusic(userId: number, musicId: number): Promise<Music> {

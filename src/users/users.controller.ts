@@ -3,12 +3,13 @@ import { UsersService } from './users.service';
 import { RegUserDto, DetailUserDto, FollowUserDto, GetUserFollowersDto } from './dto/user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RetUserDetail, RetSimpleUser, RetFollower } from './entity/user.entity';
+import { RetMsgObj } from '../helper/entity/helper.entity.dto';
 
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
     @Post('register')
-    async register(@Body() regUser: RegUserDto): Promise<object> {
+    async register(@Body() regUser: RegUserDto): Promise<RetMsgObj> {
         const user = await this.usersService.createOne(regUser.username, regUser.password);
         if (user === null) {
             throw new HttpException({
@@ -17,7 +18,7 @@ export class UsersController {
             }, HttpStatus.FORBIDDEN);
         }
 
-        return { msg: 'successs' };
+        return new RetMsgObj();
     }
 
     @UseGuards(JwtAuthGuard)
@@ -31,12 +32,12 @@ export class UsersController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Post('follow') async follow(@Request() req, @Body() followUserDto: FollowUserDto): Promise<object> {
+    @Post('follow') async follow(@Request() req, @Body() followUserDto: FollowUserDto): Promise<RetMsgObj> {
         return this.usersService.followUser(req.user.userId, followUserDto.userId);
     }
 
     @UseGuards(JwtAuthGuard)
-    @Post('unfollow') async unfollow(@Request() req, @Body() followUserDto: FollowUserDto): Promise<object> {
+    @Post('unfollow') async unfollow(@Request() req, @Body() followUserDto: FollowUserDto): Promise<RetMsgObj> {
         return this.usersService.unfollowUser(req.user.userId, followUserDto.userId);
     }
 

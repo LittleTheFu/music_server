@@ -19,6 +19,7 @@ import {
   RetArtist,
 } from './entity/music.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RetMsgObj } from '../helper/entity/helper.entity.dto';
 
 @Controller('music')
 export class MusicController {
@@ -46,13 +47,13 @@ export class MusicController {
 
   @UseGuards(JwtAuthGuard)
   @Post('DeleteCollection')
-  async deleteCollection(@Body() deleteCollectionDto: DeleteCollectionDto): Promise<object> {
+  async deleteCollection(@Body() deleteCollectionDto: DeleteCollectionDto): Promise<RetMsgObj> {
     return this.musicService.deleteCollection(deleteCollectionDto.id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('AddMusicToCollection')
-  async addMusicToCollection(@Body() addMusicToCollectionDto: AddMusicToCollectionDto): Promise<object> {
+  async addMusicToCollection(@Body() addMusicToCollectionDto: AddMusicToCollectionDto): Promise<RetMsgObj> {
     return this.musicService.addMusicToCollection(addMusicToCollectionDto.collectionId, addMusicToCollectionDto.musicId);
   }
 
@@ -89,7 +90,7 @@ export class MusicController {
 
   @UseGuards(JwtAuthGuard)
   @Post('removeMusicFromCollection')
-  async removeMusicFromCollection(@Body() removeMusicFromCollectionDto: RemoveMusicFromCollectionDto): Promise<object> {
+  async removeMusicFromCollection(@Body() removeMusicFromCollectionDto: RemoveMusicFromCollectionDto): Promise<RetMsgObj> {
     return this.musicService.removeMusicFromCollection(removeMusicFromCollectionDto.musicId, removeMusicFromCollectionDto.collectionId);
   }
 

@@ -7,6 +7,7 @@ import { Profile } from '../profile/entity/profile.entity';
 import { Md5 } from 'ts-md5/dist/md5';
 import { HelperService } from '../helper/helper.service';
 import { ConverterService } from '../converter/converter.service';
+import { RetMsgObj } from '../helper/entity/helper.entity.dto';
 
 @Injectable()
 export class UsersService {
@@ -94,23 +95,23 @@ export class UsersService {
     return retUser;
   }
 
-  async followUser(userId: number, followerId: number): Promise<object> {
+  async followUser(userId: number, followerId: number): Promise<RetMsgObj> {
     const user = await this.usersRepository.findOne({ relations: ['following'], where: { id: userId } });
     const follower = await this.usersRepository.findOne({ id: followerId });
 
     user.following.push(follower);
     await this.usersRepository.save(user);
 
-    return { msg: 'success' };
+    return new RetMsgObj();
   }
 
-  async unfollowUser(userId: number, followerId: number): Promise<object> {
+  async unfollowUser(userId: number, followerId: number): Promise<RetMsgObj> {
     const user = await this.usersRepository.findOne({ relations: ['following'], where: { id: userId } });
 
     user.following = user.following.filter((u) => { u.id != followerId });
     await this.usersRepository.save(user);
 
-    return { msg: 'success' };
+    return new RetMsgObj();
   }
 
   async getAllUsers(): Promise<RetSimpleUser[]> {

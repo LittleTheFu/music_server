@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../users/entity/user.entity';
 import { Mail, RetMail } from './entity/mail.entity';
+import { RetMsgObj } from '../helper/entity/helper.entity.dto';
 
 @Injectable()
 export class MailService {
@@ -27,7 +28,7 @@ export class MailService {
         return r;
     }
 
-    async sendMail(fromId: number, toId: number, content: string): Promise<object> {
+    async sendMail(fromId: number, toId: number, content: string): Promise<RetMsgObj> {
         const mail = new Mail();
         mail.content = content;
 
@@ -39,7 +40,7 @@ export class MailService {
 
         await this.MailRepository.save(mail);
 
-        return { msg: 'ok' };
+        return new RetMsgObj();
     }
 
     async deleteMail(userId: number, mailId: number): Promise<RetMail[]> {
