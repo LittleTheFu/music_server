@@ -66,12 +66,6 @@ export class MusicController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('getPublicMusicCollections')
-  async getPublicMusicCollections(): Promise<MusicCollection[]> {
-    return this.musicService.getPublicMusicCollections();
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Post('like')
   async like(@Request() req, @Body() likeMusicDto: LikeMusicDto): Promise<Music> {
     console.log(likeMusicDto);

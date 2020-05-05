@@ -189,11 +189,6 @@ export class MusicService {
     return user.mixes;
   }
 
-  async getPublicMusicCollections(): Promise<MusicCollection[]> {
-    const user = await this.UserRepository.findOne({ relations: ['mixes'], where: { id: 1 } });
-    return user.mixes;
-  }
-
   async createCollection(userId: number, name: string): Promise<MusicCollection> {
     const user = await this.UserRepository.findOne(userId);
 
