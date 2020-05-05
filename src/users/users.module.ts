@@ -7,9 +7,10 @@ import { MusicModule } from '../music/music.module';
 import { MusicCollection } from '../music/entity/music.entity';
 import { Profile } from '../profile/entity/profile.entity';
 import { MailModule } from '../mail/mail.module';
-
+import { ConverterModule } from '../converter/converter.module';
 @Module({
-  imports: [forwardRef(()=>MailModule), 
+  imports: [ConverterModule,
+    forwardRef(()=>MailModule), 
     forwardRef(()=>MusicModule),  
     TypeOrmModule.forFeature([User, MusicCollection, Profile])],
   controllers: [UsersController],
