@@ -30,15 +30,10 @@ export class UsersService {
     .where('user.id = :id', { id: userId })
     .getOne();
 
-    // console.log(result);
     const ret = new RetSimpleUser();
     ret.id = result.id;
     ret.name = result.name;
     ret.avatarUrl = this.helperService.getAvatarAddress(result.profile.avatar);
-
-    // console.log('MEMEME');
-    // console.log(ret);
-    // console.log('MEMEME')
 
     return ret;
   }
@@ -82,7 +77,7 @@ export class UsersService {
     const retUser = new RetUserDetail();
     retUser.name = user.name;
     retUser.avatarUrl = this.helperService.getAvatarAddress(user.profile.avatar);
-    retUser.collections = user.mixes;
+    // retUser.collections = user.mixes;
     retUser.isFollowed = (filteredFollower != null);
 
     return retUser;

@@ -72,6 +72,21 @@ export class MusicService {
     return r;
   }
 
+  private getReturnMusicCollection(c: MusicCollection, userId: number, canBeDeleted = false): RetCollectionDetail {
+    const r = new RetCollectionDetail();
+
+    r.id = c.id;
+    r.cover = this.helperService.getFakeCover(c.cover);
+    r.name = c.name;
+    r.musics = c.musics.map((m) => {
+      return this.GetReturnMusic(m, userId);
+    });
+
+    r.canBeDeleted = canBeDeleted;
+
+    return r;
+  }
+
   async getMusicsByKeyword(userId: number, keyword: string): Promise<Music[]> {
     const musics = await this.rawMusicRepository.find({
       relations: ['musicAlbum', 'musicArtist', 'liker'],
@@ -107,12 +122,8 @@ export class MusicService {
 
     const foundCollection = user.mixes.find((c) => { return c.id === collectionId });
 
-    const r = new RetCollectionDetail();
-    r.id = collection.id;
-    r.name = collection.name;
-    r.cover = this.helperService.getFakeCover(collection.cover);
-    r.canBeDeleted = (foundCollection != null);
-    r.musics = musics;
+    const canBeDeleted = (foundCollection != null);
+    const r = this.getReturnMusicCollection(collection, userId, canBeDeleted);
 
     return r;
   }
@@ -201,18 +212,9 @@ export class MusicService {
         'mixes.musics.musicAlbum',
         'mixes.musics.liker'], where: { id: userId }
     });
-    
-    const r = user.mixes.map((c) => {
-      const rc = new RetCollectionDetail();
-      rc.id = c.id;
-      rc.name = c.name;
-      rc.canBeDeleted = true;
-      rc.cover = this.helperService.getFakeCover(c.cover);
-      rc.musics = c.musics.map((m) => {
-        return this.GetReturnMusic(m, userId);
-      })
 
-      return rc;
+    const r = user.mixes.map((c) => {
+      return this.getReturnMusicCollection(c, userId, true);
     })
 
     return r;
@@ -227,11 +229,7 @@ export class MusicService {
     collection.cover = '7.png';
 
     const c = await this.MusicCollectionRepository.save(collection);
-    const r = new RetCollectionDetail();
-    r.id = c.id;
-    r.name = c.name;
-    r.canBeDeleted = true;
-    r.cover = this.helperService.getFakeCover(c.cover);
+    const r = this.getReturnMusicCollection(c, userId, true);
 
     return r;
   }
