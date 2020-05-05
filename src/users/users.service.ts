@@ -80,12 +80,6 @@ export class UsersService {
           'mixes.musics.liker'], where: { id: userId }
       });
 
-    // const user = await this.usersRepository.createQueryBuilder('user')
-    //   .leftJoinAndSelect('user.profile', 'profile')
-    //   .leftJoinAndSelect('user.mixes', 'collections')
-    //   .where('user.id = :id', { id: userId })
-    //   .getOne();
-
     const filteredFollower = me.following.find((u) => { return u.id === user.id });
 
     const retUser = new RetUserDetail();
