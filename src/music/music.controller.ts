@@ -14,9 +14,7 @@ import {
 } from './dto/music.dto';
 import {
   Music,
-  MusicCollection,
   RetCollectionDetail,
-  RetAlbum,
   RetAlbumDetail,
   RetArtist,
 } from './entity/music.entity';
@@ -103,7 +101,7 @@ export class MusicController {
 
   @UseGuards(JwtAuthGuard)
   @Post('getAlbums')
-  async getAlbums(@Request() req): Promise<RetAlbum[]> {
+  async getAlbums(@Request() req): Promise<RetAlbumDetail[]> {
     return this.musicService.getAllAlbums(req.user.userId);
   }
 

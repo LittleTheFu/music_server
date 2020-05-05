@@ -85,20 +85,11 @@ export class MusicCollection {
   user: User;
 }
 
-
-
 export class RetCollectionDetail {
   id: number;
   cover: string;
   name: string;
   canBeDeleted: boolean;
-  musics: Music[];
-}
-
-export class RetAlbum {
-  id: number;
-  cover: string;
-  name: string;
   musics: Music[];
 }
 

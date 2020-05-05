@@ -6,7 +6,6 @@ import {
   MusicCollection,
   RetCollectionDetail,
   Artist,
-  RetAlbum,
   MusicAlbum,
   RawMusic,
   RetAlbumDetail,
@@ -60,8 +59,8 @@ export class MusicService {
     return m;
   }
 
-  private GetReturnAlbum(a: MusicAlbum, userId: number): RetAlbum {
-    const r = new RetAlbum();
+  private GetReturnAlbum(a: MusicAlbum, userId: number): RetAlbumDetail {
+    const r = new RetAlbumDetail();
 
     r.id = a.id;
     r.name = a.name;
@@ -275,7 +274,7 @@ export class MusicService {
     return r;
   }
 
-  async getAllAlbums(userId: number): Promise<RetAlbum[]> {
+  async getAllAlbums(userId: number): Promise<RetAlbumDetail[]> {
     const albums = await this.albumRepository.find(
       { relations: ['musics', 'musics.musicArtist', 'musics.musicAlbum', 'musics.liker'] });
 
