@@ -181,7 +181,12 @@ export class MusicService {
     collection.cover = '7.png';
 
     const c = await this.MusicCollectionRepository.save(collection);
-    const r = this.converterService.getReturnMusicCollection(c, userId, true);
+    // const r = this.converterService.getReturnMusicCollection(c, userId, true);
+    const r = new RetCollectionDetail();
+    r.canBeDeleted = true;
+    r.cover = this.helperService.getFakeCover(collection.cover);
+    r.name = c.name;
+    r.id = c.id;
 
     return r;
   }
