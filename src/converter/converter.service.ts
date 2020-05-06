@@ -44,6 +44,9 @@ export class ConverterService {
         r.id = a.id;
         r.name = a.name;
         r.cover = this.helperService.getCoverAddress(a.name);
+        a.musics = a.musics.sort((a,b) => {
+            return a.id - b.id;
+        })
         r.musics = a.musics.map((m) => {
             return this.GetReturnMusic(m, userId);
         });
