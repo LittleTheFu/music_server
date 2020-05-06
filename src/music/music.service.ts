@@ -175,7 +175,7 @@ export class MusicService {
     const collection = new MusicCollection();
     collection.name = name;
     collection.user = user;
-    collection.cover = '7.png';
+    collection.cover = this.helperService.genMixCoverImg();
 
     const c = await this.MusicCollectionRepository.save(collection);
     // const r = this.converterService.getReturnMusicCollection(c, userId, true);

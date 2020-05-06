@@ -55,11 +55,19 @@ export class HelperService {
         return this.host + this.AVATAR_DIRECTORY;
     }
 
-    getAvatarAddress(file: string) {
+    getAvatarAddress(file: string): string {
         return this.getAvatarRoot() + file;
     }
 
-    getFakeCover(file: string) {
-        return this.getHost() + 'album' + '/' + file;
+    getFakeCover(file: string): string {
+        return this.getHost() + 'mix' + '/' + file;
+    }
+
+    private randomInteger(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    genMixCoverImg(): string {
+        return this.randomInteger(0, 7) + '.png';
     }
 }
