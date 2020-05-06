@@ -69,10 +69,6 @@ export class MusicService {
       where: { id: userId }
     });
 
-    const musics = collection.musics.map((m) => {
-      return this.converterService.GetReturnMusic(m, userId);
-    });
-
     const foundCollection = user.mixes.find((c) => { return c.id === collectionId });
 
     const canBeDeleted = (foundCollection != null);
