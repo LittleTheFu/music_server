@@ -99,14 +99,14 @@ export class MusicService {
       .where("id = :id", { id: collectionId })
       .execute();
 
-      return new RetMsgObj()
+    return new RetMsgObj()
   }
 
   async addMusicToCollection(collectionId: number, musicId: number): Promise<RetMsgObj> {
     const collection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { id: collectionId } });
     const music = await this.rawMusicRepository.findOne({ id: musicId });
 
-    if (collection.musics.find(m => { m.id === music.id })) {
+    if (collection.musics.find(m => { return m.id === music.id })) {
       return new RetMsgObj('already added');
     }
 
