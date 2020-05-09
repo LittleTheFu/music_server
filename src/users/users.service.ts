@@ -108,7 +108,7 @@ export class UsersService {
   async unfollowUser(userId: number, followerId: number): Promise<RetMsgObj> {
     const user = await this.usersRepository.findOne({ relations: ['following'], where: { id: userId } });
 
-    user.following = user.following.filter((u) => { u.id != followerId });
+    user.following = user.following.filter((u) => { return u.id != followerId });
     await this.usersRepository.save(user);
 
     return new RetMsgObj();
