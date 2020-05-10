@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Comment, RetComment } from './entity/comment.entity';
+import { Comment, RetComment, RetComments } from './entity/comment.entity';
 import { RawMusic } from '../music/entity/music.entity';
 import { User } from '../users/entity/user.entity';
 import { HelperService } from '../helper/helper.service';
@@ -37,7 +37,7 @@ export class CommentService {
     }
 
     //page: 1,2,3......N
-    async getMusicComments(musicId: number, page: number): Promise<RetComment[]> {
+    async getMusicComments(musicId: number, page: number): Promise<RetComments> {
         const NUM_PER_PAGE = 5;
         const comments = await this.CommentRepository.createQueryBuilder('comment')
             .innerJoin('comment.music', 'music')
@@ -49,9 +49,20 @@ export class CommentService {
             .take(NUM_PER_PAGE)
             .getMany();
 
-        const retComments = comments.map((c: Comment) => {
+        const r = comments.map((c: Comment) => {
             return this.getRetComment(c);
         })
+
+        const retComments = new RetComments();
+        retComments.comments = r;
+
+        const count = await this.CommentRepository.createQueryBuilder('comment')
+            .innerJoin('comment.music', 'music')
+            .where('comment.music.id = :id', { id: musicId })
+            .getCount();
+
+
+        retComments.pageNum = Math.ceil(count / NUM_PER_PAGE);
 
         return retComments;
     }

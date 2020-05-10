@@ -21,6 +21,8 @@ export class Comment {
   date: Date;
 }
 
+
+
 export class RetComment {
     id: number;
 
@@ -33,4 +35,9 @@ export class RetComment {
     userId: number;
 
     date: Date;
+}
+
+export class RetComments {
+  comments: RetComment[];
+  pageNum: number;
 }
