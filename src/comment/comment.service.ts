@@ -5,6 +5,7 @@ import { Comment, RetComment } from './entity/comment.entity';
 import { RawMusic } from '../music/entity/music.entity';
 import { User } from '../users/entity/user.entity';
 import { HelperService } from '../helper/helper.service';
+import { RetMsgObj } from '../helper/entity/helper.entity.dto';
 
 @Injectable()
 export class CommentService {
@@ -35,13 +36,17 @@ export class CommentService {
         return r;
     }
 
-    async getMusicComments(musicId: number): Promise<RetComment[]> {
+    //page: 1,2,3......N
+    async getMusicComments(musicId: number, page: number): Promise<RetComment[]> {
+        const NUM_PER_PAGE = 5;
         const comments = await this.CommentRepository.createQueryBuilder('comment')
             .innerJoin('comment.music', 'music')
             .innerJoinAndSelect('comment.user', 'user')
             .innerJoinAndSelect('user.profile', 'pofile')
             .orderBy("comment.date", "DESC")
             .where('comment.music.id = :id', { id: musicId })
+            .skip((page - 1) * NUM_PER_PAGE)
+            .take(NUM_PER_PAGE)
             .getMany();
 
         const retComments = comments.map((c: Comment) => {
@@ -51,7 +56,7 @@ export class CommentService {
         return retComments;
     }
 
-    async postMusicComments(musicId: number, userId: number, content: string): Promise<RetComment[]> {
+    async postMusicComments(musicId: number, userId: number, content: string): Promise<RetMsgObj> {
         const comment = new Comment;
         comment.content = content;
 
@@ -71,17 +76,19 @@ export class CommentService {
 
         await this.CommentRepository.save(comment);
 
-        const comments = await this.CommentRepository.createQueryBuilder('comment')
-            .innerJoin('comment.music', 'music')
-            .innerJoinAndSelect('comment.user', 'user')
-            .innerJoinAndSelect('user.profile', 'pofile')
-            .orderBy("comment.date", "DESC")
-            .where('comment.music.id = :id', { id: musicId }).getMany();
+        // const comments = await this.CommentRepository.createQueryBuilder('comment')
+        //     .innerJoin('comment.music', 'music')
+        //     .innerJoinAndSelect('comment.user', 'user')
+        //     .innerJoinAndSelect('user.profile', 'pofile')
+        //     .orderBy("comment.date", "DESC")
+        //     .where('comment.music.id = :id', { id: musicId })
+        //     .take(this.NUM_PER_PAGE)
+        //     .getMany();
 
-        const retComments = comments.map((c: Comment) => {
-            return this.getRetComment(c);
-        })
+        // const retComments = comments.map((c: Comment) => {
+        //     return this.getRetComment(c);
+        // })
 
-        return retComments;
+        return new RetMsgObj();
     }
 }
