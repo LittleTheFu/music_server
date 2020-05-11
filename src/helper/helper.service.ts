@@ -13,7 +13,7 @@ export class HelperService {
 
     constructor(private readonly configService: ConfigService) {
 
-        this.hostName = this.configService.get<string>('HOSTNAME');
+        this.hostName = this.configService.get<string>('HSTNAME');
         this.port = this.configService.get<string>('PORT');
 
         this.host = 'http://' + this.hostName + (':') + this.port + '/';

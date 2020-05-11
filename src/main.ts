@@ -12,6 +12,8 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'public'));
 
   const helperService = app.get(HelperService);
-  await app.listen(helperService.getProt(), helperService.getHostName());
+  
+  await app.listen(helperService.getProt(), '0.0.0.0');
+  // await app.listen(helperService.getProt(), helperService.getHostName());
 }
 bootstrap();
