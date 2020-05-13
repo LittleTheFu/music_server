@@ -1,4 +1,4 @@
-import {ConnectionOptions} from 'typeorm';
+import {ConnectionOptions, getMetadataArgsStorage} from 'typeorm';
 // You can load you .env file here synchronously using dotenv package (not installed here),
 // import * as dotenv from 'dotenv';
 // import * as fs from 'fs';
@@ -12,7 +12,8 @@ import {ConnectionOptions} from 'typeorm';
 const config: ConnectionOptions = {
   type: 'sqlite',
   database: 'db',
-  entities: [__dirname + '/**/*.entity{.ts,.js}'],
+  // entities: ["./**/*.entity.js" ],
+  entities: getMetadataArgsStorage().tables.map(tbl => tbl.target),
 
   // We are using migrations, synchronize should be set to false.
 //   synchronize: false,
