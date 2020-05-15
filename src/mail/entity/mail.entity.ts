@@ -10,6 +10,9 @@ export class Mail {
   @Column()
   content: string;
 
+  @Column({default: false})
+  read: boolean;
+
   @ManyToOne(type => User, user=>user.sendMails)
   from: User;
 
@@ -19,12 +22,9 @@ export class Mail {
  
 export class RetMail {
     id: number;
-
     content: string;
-
     fromName: string;
-
     toName: string;
-
     fromId: number;
+    read: boolean;
 }

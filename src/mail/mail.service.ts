@@ -24,6 +24,7 @@ export class MailService {
         r.fromName = m.from.name;
         r.toName = m.to.name;
         r.content = m.content;
+        r.read = m.read;
 
         return r;
     }
@@ -63,12 +64,16 @@ export class MailService {
             .where('mail.id = :id', { id: mailId })
             .getOne();
 
+        mail.read = true;
+        await this.MailRepository.save(mail);
+
         const retMail = new RetMail();
         retMail.id = mail.id;
         retMail.fromName = mail.from.name;
         retMail.toName = mail.to.name;
         retMail.content = mail.content;
         retMail.fromId = mail.from.id;
+        retMail.read = true;
 
         return retMail;
     }
