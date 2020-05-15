@@ -23,7 +23,7 @@ export class CommentService {
 
     }
 
-    private getRetComment(c: Comment): RetComment {
+    private getRetComment(c: Comment, userId: number): RetComment {
         const r = new RetComment();
 
         r.content = c.content;
@@ -32,12 +32,13 @@ export class CommentService {
         r.date = c.date;
         r.avatar = this.helperService.getAvatarAddress(c.user.profile.avatar);
         r.userId = c.user.id;
+        r.canBeDeleted = (userId === r.userId);
 
         return r;
     }
 
     //page: 1,2,3......N
-    async getMusicComments(musicId: number, page: number): Promise<RetComments> {
+    async getMusicComments(musicId: number, page: number, userId: number): Promise<RetComments> {
         const NUM_PER_PAGE = 5;
         const comments = await this.CommentRepository.createQueryBuilder('comment')
             .innerJoin('comment.music', 'music')
@@ -50,7 +51,7 @@ export class CommentService {
             .getMany();
 
         const r = comments.map((c: Comment) => {
-            return this.getRetComment(c);
+            return this.getRetComment(c, userId);
         })
 
         const retComments = new RetComments();
@@ -65,6 +66,17 @@ export class CommentService {
         retComments.pageNum = Math.ceil(count / NUM_PER_PAGE);
 
         return retComments;
+    }
+
+    async deleteMusicComment(commentId: number): Promise<RetMsgObj> {
+        await this.CommentRepository
+        .createQueryBuilder()
+        .delete()
+        .from(Comment)
+        .where("id = :id", { id: commentId })
+        .execute();
+
+        return new RetMsgObj();
     }
 
     async postMusicComments(musicId: number, userId: number, content: string): Promise<RetMsgObj> {
@@ -86,19 +98,6 @@ export class CommentService {
         console.log(comment);
 
         await this.CommentRepository.save(comment);
-
-        // const comments = await this.CommentRepository.createQueryBuilder('comment')
-        //     .innerJoin('comment.music', 'music')
-        //     .innerJoinAndSelect('comment.user', 'user')
-        //     .innerJoinAndSelect('user.profile', 'pofile')
-        //     .orderBy("comment.date", "DESC")
-        //     .where('comment.music.id = :id', { id: musicId })
-        //     .take(this.NUM_PER_PAGE)
-        //     .getMany();
-
-        // const retComments = comments.map((c: Comment) => {
-        //     return this.getRetComment(c);
-        // })
 
         return new RetMsgObj();
     }

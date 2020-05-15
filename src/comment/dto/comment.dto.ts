@@ -7,3 +7,7 @@ export class PostMusicCommentsDto {
     musicId: number;
     content: string;
 }
+
+export class DeleteMusicCommentsDto {
+    commentId: number;
+}

@@ -2,7 +2,7 @@ import { Controller, Post, Request, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CommentService } from './comment.service';
 import { RetComment, RetComments } from './entity/comment.entity';
-import { PostMusicCommentsDto, GetMusicCommentsDto } from './dto/comment.dto';
+import { PostMusicCommentsDto, GetMusicCommentsDto, DeleteMusicCommentsDto } from './dto/comment.dto';
 import { RetMsgObj } from '../helper/entity/helper.entity.dto';
 
 @Controller('comment')
@@ -11,9 +11,15 @@ export class CommentController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('DeleteMusicComment')
+  async deleteMusicComment(@Body() deleteMusicCommentsDto: DeleteMusicCommentsDto): Promise<RetMsgObj> {
+    return this.musicService.deleteMusicComment(deleteMusicCommentsDto.commentId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('GetMusicComments')
   async getMusicComments(@Request() req, @Body() getMusicCommentsDto: GetMusicCommentsDto): Promise<RetComments> {
-    return this.musicService.getMusicComments(getMusicCommentsDto.musicId, getMusicCommentsDto.page);
+    return this.musicService.getMusicComments(getMusicCommentsDto.musicId, getMusicCommentsDto.page, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)

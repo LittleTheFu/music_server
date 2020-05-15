@@ -25,16 +25,12 @@ export class Comment {
 
 export class RetComment {
     id: number;
-
     content: string;
-
     username: string;
-
     avatar: string;
-
     userId: number;
-
     date: Date;
+    canBeDeleted: boolean;
 }
 
 export class RetComments {
