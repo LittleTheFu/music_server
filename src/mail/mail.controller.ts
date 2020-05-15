@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Request, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Request, Body, UseGuards } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RetMail } from './entity/mail.entity';

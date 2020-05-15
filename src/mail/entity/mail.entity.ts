@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { User } from '../../users/entity/user.entity';
 
 
@@ -10,21 +10,21 @@ export class Mail {
   @Column()
   content: string;
 
-  @Column({default: false})
+  @Column({ default: false })
   read: boolean;
 
-  @ManyToOne(type => User, user=>user.sendMails)
+  @ManyToOne(() => User, user => user.sendMails)
   from: User;
 
-  @ManyToOne(type => User, user=>user.receiveMails)
+  @ManyToOne(() => User, user => user.receiveMails)
   to: User;
 }
- 
+
 export class RetMail {
-    id: number;
-    content: string;
-    fromName: string;
-    toName: string;
-    fromId: number;
-    read: boolean;
+  id: number;
+  content: string;
+  fromName: string;
+  toName: string;
+  fromId: number;
+  read: boolean;
 }
