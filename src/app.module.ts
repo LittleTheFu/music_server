@@ -27,8 +27,5 @@ import * as ormconfig from './ormconfig';
 })
 export class AppModule {
   constructor(private readonly connection: Connection) {
-    console.log('APP');
-    console.log(ormconfig.entities);
-    console.log('APP');
   }
 }

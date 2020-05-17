@@ -25,7 +25,6 @@ export class MailController {
     @UseGuards(JwtAuthGuard)
     @Post('DeleteMail')
     async deleteMail(@Request() req, @Body() deleteMailDto: DeleteMailDto): Promise<RetMsgObj> {
-        console.log(deleteMailDto);
         return this.mailService.deleteMail(req.user.userId, deleteMailDto.mailId);
     }
 

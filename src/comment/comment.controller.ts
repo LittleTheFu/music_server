@@ -25,7 +25,6 @@ export class CommentController {
   @UseGuards(JwtAuthGuard)
   @Post('PostMusicComments')
   async postMusicComments(@Request() req, @Body() getMusicCommentsDto: PostMusicCommentsDto): Promise<RetMsgObj> {
-    // console.log('postMusicComments : music: ' + getMusicCommentsDto.musicId + '__ user:' + req.user.userId)
     return this.musicService.postMusicComments(getMusicCommentsDto.musicId, req.user.userId, getMusicCommentsDto.content);
   }
 }

@@ -37,8 +37,6 @@ export class ProfileService {
         .where('user.name = :name', { name: username })
         .getOne();
 
-        console.log(result);
-
         result.profile.avatar = fileName;
         this.ProfileRepository.save(result.profile);
 

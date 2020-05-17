@@ -86,7 +86,6 @@ export class UsersService {
     const retUser = new RetUserDetail();
     retUser.name = user.name;
     retUser.avatarUrl = this.helperService.getAvatarAddress(user.profile.avatar);
-    console.log(user);
     retUser.collections = user.mixes.map((c) => {
       return this.converterService.getReturnMusicCollection(c, meId, meId === userId);
     })
@@ -157,9 +156,6 @@ export class UsersService {
       return r;
     })
 
-    // console.log(user.following);
-    // console.log(ret);
-
     return ret;
   }
-}
+} 

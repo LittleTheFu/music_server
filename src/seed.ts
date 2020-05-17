@@ -14,7 +14,6 @@ async function bootstrap() {
   await app.listen(port, hostName);
 
   const ss = app.get(SeedService);
-  //   console.log(ss);
   ss.initDbData();
 }
 bootstrap();

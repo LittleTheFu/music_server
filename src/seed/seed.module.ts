@@ -29,8 +29,5 @@ import { HelperModule } from '../helper/helper.module';
 
 export class SeedModule {
   constructor(private readonly connection: Connection) {
-      console.log("Seed");
-      console.log(ormconfig.entities);      
-      console.log("ed");
   }
 }

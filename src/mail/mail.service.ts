@@ -45,7 +45,6 @@ export class MailService {
     }
 
     async deleteMail(userId: number, mailId: number): Promise<RetMsgObj> {
-        console.log('mail : ' + mailId);
         await this.MailRepository
             .createQueryBuilder()
             .delete()

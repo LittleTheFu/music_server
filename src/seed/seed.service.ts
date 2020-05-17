@@ -4,7 +4,6 @@ import { Profile } from '../profile/entity/profile.entity';
 import { MusicCollection, RawMusic, Artist, MusicAlbum } from '../music/entity/music.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Md5 } from 'ts-md5/dist/md5';
 import { HelperService } from '../helper/helper.service';
 
 @Injectable()
@@ -35,14 +34,6 @@ export class SeedService {
 
     }
 
-    getHello(): string {
-        return 'Hello World!';
-    }
-
-    hello(): void {
-        console.log('seed-service-hello');
-    }
-
     private createRawMusic = ( name: string, artist: Artist, album: MusicAlbum ): void => {
         const rm = new RawMusic();
 
@@ -54,37 +45,6 @@ export class SeedService {
     }
 
     async initDbData(): Promise<void> {
-        console.log('init db data');
-
-        // const profile = new Profile();
-        // profile.avatar = '2.jpeg';
-        // const savedProfile = await this.profileReposity.save(profile);
-
-        // const u = new User();
-        // u.name = 'staff';
-        // u.password = Md5.hashStr('staff') as string;
-        // u.profile = savedProfile;
-        // await this.userRepository.save(u);
-
-        // const c1 = new MusicCollection();
-        // c1.cover = '4.png';
-        // c1.name = 'recommend';
-        // c1.user = u;
-        // c1.musics = [];
-
-        // await this.collectionRepository.save(c1);
-
-        // ------------------------------------------------------------------------------------------
-        // const album123 = new MusicAlbum();
-        // album123.name = '123';
-
-        // const artD = new Artist();
-        // artD.name = 'dd';
-        // artD.musicAlbums = [album123];
-        // await this.artistRepository.save(artD);
-
-        // this.createRawMusic('0', artD, album123);
-        // this.createRawMusic('1', artD, album123);
 
         const albumWT = new MusicAlbum();
         albumWT.name = 'Walküre_Trap!';

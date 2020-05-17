@@ -1,7 +1,5 @@
-import { Controller, Get, Request, Post, UseGuards, UseInterceptors, UploadedFile} from '@nestjs/common';
-// import { FileInterceptor } from '@nestjs/platform-express';
+import { Controller, Get, Request, Post, UseGuards} from '@nestjs/common';
 import { AppService } from './app.service';
-// import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
 
@@ -16,7 +14,6 @@ export class AppController {
   getHello(): string {
     this.index++;
     return (this.index.toString());
-    // return this.appService.getHello(); 
   }
 
   @UseGuards(LocalAuthGuard)
@@ -24,21 +21,4 @@ export class AppController {
   async login(@Request() req) {
     return this.authService.login(req.user);
   }
-
-  // @UseGuards(JwtAuthGuard)
-  // @Post('profile')
-  // getProfile(@Request() req) {
-  //   console.log('profile');
-  //   console.log(req);
-  //   return req.user;
-  // }
-
-  // @Post('upload')
-  // @UseInterceptors(FileInterceptor('file'))
-  // uploadFile(@UploadedFile() file) {
-  //   console.log('UPLOAD');
-  //   console.log(file);
-
-  //   return 'goood';
-  // }
 }

@@ -94,9 +94,6 @@ export class CommentService {
         });
         comment.user = user;
 
-        console.log('comment : ');
-        console.log(comment);
-
         await this.CommentRepository.save(comment);
 
         return new RetMsgObj();
