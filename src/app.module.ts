@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { HelperModule } from './helper/helper.module';
 import * as ormconfig from './ormconfig';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import * as ormconfig from './ormconfig';
     CommentModule,
     ProfileModule,
     MailModule,
-    AuthModule,],
+    AuthModule,
+    EventsModule],
   controllers: [AppController],
   providers: [AppService],
 })
