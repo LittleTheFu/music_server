@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Mail } from './entity/mail.entity';
 import { UsersModule } from '../users/users.module';
 import { User } from '../users/entity/user.entity';
+import { EventsModule } from '../events/events.module';
 // import { MusicModule } from '../music/music.module';
 // import { Music } from '../music/entity/music.entity';
 // import { CommentController } from './comment.controller';
@@ -13,8 +14,8 @@ import { User } from '../users/entity/user.entity';
 
 // import { User } from '../users/entity/user.entity';
 
-@Module({
-  imports: [ TypeOrmModule.forFeature([User, Mail]) ],
+@Module({ 
+  imports: [ EventsModule, TypeOrmModule.forFeature([User, Mail]) ],
   controllers: [MailController],
   providers: [MailService],
 })

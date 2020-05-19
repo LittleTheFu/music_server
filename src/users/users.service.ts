@@ -8,11 +8,13 @@ import { Md5 } from 'ts-md5/dist/md5';
 import { HelperService } from '../helper/helper.service';
 import { ConverterService } from '../converter/converter.service';
 import { RetMsgObj } from '../helper/entity/helper.entity.dto';
+import { EventsGateway } from '../events/events.gateway';
 
 @Injectable()
 export class UsersService {
 
   constructor(
+    private readonly eventsGateway: EventsGateway,
     private readonly converterService: ConverterService,
     private readonly helperService: HelperService,
 
@@ -101,6 +103,8 @@ export class UsersService {
     user.following.push(follower);
     await this.usersRepository.save(user);
 
+    this.eventsGateway.notifyUser(followerId);
+
     return new RetMsgObj();
   }
 
@@ -110,7 +114,9 @@ export class UsersService {
     user.following = user.following.filter((u) => { return u.id != followerId });
     await this.usersRepository.save(user);
 
-    return new RetMsgObj();
+    this.eventsGateway.notifyUser(followerId);
+
+    return new RetMsgObj(); 
   }
 
   async getAllUsers(): Promise<RetSimpleUser[]> {

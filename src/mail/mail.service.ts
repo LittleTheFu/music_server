@@ -4,10 +4,13 @@ import { Repository } from 'typeorm';
 import { User } from '../users/entity/user.entity';
 import { Mail, RetMail } from './entity/mail.entity';
 import { RetMsgObj } from '../helper/entity/helper.entity.dto';
+import { EventsGateway } from '../events/events.gateway';
 
 @Injectable()
 export class MailService {
     constructor(
+        private  eventsGateway: EventsGateway,
+
         @InjectRepository(Mail)
         private readonly MailRepository: Repository<Mail>,
 
@@ -40,6 +43,8 @@ export class MailService {
         mail.to = toUser;
 
         await this.MailRepository.save(mail);
+
+        this.eventsGateway.notifyUser(toId);
 
         return new RetMsgObj();
     }
