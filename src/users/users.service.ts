@@ -37,13 +37,13 @@ export class UsersService {
     const result = await this.usersRepository
       .createQueryBuilder('user')
       .innerJoinAndSelect('user.profile', 'profile')
-      .innerJoinAndSelect('user.receiveMails', 'receive')
+      .leftJoinAndSelect('user.receiveMails', 'receive')
       .where('user.id = :id', { id: userId })
       .getOne();
 
     const cnt = await this.mailRepository
       .createQueryBuilder('mail')
-      .innerJoinAndSelect('mail.to', 'user')
+      .leftJoinAndSelect('mail.to', 'user')
       .where('user.id = :id', { id: userId })
       .andWhere('read = false')
       .getCount();
