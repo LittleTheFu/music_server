@@ -28,6 +28,7 @@ export class MailService {
         r.toName = m.to.name;
         r.content = m.content;
         r.read = m.read;
+        r.date = m.date;
 
         return r;
     }
@@ -69,16 +70,9 @@ export class MailService {
             .getOne();
 
         mail.read = true;
-        await this.MailRepository.save(mail);
-
-        const retMail = new RetMail();
-        retMail.id = mail.id;
-        retMail.fromName = mail.from.name;
-        retMail.toName = mail.to.name;
-        retMail.content = mail.content;
-        retMail.fromId = mail.from.id;
-        retMail.read = true;
-
+        const savedMail = await this.MailRepository.save(mail);
+        
+        const retMail = this.getReturnMail(savedMail);
         return retMail;
     }
 
@@ -88,6 +82,7 @@ export class MailService {
             .innerJoinAndSelect('mail.to', 'user')
             .innerJoinAndSelect('mail.from', 'tuser')
             .where('user.id = :id', { id: userId })
+            .orderBy("mail.date", "DESC")
             .getMany();
 
 

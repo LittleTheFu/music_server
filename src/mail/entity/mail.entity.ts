@@ -18,6 +18,9 @@ export class Mail {
 
   @ManyToOne(() => User, user => user.receiveMails)
   to: User;
+
+  @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
+  date: Date;
 }
 
 export class RetMail {
@@ -27,4 +30,5 @@ export class RetMail {
   toName: string;
   fromId: number;
   read: boolean;
+  date: Date;
 }
