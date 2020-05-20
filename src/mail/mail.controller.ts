@@ -33,4 +33,10 @@ export class MailController {
     async sendMail(@Request() req, @Body() sendMailDto: SendMailDto): Promise<RetMsgObj> {
         return this.mailService.sendMail(req.user.userId, sendMailDto.toId, sendMailDto.content)
     }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('getUnreadMailNum')
+    async getUnreadMailNum(@Request() req): Promise<number> {
+        return this.mailService.getUnreadMailNum(req.user.userId);
+    }
 }

@@ -3,12 +3,10 @@ import {
     SubscribeMessage,
     WebSocketGateway,
     WebSocketServer,
-    WsResponse,
     ConnectedSocket,
     OnGatewayConnection,
     OnGatewayDisconnect
 } from '@nestjs/websockets';
-import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Server, Client } from 'socket.io';
 import { Socket } from 'dgram';
@@ -38,10 +36,10 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return 9;
     }
 
-    notifyUser(userId: number): void {
+    notifyNewMail(userId: number): void {
         const socket = this.userSocketMap.get(userId);
-        if(socket) {
-            socket.emit('notice', 998);
+        if (socket) {
+            socket.emit('new_mail');
         }
     }
 
@@ -51,7 +49,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         console.log(this.userSocketMap.keys());
 
         return 'bind';
-    } 
+    }
 
     @SubscribeMessage('logout')
     async logout(@MessageBody() id: number, @ConnectedSocket() client: Socket, ): Promise<string> {

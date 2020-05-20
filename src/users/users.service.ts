@@ -9,6 +9,8 @@ import { HelperService } from '../helper/helper.service';
 import { ConverterService } from '../converter/converter.service';
 import { RetMsgObj } from '../helper/entity/helper.entity.dto';
 import { EventsGateway } from '../events/events.gateway';
+// import { Mail } from '../mail/entity/mail.entity';
+import { Mail } from '../mail/entity/mail.entity';
 
 @Injectable()
 export class UsersService {
@@ -17,6 +19,9 @@ export class UsersService {
     private readonly eventsGateway: EventsGateway,
     private readonly converterService: ConverterService,
     private readonly helperService: HelperService,
+
+    @InjectRepository(Mail)
+    private readonly mailRepository: Repository<Mail>,
 
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
@@ -32,13 +37,22 @@ export class UsersService {
     const result = await this.usersRepository
       .createQueryBuilder('user')
       .innerJoinAndSelect('user.profile', 'profile')
+      .innerJoinAndSelect('user.receiveMails', 'receive')
       .where('user.id = :id', { id: userId })
       .getOne();
+
+    const cnt = await this.mailRepository
+      .createQueryBuilder('mail')
+      .innerJoinAndSelect('mail.to', 'user')
+      .where('user.id = :id', { id: userId })
+      .andWhere('read = false')
+      .getCount();
 
     const ret = new RetSimpleUser();
     ret.id = result.id;
     ret.name = result.name;
     ret.avatarUrl = this.helperService.getAvatarAddress(result.profile.avatar);
+    ret.unreadMailNum = cnt;
 
     return ret;
   }
@@ -103,7 +117,7 @@ export class UsersService {
     user.following.push(follower);
     await this.usersRepository.save(user);
 
-    this.eventsGateway.notifyUser(followerId);
+    this.eventsGateway.notifyNewMail(followerId);
 
     return new RetMsgObj();
   }
@@ -114,9 +128,9 @@ export class UsersService {
     user.following = user.following.filter((u) => { return u.id != followerId });
     await this.usersRepository.save(user);
 
-    this.eventsGateway.notifyUser(followerId);
+    this.eventsGateway.notifyNewMail(followerId);
 
-    return new RetMsgObj(); 
+    return new RetMsgObj();
   }
 
   async getAllUsers(): Promise<RetSimpleUser[]> {

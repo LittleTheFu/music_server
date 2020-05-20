@@ -34,7 +34,7 @@ export class User {
     sendMails: Mail[];
 
     @OneToMany(() => Mail, mail => mail.to)
-    receiveMails: Comment[];
+    receiveMails: Mail[];
 
     @ManyToMany(() => User, { onDelete: "CASCADE" })
     @JoinTable()
@@ -59,4 +59,5 @@ export class User {
     id: number;
     name: string;
     avatarUrl: string;
+    unreadMailNum: number;
   }

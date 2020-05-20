@@ -9,7 +9,7 @@ import { EventsGateway } from '../events/events.gateway';
 @Injectable()
 export class MailService {
     constructor(
-        private  eventsGateway: EventsGateway,
+        private eventsGateway: EventsGateway,
 
         @InjectRepository(Mail)
         private readonly MailRepository: Repository<Mail>,
@@ -44,7 +44,7 @@ export class MailService {
 
         await this.MailRepository.save(mail);
 
-        this.eventsGateway.notifyUser(toId);
+        this.eventsGateway.notifyNewMail(toId);
 
         return new RetMsgObj();
     }
@@ -92,10 +92,21 @@ export class MailService {
 
 
         const retMails = mails.map((m) => {
-           return this.getReturnMail(m);
+            return this.getReturnMail(m);
         })
 
         return retMails;
+    }
+
+    async getUnreadMailNum(userId: number): Promise<number> {
+        const cnt = await this.MailRepository
+            .createQueryBuilder('mail')
+            .innerJoinAndSelect('mail.to', 'user')
+            .where('user.id = :id', { id: userId })
+            .andWhere('read = false')
+            .getCount();
+
+        return cnt;
     }
 
 }
