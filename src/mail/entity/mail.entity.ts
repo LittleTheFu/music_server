@@ -26,9 +26,10 @@ export class Mail {
 export class RetMail {
   id: number;
   content: string;
-  fromName: string;
-  toName: string;
   fromId: number;
+  fromName: string;
+  fromAvatar: string;
+  toName: string;
   read: boolean;
   date: Date;
 }

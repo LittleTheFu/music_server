@@ -5,10 +5,12 @@ import { User } from '../users/entity/user.entity';
 import { Mail, RetMail } from './entity/mail.entity';
 import { RetMsgObj } from '../helper/entity/helper.entity.dto';
 import { EventsGateway } from '../events/events.gateway';
+import { HelperService } from '../helper/helper.service';
 
 @Injectable()
 export class MailService {
     constructor(
+        private helperService: HelperService,
         private eventsGateway: EventsGateway,
 
         @InjectRepository(Mail)
@@ -29,6 +31,7 @@ export class MailService {
         r.content = m.content;
         r.read = m.read;
         r.date = m.date;
+        r.fromAvatar = this.helperService.getAvatarAddress(m.from.profile.avatar);
 
         return r;
     }
@@ -64,10 +67,13 @@ export class MailService {
     async getMail(mailId: number): Promise<RetMail> {
         const mail = await this.MailRepository
             .createQueryBuilder('mail')
-            .innerJoinAndSelect('mail.to', 'user')
-            .innerJoinAndSelect('mail.from', 'tuser')
+            .innerJoinAndSelect('mail.to', 'to')
+            .innerJoinAndSelect('mail.from', 'from')
+            .innerJoinAndSelect('from.profile', 'profile')
             .where('mail.id = :id', { id: mailId })
             .getOne();
+
+            console.log(mail);
 
         mail.read = true;
         const savedMail = await this.MailRepository.save(mail);
@@ -79,12 +85,12 @@ export class MailService {
     async getMails(userId: number): Promise<RetMail[]> {
         const mails = await this.MailRepository
             .createQueryBuilder('mail')
-            .innerJoinAndSelect('mail.to', 'user')
-            .innerJoinAndSelect('mail.from', 'tuser')
-            .where('user.id = :id', { id: userId })
+            .innerJoinAndSelect('mail.to', 'to')
+            .innerJoinAndSelect('mail.from', 'from')
+            .innerJoinAndSelect('from.profile', 'profile')
+            .where('to.id = :id', { id: userId })
             .orderBy("mail.date", "DESC")
             .getMany();
-
 
         const retMails = mails.map((m) => {
             return this.getReturnMail(m);
