@@ -120,7 +120,7 @@ export class UsersService {
     user.following.push(follower);
     await this.usersRepository.save(user);
 
-    await this.mailService.sendMail(userId, followerId, "I follower you!");
+    await this.mailService.sendMail(userId, followerId, "I followed you!");
 
     return new RetMsgObj();
   }
@@ -129,7 +129,7 @@ export class UsersService {
     const user = await this.usersRepository.findOne({ relations: ['following'], where: { id: userId } });
     user.following = user.following.filter((u) => { return u.id != followerId });
 
-    await this.mailService.sendMail(userId, followerId, "I unfollower you!");
+    await this.mailService.sendMail(userId, followerId, "I unfollowed you!");
 
     return new RetMsgObj();
   }
