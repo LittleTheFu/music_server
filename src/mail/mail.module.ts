@@ -10,6 +10,6 @@ import { EventsModule } from '../events/events.module';
   imports: [EventsModule, TypeOrmModule.forFeature([User, Mail])],
   controllers: [MailController],
   providers: [MailService],
-  // exports: [MailService],
+  exports: [MailService],
 })
 export class MailModule { }

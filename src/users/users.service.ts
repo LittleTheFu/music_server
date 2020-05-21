@@ -11,11 +11,13 @@ import { RetMsgObj } from '../helper/entity/helper.entity.dto';
 import { EventsGateway } from '../events/events.gateway';
 // import { Mail } from '../mail/entity/mail.entity';
 import { Mail } from '../mail/entity/mail.entity';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class UsersService {
 
   constructor(
+    private readonly mailService: MailService,
     private readonly eventsGateway: EventsGateway,
     private readonly converterService: ConverterService,
     private readonly helperService: HelperService,
@@ -41,12 +43,13 @@ export class UsersService {
       .where('user.id = :id', { id: userId })
       .getOne();
 
-    const cnt = await this.mailRepository
-      .createQueryBuilder('mail')
-      .leftJoinAndSelect('mail.to', 'user')
-      .where('user.id = :id', { id: userId })
-      .andWhere('read = false')
-      .getCount();
+    // const cnt = await this.mailRepository
+    //   .createQueryBuilder('mail')
+    //   .leftJoinAndSelect('mail.to', 'user')
+    //   .where('user.id = :id', { id: userId })
+    //   .andWhere('read = false')
+    //   .getCount();
+    const cnt = await this.mailService.getUnreadMailNum(userId);
 
     const ret = new RetSimpleUser();
     ret.id = result.id;
@@ -117,18 +120,16 @@ export class UsersService {
     user.following.push(follower);
     await this.usersRepository.save(user);
 
-    this.eventsGateway.notifyNewMail(followerId);
+    await this.mailService.sendMail(userId, followerId, "I follower you!");
 
     return new RetMsgObj();
   }
 
   async unfollowUser(userId: number, followerId: number): Promise<RetMsgObj> {
     const user = await this.usersRepository.findOne({ relations: ['following'], where: { id: userId } });
-
     user.following = user.following.filter((u) => { return u.id != followerId });
-    await this.usersRepository.save(user);
 
-    this.eventsGateway.notifyNewMail(followerId);
+    await this.mailService.sendMail(userId, followerId, "I unfollower you!");
 
     return new RetMsgObj();
   }
