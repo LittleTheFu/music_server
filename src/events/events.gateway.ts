@@ -7,10 +7,8 @@ import {
     OnGatewayConnection,
     OnGatewayDisconnect
 } from '@nestjs/websockets';
-import { map } from 'rxjs/operators';
 import { Server, Client } from 'socket.io';
 import { Socket } from 'dgram';
-import { Injectable } from '@nestjs/common';
 
 @WebSocketGateway()
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
