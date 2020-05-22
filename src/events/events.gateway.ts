@@ -51,7 +51,6 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     @SubscribeMessage('logout')
     async logout(@MessageBody() id: number, @ConnectedSocket() client: Socket, ): Promise<string> {
-        this.userSocketMap.get(1)?.emit('events', 199);
         this.userSocketMap.delete(id);
         client.emit('events', 99999);
 
