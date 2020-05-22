@@ -43,7 +43,15 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     @SubscribeMessage('login')
     async login(@MessageBody() id: number, @ConnectedSocket() client: Socket, ): Promise<string> {
-        this.userSocketMap.get(id)?.emit('banned');
+        const oldClient = this.userSocketMap.get(id);
+
+        console.log('old client :' + oldClient);
+        console.log('new client :' + client);
+
+        if(oldClient && oldClient !== client ) {
+          
+            oldClient.emit('banned');
+        }
         this.userSocketMap.set(id, client);
         console.log(this.userSocketMap.keys());
 
@@ -52,7 +60,10 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     @SubscribeMessage('logout')
     async logout(@MessageBody() id: number, @ConnectedSocket() client: Socket, ): Promise<string> {
-        this.userSocketMap.delete(id);
+        const c = this.userSocketMap.get(id);
+        if( c == client) {
+            this.userSocketMap.delete(id);
+        }
         client.emit('events', 99999);
 
         console.log(this.userSocketMap.keys());
