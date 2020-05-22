@@ -73,11 +73,9 @@ export class MailService {
             .where('mail.id = :id', { id: mailId })
             .getOne();
 
-            console.log(mail);
-
         mail.read = true;
         const savedMail = await this.MailRepository.save(mail);
-        
+
         const retMail = this.getReturnMail(savedMail);
         return retMail;
     }
