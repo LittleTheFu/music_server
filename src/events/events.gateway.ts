@@ -45,8 +45,8 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     async login(@MessageBody() id: number, @ConnectedSocket() client: Socket, ): Promise<string> {
         const oldClient = this.userSocketMap.get(id);
 
-        console.log('old client :' + oldClient);
-        console.log('new client :' + client);
+        // console.log('old client :' + oldClient);
+        // console.log('new client :' + client);
 
         if(oldClient && oldClient !== client ) {
           
