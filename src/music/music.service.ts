@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
 import {
@@ -107,7 +107,10 @@ export class MusicService {
     const music = await this.rawMusicRepository.findOne({ id: musicId });
 
     if (collection.musics.find(m => { return m.id === music.id })) {
-      return new RetMsgObj('already added');
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: 'already added',
+      }, HttpStatus.FORBIDDEN);
     }
 
     collection.musics = collection.musics.concat(music);
