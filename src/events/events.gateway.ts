@@ -43,6 +43,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     @SubscribeMessage('login')
     async login(@MessageBody() id: number, @ConnectedSocket() client: Socket, ): Promise<string> {
+        this.userSocketMap.get(id)?.emit('banned');
         this.userSocketMap.set(id, client);
         console.log(this.userSocketMap.keys());
 
