@@ -52,6 +52,9 @@ export class SeedService {
         const albumTMNN = new MusicAlbum();
         albumTMNN.name = 'ワルキューレがとまらない';
 
+        const albumLRNZ = new MusicAlbum();
+        albumLRNZ.name = '冴えない彼女の育てかた';
+
         const artJunna = new Artist();
         artJunna.name = 'JUNNA';
         artJunna.musicAlbums = [albumWT];
@@ -59,7 +62,7 @@ export class SeedService {
 
         const artAye = new Artist();
         artAye.name = '安野希世乃';
-        artAye.musicAlbums = [albumWT];
+        artAye.musicAlbums = [albumWT, albumLRNZ];
         await this.artistRepository.save(artAye);
 
         const artDsny = new Artist();
@@ -86,5 +89,8 @@ export class SeedService {
 
         this.createRawMusic('鈴木みのり - 僕らの戦場～Freyja Solo Edition～', artSzk, albumTMNN);
         this.createRawMusic('鈴木みのり - 星間飛行～Freyja Ver.～', artSzk, albumTMNN);
+
+        this.createRawMusic('LOVE iLLUSION (Megumi Solo Ver.)', artAye, albumLRNZ);
+        this.createRawMusic('安野希世乃 - M♭', artAye, albumLRNZ);
     }
 }
