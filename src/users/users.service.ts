@@ -12,11 +12,13 @@ import { EventsGateway } from '../events/events.gateway';
 // import { Mail } from '../mail/entity/mail.entity';
 import { Mail } from '../mail/entity/mail.entity';
 import { MailService } from '../mail/mail.service';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class UsersService {
 
-  constructor(
+  constructor(    
+    private readonly emailService: EmailService,
     private readonly mailService: MailService,
     private readonly eventsGateway: EventsGateway,
     private readonly converterService: ConverterService,
@@ -83,6 +85,10 @@ export class UsersService {
     await this.profileRepository.save(profile);
 
     const retUser = await this.usersRepository.save(user);
+
+    console.log('before email');
+    this.emailService.sendEmail();
+    console.log('end email');
     return retUser;
   }
 

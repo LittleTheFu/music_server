@@ -13,6 +13,7 @@ import { HelperModule } from './helper/helper.module';
 import * as ormconfig from './ormconfig';
 import { EventsModule } from './events/events.module';
 
+
 @Module({
   imports: [
     HelperModule,
@@ -23,7 +24,8 @@ import { EventsModule } from './events/events.module';
     ProfileModule,
     MailModule,
     AuthModule,
-    EventsModule],
+    EventsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

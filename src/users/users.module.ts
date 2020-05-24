@@ -10,9 +10,11 @@ import { Mail } from '../mail/entity/mail.entity';
 import { MailModule } from '../mail/mail.module';
 import { ConverterModule } from '../converter/converter.module';
 import { EventsModule } from '../events/events.module';
+import { EmailModule } from '../email/email.module';
 
 @Module({
   imports: [
+    EmailModule,
     EventsModule,
     ConverterModule,
     forwardRef(() => MailModule),
