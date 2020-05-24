@@ -17,7 +17,10 @@ import { EventsModule } from './events/events.module';
 @Module({
   imports: [
     HelperModule,
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env.email', '.env'],
+    }),
     TypeOrmModule.forRoot(ormconfig),
     MusicModule,
     CommentModule,
