@@ -4,6 +4,10 @@ export class RegUserDto {
     email: string;
 }
 
+export class EditPasswordDto {
+    password: string;
+}
+
 export class DetailUserDto {
     // username: string;
     userId: number;

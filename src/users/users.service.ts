@@ -62,6 +62,18 @@ export class UsersService {
     return ret;
   }
 
+  async changePassword(userId: number, password: string): Promise<RetMsgObj> {
+    const u = await this.usersRepository.findOne(userId);
+    if(u) {
+      u.password = Md5.hashStr(password) as string;
+    }
+
+    await this.usersRepository.save(u);
+
+    return new RetMsgObj();
+  }
+
+
   async findOne(username: string): Promise<User | undefined> {
     const user = await this.usersRepository.findOne({
       name: username

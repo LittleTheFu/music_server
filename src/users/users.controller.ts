@@ -1,6 +1,6 @@
 import { Controller, Post, Request, Body, UseGuards, HttpStatus, HttpException } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { RegUserDto, DetailUserDto, FollowUserDto, GetUserFollowersDto } from './dto/user.dto';
+import { RegUserDto, DetailUserDto, FollowUserDto, GetUserFollowersDto, EditPasswordDto } from './dto/user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RetUserDetail, RetSimpleUser, RetFollower } from './entity/user.entity';
 import { RetMsgObj } from '../helper/entity/helper.entity.dto';
@@ -8,6 +8,13 @@ import { RetMsgObj } from '../helper/entity/helper.entity.dto';
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('edit_password')
+    async editPassword(@Request() req, @Body() editPasswordDto: EditPasswordDto): Promise<RetMsgObj> {
+        return this.usersService.changePassword(req.user.userId, editPasswordDto.password);
+    }
+
     @Post('register')
     async register(@Body() regUser: RegUserDto): Promise<RetMsgObj> {
         const user = await this.usersService.createOne(regUser.username, regUser.password, regUser.email);
