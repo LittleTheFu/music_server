@@ -1,6 +1,7 @@
 export class RegUserDto { 
     username: string;
     password: string;
+    email: string;
 }
 
 export class DetailUserDto {

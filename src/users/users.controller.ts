@@ -10,7 +10,7 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) { }
     @Post('register')
     async register(@Body() regUser: RegUserDto): Promise<RetMsgObj> {
-        const user = await this.usersService.createOne(regUser.username, regUser.password);
+        const user = await this.usersService.createOne(regUser.username, regUser.password, regUser.email);
         if (user === null) {
             throw new HttpException({
                 status: HttpStatus.FORBIDDEN,

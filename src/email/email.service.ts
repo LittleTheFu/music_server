@@ -12,11 +12,11 @@ export class EmailService {
             return 'please remeber the address: http://' + this.configService.get('HSTNAME');
         }
 
-    public sendEmail(): void {
+    public sendEmail(address: string): void {
         this
             .mailerService
             .sendMail({
-                to: this.configService.get('MAILER_EMAIL'), // list of receivers
+                to: address, // list of receivers
                 from: this.configService.get('MAILER_EMAIL'), // sender address
                 subject: 'Thank you for registering!!!', // Subject line
                 text: this.getWelcomeMsg(), // plaintext body

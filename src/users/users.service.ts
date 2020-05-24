@@ -69,7 +69,7 @@ export class UsersService {
     return user;
   }
 
-  async createOne(username: string, password: string): Promise<User> {
+  async createOne(username: string, password: string, email: string): Promise<User> {
     const exsitUser = await this.findOne(username)
 
     if (exsitUser != null) {
@@ -79,6 +79,7 @@ export class UsersService {
     const user = new User();
     user.name = username;
     user.password = Md5.hashStr(password) as string;
+    user.email = email;
 
     const profile = new Profile();
     user.profile = profile;
@@ -87,7 +88,7 @@ export class UsersService {
     const retUser = await this.usersRepository.save(user);
 
     console.log('before email');
-    this.emailService.sendEmail();
+    this.emailService.sendEmail(retUser.email);
     console.log('end email');
     return retUser;
   }
