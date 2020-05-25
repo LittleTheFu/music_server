@@ -1,7 +1,16 @@
-export class RegUserDto { 
+export class RegUserDto {
     username: string;
     password: string;
     email: string;
+}
+
+export class ForgetPasswordDto {
+    username: string;
+    email: string;
+}
+
+export class ResetPasswordDto {
+    key: string;
 }
 
 export class EditPasswordDto {

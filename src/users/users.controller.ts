@@ -1,6 +1,14 @@
 import { Controller, Post, Request, Body, UseGuards, HttpStatus, HttpException } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { RegUserDto, DetailUserDto, FollowUserDto, GetUserFollowersDto, EditPasswordDto } from './dto/user.dto';
+import {
+    RegUserDto,
+    DetailUserDto,
+    FollowUserDto,
+    GetUserFollowersDto,
+    EditPasswordDto,
+    ForgetPasswordDto,
+    ResetPasswordDto
+} from './dto/user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RetUserDetail, RetSimpleUser, RetFollower } from './entity/user.entity';
 import { RetMsgObj } from '../helper/entity/helper.entity.dto';
@@ -26,6 +34,16 @@ export class UsersController {
         }
 
         return new RetMsgObj();
+    }
+
+    @Post('forget_password')
+    async forgetPassword(@Body() forgetPasswordDto: ForgetPasswordDto): Promise<RetMsgObj> {
+        return this.usersService.sendResetPasswordMail(forgetPasswordDto.username, forgetPasswordDto.email);
+    }
+
+    @Post('reset_password')
+    async resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<RetMsgObj> {
+        return this.usersService.resetPassword(resetPasswordDto.key);
     }
 
     @UseGuards(JwtAuthGuard)

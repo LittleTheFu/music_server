@@ -44,6 +44,24 @@ export class User {
     following: User[];
   }
 
+  @Entity()
+  export class ResetInfo {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
+    name: string;
+
+    @Column()
+    email: string;
+
+    @Column()
+    key: string;
+
+    @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
+    date: Date;
+  }
+
   export class RetUserDetail {
     name: string;
     avatarUrl: string;

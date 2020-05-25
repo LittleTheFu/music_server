@@ -6,10 +6,12 @@ export class HelperService {
     readonly MUSICS_DIRECTORY = 'musics/';
     readonly ARTIST_DIRECTORY = 'artist/';
     readonly AVATAR_DIRECTORY = 'avatar/';
+    readonly RESET_PATH = 'reset/';
 
     port: string;
     hostName: string;
     host: string;
+    clientHost: string;
 
     constructor(private readonly configService: ConfigService) {
 
@@ -17,6 +19,8 @@ export class HelperService {
         this.port = this.configService.get<string>('PORT');
 
         this.host = 'http://' + this.hostName + (':') + this.port + '/';
+
+        this.clientHost = 'http://' + this.configService.get<string>('CLIENT_HOST') + '/';
     }
 
     getProt(): string {
@@ -69,5 +73,9 @@ export class HelperService {
 
     genMixCoverImg(): string {
         return this.randomInteger(0, 7) + '.png';
+    }
+
+    getResetUrl(key: string): string {
+        return this.clientHost + this.RESET_PATH + key;
     }
 }

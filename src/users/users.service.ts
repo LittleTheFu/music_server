@@ -1,31 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User, RetUserDetail, RetFollower, RetSimpleUser } from './entity/user.entity';
+import {
+  User,
+  RetUserDetail,
+  RetFollower,
+  RetSimpleUser,
+  ResetInfo
+} from './entity/user.entity';
 import { MusicCollection } from '../music/entity/music.entity';
 import { Profile } from '../profile/entity/profile.entity';
 import { Md5 } from 'ts-md5/dist/md5';
 import { HelperService } from '../helper/helper.service';
 import { ConverterService } from '../converter/converter.service';
 import { RetMsgObj } from '../helper/entity/helper.entity.dto';
-import { EventsGateway } from '../events/events.gateway';
-// import { Mail } from '../mail/entity/mail.entity';
-import { Mail } from '../mail/entity/mail.entity';
 import { MailService } from '../mail/mail.service';
 import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class UsersService {
 
-  constructor(    
+  constructor(
     private readonly emailService: EmailService,
     private readonly mailService: MailService,
-    private readonly eventsGateway: EventsGateway,
     private readonly converterService: ConverterService,
     private readonly helperService: HelperService,
 
-    @InjectRepository(Mail)
-    private readonly mailRepository: Repository<Mail>,
+    @InjectRepository(ResetInfo)
+    private readonly resetInfoRepository: Repository<ResetInfo>,
 
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
@@ -45,12 +47,6 @@ export class UsersService {
       .where('user.id = :id', { id: userId })
       .getOne();
 
-    // const cnt = await this.mailRepository
-    //   .createQueryBuilder('mail')
-    //   .leftJoinAndSelect('mail.to', 'user')
-    //   .where('user.id = :id', { id: userId })
-    //   .andWhere('read = false')
-    //   .getCount();
     const cnt = await this.mailService.getUnreadMailNum(userId);
 
     const ret = new RetSimpleUser();
@@ -64,7 +60,7 @@ export class UsersService {
 
   async changePassword(userId: number, password: string): Promise<RetMsgObj> {
     const u = await this.usersRepository.findOne(userId);
-    if(u) {
+    if (u) {
       u.password = Md5.hashStr(password) as string;
     }
 
@@ -73,6 +69,68 @@ export class UsersService {
     return new RetMsgObj();
   }
 
+  async resetPassword(key: string): Promise<RetMsgObj> {
+    const info = await this.resetInfoRepository.createQueryBuilder('info')
+      .orderBy('info.date', 'DESC')
+      .where('info.key = :key', { key: key })
+      .getOne();
+
+    console.log('info:');
+    console.log(info);
+
+    if(!info) {
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: 'no such key!',
+      }, HttpStatus.FORBIDDEN);
+    }
+
+    const user = await this.usersRepository.findOne({
+      name: info.name,
+      email: info.email
+    });
+
+    if(!user) {
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: 'no such user!',
+      }, HttpStatus.FORBIDDEN);
+    }
+
+    user.password = Md5.hashStr('1234') as string;
+    await this.usersRepository.save(user);
+
+    await this.resetInfoRepository.delete({ name: info.name});
+
+    return new RetMsgObj('your password is 1234, please change it after you login!');
+  }
+
+  async sendResetPasswordMail(username: string, email: string): Promise<RetMsgObj> {
+    console.log('reset password');
+    const user = await this.usersRepository.findOne({
+      name: username,
+      email: email
+    });
+
+    console.log(user);
+    if (!user) {
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: 'invalid input!',
+      }, HttpStatus.FORBIDDEN);
+    }
+
+    const resetInfo = new ResetInfo();
+    resetInfo.name = username;
+    resetInfo.email = email;
+    resetInfo.key = Md5.hashStr ((Math.random() * 1000).toString()) as string;
+
+    await this.resetInfoRepository.save(resetInfo);
+
+    this.emailService.sendEmail(email, 'click here to reset', this.helperService.getResetUrl(resetInfo.key));
+
+    return new RetMsgObj('we send an email to you,it could be moved to trashbox by your email block system.');
+  }
 
   async findOne(username: string): Promise<User | undefined> {
     const user = await this.usersRepository.findOne({
@@ -100,7 +158,7 @@ export class UsersService {
     const retUser = await this.usersRepository.save(user);
 
     console.log('before email');
-    this.emailService.sendEmail(retUser.email);
+    this.emailService.sendEmail(retUser.email, 'welcome', 'welcome');
     console.log('end email');
     return retUser;
   }

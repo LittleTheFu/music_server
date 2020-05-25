@@ -1,6 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from './entity/user.entity';
+import { User, ResetInfo } from './entity/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersController } from './users.controller';
 import { MusicModule } from '../music/music.module';
@@ -19,7 +19,7 @@ import { EmailModule } from '../email/email.module';
     ConverterModule,
     forwardRef(() => MailModule),
     forwardRef(() => MusicModule),
-    TypeOrmModule.forFeature([User, MusicCollection, Profile, Mail])],
+    TypeOrmModule.forFeature([User, MusicCollection, Profile, Mail, ResetInfo])],
   controllers: [UsersController],
   providers: [UsersService],
   exports: [UsersService],
