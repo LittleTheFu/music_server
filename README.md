@@ -6,6 +6,8 @@ with nestjs
 npm install
 `
 
+set MAILER_EMAIL,MAILER_PASSWORD,MAILER_HOST with appropriate values in .env file
+
 then run the command(seed) below which is to initialize database
 
 `
