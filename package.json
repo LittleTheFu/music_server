@@ -32,7 +32,7 @@
     "@nestjs/jwt": "^6.1.2",
     "@nestjs/passport": "^6.2.0",
     "@nestjs/platform-express": "^6.11.11",
-    "@nestjs/platform-socket.io": "^6.11.11",
+    "@nestjs/platform-socket.io": "^9.2.0",
     "@nestjs/typeorm": "^6.3.3",
     "@nestjs/websockets": "^6.11.11",
     "nodemailer": "^6.4.6",
