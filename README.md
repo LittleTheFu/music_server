@@ -19,5 +19,3 @@ npm run dev
 `
 
 [client code](https://github.com/LittleTheFu/music_client)
-
-[demo](http://129.211.8.25/)
