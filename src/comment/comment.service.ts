@@ -83,13 +83,13 @@ export class CommentService {
         const comment = new Comment;
         comment.content = content;
 
-        const music = await this.rawMusicRepository.findOne({
+        const music = await this.rawMusicRepository.findOneBy({
             id: musicId,
         });
 
         comment.music = music;
 
-        const user = await this.userRepository.findOne({
+        const user = await this.userRepository.findOneBy({
             id: userId,
         });
         comment.user = user;

@@ -40,8 +40,8 @@ export class MailService {
         const mail = new Mail();
         mail.content = content;
 
-        const fromUser = await this.userRepository.findOne({ id: fromId });
-        const toUser = await this.userRepository.findOne({ id: toId });
+        const fromUser = await this.userRepository.findOneBy({ id: fromId });
+        const toUser = await this.userRepository.findOneBy({ id: toId });
 
         mail.from = fromUser;
         mail.to = toUser;

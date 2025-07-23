@@ -7,8 +7,8 @@ import {
     OnGatewayConnection,
     OnGatewayDisconnect
 } from '@nestjs/websockets';
-import { Server, Client } from 'socket.io';
-import { Socket } from 'dgram';
+import { Server, Socket } from 'socket.io';
+
 
 @WebSocketGateway()
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -28,7 +28,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // }
 
     @SubscribeMessage('identity')
-    async identity(@MessageBody() data: number, @ConnectedSocket() client: Client, ): Promise<number> {
+    async identity(@MessageBody() data: number, @ConnectedSocket() client: Socket, ): Promise<number> {
 
         console.log(client.id);
         return 9;
@@ -71,11 +71,11 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         return 'unbind';
     }
 
-    public handleConnection(client: Client) {
+    public handleConnection(client: Socket) {
         console.log("Client " + client.id + " has connected");
     }
 
-    public handleDisconnect(client: Client) {
+    public handleDisconnect(client: Socket) {
         console.log("Client " + client.id + " has disconnected");
     }
 }

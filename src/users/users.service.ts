@@ -10,7 +10,7 @@ import {
 } from './entity/user.entity';
 import { MusicCollection } from '../music/entity/music.entity';
 import { Profile } from '../profile/entity/profile.entity';
-import { Md5 } from 'ts-md5/dist/md5';
+import * as crypto from 'crypto';
 import { HelperService } from '../helper/helper.service';
 import { ConverterService } from '../converter/converter.service';
 import { RetMsgObj } from '../helper/entity/helper.entity.dto';
@@ -59,9 +59,9 @@ export class UsersService {
   }
 
   async changePassword(userId: number, password: string): Promise<RetMsgObj> {
-    const u = await this.usersRepository.findOne(userId);
+    const u = await this.usersRepository.findOneBy({ id: userId });
     if (u) {
-      u.password = Md5.hashStr(password) as string;
+      u.password = crypto.createHash('md5').update(password).digest('hex');
     }
 
     await this.usersRepository.save(u);
@@ -85,7 +85,7 @@ export class UsersService {
       }, HttpStatus.FORBIDDEN);
     }
 
-    const user = await this.usersRepository.findOne({
+    const user = await this.usersRepository.findOneBy({
       name: info.name,
       email: info.email
     });
@@ -97,7 +97,7 @@ export class UsersService {
       }, HttpStatus.FORBIDDEN);
     }
 
-    user.password = Md5.hashStr('1234') as string;
+    user.password = crypto.createHash('md5').update('1234').digest('hex');
     await this.usersRepository.save(user);
 
     await this.resetInfoRepository.delete({ name: info.name});
@@ -107,7 +107,7 @@ export class UsersService {
 
   async sendResetPasswordMail(username: string, email: string): Promise<RetMsgObj> {
     console.log('reset password');
-    const user = await this.usersRepository.findOne({
+    const user = await this.usersRepository.findOneBy({
       name: username,
       email: email
     });
@@ -123,7 +123,7 @@ export class UsersService {
     const resetInfo = new ResetInfo();
     resetInfo.name = username;
     resetInfo.email = email;
-    resetInfo.key = Md5.hashStr ((Math.random() * 1000).toString()) as string;
+    resetInfo.key = crypto.createHash('md5').update((Math.random() * 1000).toString()).digest('hex');
 
     await this.resetInfoRepository.save(resetInfo);
 
@@ -133,7 +133,7 @@ export class UsersService {
   }
 
   async findOne(username: string): Promise<User | undefined> {
-    const user = await this.usersRepository.findOne({
+    const user = await this.usersRepository.findOneBy({
       name: username
     });
     return user;
@@ -148,7 +148,7 @@ export class UsersService {
 
     const user = new User();
     user.name = username;
-    user.password = Md5.hashStr(password) as string;
+    user.password = crypto.createHash('md5').update(password).digest('hex');
     user.email = email;
 
     const profile = new Profile();
@@ -192,7 +192,7 @@ export class UsersService {
 
   async followUser(userId: number, followerId: number): Promise<RetMsgObj> {
     const user = await this.usersRepository.findOne({ relations: ['following'], where: { id: userId } });
-    const follower = await this.usersRepository.findOne({ id: followerId });
+    const follower = await this.usersRepository.findOneBy({ id: followerId });
 
     user.following.push(follower);
     await this.usersRepository.save(user);

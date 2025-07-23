@@ -104,7 +104,7 @@ export class MusicService {
 
   async addMusicToCollection(collectionId: number, musicId: number): Promise<RetMsgObj> {
     const collection = await this.MusicCollectionRepository.findOne({ relations: ['musics'], where: { id: collectionId } });
-    const music = await this.rawMusicRepository.findOne({ id: musicId });
+    const music = await this.rawMusicRepository.findOneBy({ id: musicId });
 
     if (collection.musics.find(m => { return m.id === music.id })) {
       throw new HttpException({
@@ -173,7 +173,7 @@ export class MusicService {
   }
 
   async createCollection(userId: number, name: string): Promise<RetCollectionDetail> {
-    const user = await this.UserRepository.findOne(userId);
+    const user = await this.UserRepository.findOneBy({id: userId});
 
     const collection = new MusicCollection();
     collection.name = name;
